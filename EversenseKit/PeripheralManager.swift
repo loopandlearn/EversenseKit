@@ -211,13 +211,10 @@ extension PeripheralManager: CBPeripheralDelegate {
         let isE3 = cgmManager.state.security == .none
 
         if !isE3 {
-            logger.debug("Stripping header from received data")
             data = data.subdata(in: 3 ..< data.count)
 
             if data[0] != Eversense365.PacketIds.AuthenticateV2ResponseId.rawValue {
                 // Only decrypt if packet is not for Authentication
-                logger.debug("Decrypting payload...")
-
                 data = CryptoUtil.shared.decrypt(data: data)
                 guard !data.isEmpty else {
                     logger.error("Failed to decrypt payload")

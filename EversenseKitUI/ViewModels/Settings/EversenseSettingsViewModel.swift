@@ -50,10 +50,7 @@ extension EversenseSettingsViewModel: StateObserver {
         transmitterModel = state.modelStr ?? "UNKNOWN"
         transmitterName = state.bleNameString
         connectionStatus = state.connectionStatus.title
-        currentPhase = state.calibrationPhase.getTitle(
-            isOneCal: state.isOneCalibrationPhase,
-            oneCalExists: state.oneCalibrationPhaseExists
-        )
+        currentPhase = state.calibrationPhase.getTitle(calibrationMode: state.calibrationMode)
 
         signalStrength = state.signalStrength.title
         batteryLevel = "\(state.batteryPercentage)%"
@@ -69,7 +66,7 @@ extension EversenseSettingsViewModel: StateObserver {
         if let value = state.lastCalibration {
             lastCalibrationDatetime = dateFormatter.string(from: value)
 
-            let calibrationPeriod: TimeInterval = state.isOneCalibrationPhase ? .hours(24) : .hours(12)
+            let calibrationPeriod = state.calibrationMode.toPeriod()
             let nextCalibration = value.addingTimeInterval(calibrationPeriod)
             let calibrationAge = value.timeIntervalSinceNow * -1
             let nextCalibrationIn = calibrationPeriod - calibrationAge

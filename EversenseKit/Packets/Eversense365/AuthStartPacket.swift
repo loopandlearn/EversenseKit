@@ -41,6 +41,10 @@ extension Eversense365 {
             return data
         }
 
+        /// Message parsed:
+        /// 0B 03 -> CmdType & CmdId
+        /// DC46BEBE9096AA44E6BB42766B23C22886164C1BFBE55126A3284A98A1864EF0E09D63B705C4BE5D2E1AE1B07DCF2F72DC576DD76BB5DD0D70F2C6AA68134EE -> shared public key
+        /// BAA63C88119A80D3E94B534E0DCF9C2EBC1DE44592B690BD2C00D4214B4CEA38D8804DFAB9902A7CD8B9DD3DC249204B12C36E707A2B97510E9250D03FA1E4FFD -> ECDSA Signature
         func parseResponse(data: Data) -> AuthStartResponse {
             if data.count <= 7 {
                 return AuthStartResponse(

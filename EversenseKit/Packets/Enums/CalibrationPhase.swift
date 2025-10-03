@@ -7,20 +7,21 @@ public enum CalibrationPhase: UInt8 {
     case DEBUG = 6
     case DROPOUT = 7
 
-    func getTitle(isOneCal: Bool, oneCalExists: Bool) -> String {
+    func getTitle(calibrationMode: CalibrationMode) -> String {
         switch self {
         case .WARM_UP:
             return LocalizedString("Warming up", comment: "phase warming up")
         case .DAILY_CALIBRATION:
-            if oneCalExists {
-                if isOneCal {
-                    return LocalizedString("Daily single calibration", comment: "phase daily calibration")
-                } else {
-                    return LocalizedString("Daily dual calibration", comment: "phase daily calibration")
-                }
+            switch calibrationMode {
+            case .DailySingle:
+                return LocalizedString("Daily single calibration", comment: "phase daily calibration")
+            case .DailyDual:
+                return LocalizedString("Daily dual calibration", comment: "phase daily calibration")
+            case .WeeklySingle:
+                return LocalizedString("Weekly single calibration", comment: "phase daily calibration")
+            case .Default:
+                return LocalizedString("Daily calibration", comment: "phase daily calibration")
             }
-
-            return LocalizedString("Daily calibration", comment: "phase daily calibration")
         case .INITIALIZATION:
             return LocalizedString("Initialization", comment: "phase init")
         case .SUSPICIOUS:
@@ -31,6 +32,19 @@ public enum CalibrationPhase: UInt8 {
             return LocalizedString("Debug/test", comment: "phase debug")
         default:
             return LocalizedString("Unknown", comment: "phase unknown")
+        }
+    }
+
+    static func from365(rawValue: UInt8) -> CalibrationPhase {
+        switch rawValue {
+        case 0: return .UNKNOWN
+        case 1: return .WARM_UP
+        case 2: return .INITIALIZATION
+        case 3: return .DAILY_CALIBRATION
+        case 4: return .SUSPICIOUS
+        case 5: return .DROPOUT
+        case 6: return .DEBUG
+        default: return .UNKNOWN
         }
     }
 }

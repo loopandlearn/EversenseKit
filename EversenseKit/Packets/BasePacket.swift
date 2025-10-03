@@ -125,11 +125,15 @@ enum Eversense365 {
     enum ReadIds: UInt8 {
         case Ping = 1
         case GetSignalStrength = 27
+        case GetCalibrationInfo = 29
+        case GetGlucoseData = 31
         case GetSensorInformation = 32
+        case GetPatientInformation = 33
     }
 
     enum WriteIds: UInt8 {
         case CurrentDateTime = 1
+        case AppVersion = 14
     }
 
     enum AuthTypes: UInt8 {

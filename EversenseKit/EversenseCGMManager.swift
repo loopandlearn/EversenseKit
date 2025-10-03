@@ -144,43 +144,20 @@ extension EversenseCGMManager {
                 return
             }
 
-            do {
-                if !self.state.is365 {
-                    let glucoseData: EversenseE3.GetGlucoseDataResponse = try await self.bluetoothManager
-                        .write(EversenseE3.GetGlucoseDataPacket())
-                    let recentGlucoseValue: EversenseE3.GetRecentGlucoseValueResponse = try await self.bluetoothManager
-                        .write(EversenseE3.GetRecentGlucoseValuePacket())
-                    let recentGlucoseDate: EversenseE3.GetRecentGlucoseDateResponse = try await self.bluetoothManager
-                        .write(EversenseE3.GetRecentGlucoseDatePacket())
-                    let recentGlucoseTime: EversenseE3.GetRecentGlucoseTimeResponse = try await self.bluetoothManager
-                        .write(EversenseE3.GetRecentGlucoseTimePacket())
-
-                    let dateTime = Date.fromComponents(
-                        date: recentGlucoseDate.date,
-                        time: recentGlucoseTime.time
-                    )
-
-                    self.state.recentGlucoseInMgDl = recentGlucoseValue.valueInMgDl
-                    self.state.recentGlucoseDateTime = dateTime
-
-                    cgmManagerDelegate.cgmManager(self, hasNew: .newData([
-                        NewGlucoseSample(
-                            cgmManager: self,
-                            value: recentGlucoseValue.valueInMgDl,
-                            trend: glucoseData.trend ?? .flat,
-                            dateTime: dateTime
-                        )
-                    ]))
-
-                    await EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
-                } else {
-                    self.logger.error("TODO: Implement 365 heartbeath operation")
-
-                    await Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
-                }
-
-            } catch {
-                self.logger.error("Failed to fetch recent Glucose: \(error.localizedDescription)")
+            if !self.state.is365 {
+                await EversenseE3.readGlucoseData(
+                    peripheralManager: peripheralManager,
+                    cgmManager: self,
+                    cgmManagerDelegate: cgmManagerDelegate
+                )
+                await EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+            } else {
+                await Eversense365.readGlucoseData(
+                    peripheralManager: peripheralManager,
+                    cgmManager: self,
+                    cgmManagerDelegate: cgmManagerDelegate
+                )
+                await Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
             }
         }
     }

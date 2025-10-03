@@ -5,13 +5,25 @@ extension Eversense365 {
         let transmitterDatetime: Date
         let mmaFeatures: UInt8
         let batteryLevel: Int
+        let version: String
+        let extVersion: String
 
-        init(serialNumber: String, transmitterName: String, transmitterDatetime: Date, mmaFeatures: UInt8, batteryLevel: Int) {
+        init(
+            serialNumber: String,
+            transmitterName: String,
+            transmitterDatetime: Date,
+            mmaFeatures: UInt8,
+            batteryLevel: Int,
+            version: String,
+            extVersion: String
+        ) {
             self.serialNumber = serialNumber
             self.transmitterName = transmitterName
             self.transmitterDatetime = transmitterDatetime
             self.mmaFeatures = mmaFeatures
             self.batteryLevel = batteryLevel
+            self.version = version
+            self.extVersion = extVersion
         }
     }
 
@@ -31,6 +43,33 @@ extension Eversense365 {
             return CryptoUtil.shared.encrypt(data: data)
         }
 
+        /// Message parsed:
+        /// 42 20 -> CmdType & CmdId
+        /// 33 30 36 33 36 36 00 00 00 00 00 00 00 00 00 00 -> Serial number
+        /// 44 33 30 36 33 36 36 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 -> Transmitter name
+        /// 1A 44 08 CB BF 00 00 00 -> Current datetime
+        /// 29 6D 23 06 -> Transmitter model
+        /// 30 35 2E 30 30 2E 30 31 2E 30 37 4D 00 00 -> Current firmware version
+        /// 30 31 2E 30 36 00 -> Comm version
+        /// 30 31 2E 30 30 00 -> Register map version
+        /// 30 31 2E 30 30 00 -> Log map version
+        /// 30 31 2E 30 30 00 -> Push map version
+        /// 00 -> Glucose algorithm version major
+        /// 00 -> Glucose algorithm version minor
+        /// 01 -> MMA functionality
+        /// 11 00 -> Transmitter mode
+        /// 8C 01 -> Transmitter life remaining
+        /// 2C 01 -> Sensor sample interval
+        /// 01 -> Sensor type
+        /// 0A -> Sensor ID length
+        /// 00 00 00 00 00 00 00 00 00 00 -> Sensor ID (size is based on previous value)
+        /// 00 00 00 00 00 00 00 00 -> Sensor insertion date
+        /// 00 00 -> Sensor life remaining
+        /// 00 00 00 00 00 00 00 00 00 00 -> Detected sensor ID (length is based on Sensor ID length)
+        /// 62 -> Battery percentage
+        /// 30 35 2E 30 30 2E 30 31 2E 30 37 4D 2D 30 36 00 -> Firmware version
+        /// 00 00 00 00 00 00 00 00 -> Operation start datetime
+        /// 30 31 2E 30 30 2E 30 31 2E 30 32 00 00 00 00 00 -> Other firmware version
         func parseResponse(data: Data) -> Eversense365.GetSensorInformationResponse {
             let doubleSensorIdLen = Int(data[Offset.SENSOR_ID_LEN_START] * 2)
 
@@ -44,7 +83,19 @@ extension Eversense365 {
                 transmitterDatetime: Date
                     .fromUnix2000(data: data.subdata(in: Offset.CURRENT_DATETIME_START ..< Offset.CURRENT_DATETIME_END)),
                 mmaFeatures: data[Offset.MMA_FUNCTIONALITY_START],
-                batteryLevel: Int(data[Offset.BATTERY_PERCENTAGE_START + doubleSensorIdLen])
+                batteryLevel: Int(data[Offset.BATTERY_PERCENTAGE_START + doubleSensorIdLen]),
+                version: data
+                    .subdata(
+                        in: Offset.FIRMWARE_VERSION_START + doubleSensorIdLen ..< Offset
+                            .FIRMWARE_VERSION_END + doubleSensorIdLen
+                    )
+                    .toUtf8String(),
+                extVersion: data
+                    .subdata(
+                        in: Offset.OTHER_FIRMWARE_VERSION_START + doubleSensorIdLen ..< Offset
+                            .OTHER_FIRMWARE_VERSION_END + doubleSensorIdLen
+                    )
+                    .toUtf8String()
             )
         }
 

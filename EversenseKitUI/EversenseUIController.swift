@@ -1,5 +1,5 @@
 import LoopKitUI
-import SwiftUICore
+import SwiftUI
 
 enum EversenseUIScreen {
     case onboardingStart

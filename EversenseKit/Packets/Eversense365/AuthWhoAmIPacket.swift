@@ -34,6 +34,11 @@ extension Eversense365 {
             return data
         }
 
+        /// Message parsed:
+        /// 0B 01 -> CmdType & CmdId
+        /// 33 30 36 33 36 36 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 -> Serial number
+        /// 46 F7 77 9A E5 42 66 FF -> Nonce
+        /// 01 00 -> Flags??
         func parseResponse(data: Data) -> AuthWhoAmIResponse {
             let serialNumberData = data.subdata(in: 2 ..< 34)
             let nonce = data.subdata(in: 34 ..< 42)

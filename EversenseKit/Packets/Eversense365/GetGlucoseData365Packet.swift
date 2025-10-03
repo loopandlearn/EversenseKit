@@ -1,0 +1,131 @@
+import LoopKit
+
+extension Eversense365 {
+    class GetGlucoseDataResponse {
+        let trend: GlucoseTrend?
+        let glucoseDatetime: Date
+        let glucoseInMgDl: UInt16
+
+        init(trend: GlucoseTrend?, glucoseDatetime: Date, glucoseInMgDl: UInt16) {
+            self.trend = trend
+            self.glucoseDatetime = glucoseDatetime
+            self.glucoseInMgDl = glucoseInMgDl
+        }
+    }
+
+    class GetGlucoseDataPacket: BasePacket {
+        typealias T = GetGlucoseDataResponse
+
+        var responseType: UInt8 {
+            PacketIds.ReadResponseId.rawValue
+        }
+
+        var responseId: UInt8? {
+            ReadIds.GetGlucoseData.rawValue
+        }
+
+        func getRequestData() -> Data {
+            let data = Data([PacketIds.ReadCommandId.rawValue, ReadIds.GetGlucoseData.rawValue])
+            return CryptoUtil.shared.encrypt(data: data)
+        }
+
+        /// Parsed message:
+        /// 42 1F -> CmdType & CmdId
+        /// F6 95 86 CB C1 00 00 00 -> Current datetime
+        /// 00 -> Sensor type
+        /// 0A -> Sensor ID length
+        /// 00 00 00 00 00 00 00 00 00 00 -> Sensor ID (size is based on previous value)
+        /// 00 18 82 cb c1 00 00 00 -> Most recent glucose datetime
+        /// bc 00 -> Most recent glucose value
+        /// 32 00 -> Signal strength
+        /// 00 00 -> Glucose unavailable reason
+        /// 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 -> Measurement (length 136 bytes)
+        /// 05 00 -> Trend value
+        /// 04 -> Trend direction
+        /// 00 00 00 00 -> Sensor temperature
+        /// 00 00 00 05 -> MSP
+        /// 00 04 00 00 -> MEP spike
+        /// 00 00 00 00 -> MEP low ref
+        /// 00 00 00 00 -> MEP drift
+        /// 00 00 00 00 -> MEP ref channel
+        /// 00 00 00 00 -> MEP value
+        /// 07 -> Battery percentage
+        /// 00 00 00 00 -> Transmitter temperature
+        /// 00 00 00 00 -> AccelerometerXAxis
+        /// 00 00 00 00 -> AccelerometerYAxis
+        /// 00 00 00 00 -> AccelerometerZAxis
+        func parseResponse(data: Data) -> Eversense365.GetGlucoseDataResponse {
+            var sensorIdLength = Int(data[Offset.SENSOR_ID_LENGTH])
+            if sensorIdLength == 0x00 {
+                // Fallback for simulator transmitter...
+                sensorIdLength = 0x0A
+            }
+
+            return GetGlucoseDataResponse(
+                trend: getTrend(value: data[Offset.TREND_DIRECTION + sensorIdLength]),
+                glucoseDatetime: Date
+                    .fromUnix2000(data: data.subdata(in: Offset.GLUCOSE_DATETIME_START ..< Offset.GLUCOSE_DATETIME_END)),
+                glucoseInMgDl: UInt16(data[Offset.GLUCOSE]) | (UInt16(data[Offset.GLUCOSE + 1]) << 8)
+            )
+        }
+
+        func getTrend(value: UInt8) -> GlucoseTrend? {
+            switch value {
+            case 0:
+                return nil // STALE
+            case 1:
+                return .downDown
+            case 2:
+                return .down
+            case 4:
+                return .flat
+            case 8:
+                return .up
+            case 16:
+                return .upUp
+            case 32:
+                return .downDownDown
+            case 64:
+                return .upUpUp
+            default:
+                return nil // STALE
+            }
+        }
+
+        enum Offset {
+            static let CURRENT_DATETIME_START = 2
+            static let CURRENT_DATETIME_END = 10
+
+            static let SENSOR_TYPE = 10
+            static let SENSOR_ID_LENGTH = 11
+
+            static let SENSOR_ID_START = 11
+            static let SENSOR_ID_END = 11
+
+            static let GLUCOSE_DATETIME_START = 12
+            static let GLUCOSE_DATETIME_END = 20
+
+            static let GLUCOSE = 20
+            static let SIGNAL_STRENGTH = 22
+            static let GLUCOSE_UNAVAILABLE = 24
+
+            static let MEASUREMENT_START = 26
+            static let MEASUREMENT_END = 162
+
+            static let TREND_VALUE = 162
+            static let TREND_DIRECTION = 164
+            static let SENSOR_TEMPERATURE = 165
+            static let MSP = 169
+            static let MEP_SPIKE = 173
+            static let MEP_LOW_REF = 177
+            static let MEP_DRIFT = 181
+            static let MEP_REF_CHANNEL = 185
+            static let MEP_VALUE = 189
+            static let BATTERY_PERCENTAGE = 193
+            static let TRANSMITTER_TEMPERATURE = 194
+            static let ACCELEROMETER_X_AXIS = 198
+            static let ACCELEROMETER_Y_AXIS = 202
+            static let ACCELEROMETER_Z_AXIS = 206
+        }
+    }
+}

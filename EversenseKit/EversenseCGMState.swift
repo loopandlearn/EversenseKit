@@ -36,19 +36,14 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         delayBLEDisconnectionAlarm = rawValue["delayBLEDisconnectionAlarm"] as? TimeInterval ?? .seconds(180)
         isDelayBLEDisconnectionAlarmSupported = rawValue["isDelayBLEDisconnectionAlarmSupported"] as? Bool ?? false
         lastCalibration = rawValue["lastCalibration"] as? Date
-        phaseStart = rawValue["phaseStart"] as? Date
-        oneCalibrationPhaseExists = rawValue["oneCalibrationPhaseExists"] as? Bool ?? false
-        isOneCalibrationPhase = rawValue["isOneCalibrationPhase"] as? Bool ?? false
         calibrationCount = rawValue["calibrationCount"] as? UInt16 ?? 0
         isGlucoseHighAlarmEnabled = rawValue["isGlucoseHighAlarmEnabled"] as? Bool ?? false
         lowGlucoseAlarmInMgDl = rawValue["lowGlucoseAlarmInMgDl"] as? UInt16 ?? 0
         highGlucoseAlarmInMgDl = rawValue["highGlucoseAlarmInMgDl"] as? UInt16 ?? 0
-        isPredictionEnabled = rawValue["isPredictionEnabled"] as? Bool ?? false
         isPredictionLowEnabled = rawValue["isPredictionLowEnabled"] as? Bool ?? false
         isPredictionHighEnabled = rawValue["isPredictionHighEnabled"] as? Bool ?? false
         predictionRisingInterval = rawValue["predictionRisingInterval"] as? TimeInterval
         predictionFallingInterval = rawValue["predictionFallingInterval"] as? TimeInterval
-        isRateEnabled = rawValue["isRateEnabled"] as? Bool ?? false
         isFallingRateEnabled = rawValue["isRateEnabled"] as? Bool ?? false
         isRisingRateEnabled = rawValue["isRisingRateEnabled"] as? Bool ?? false
         rateFallingThreshold = rawValue["rateFallingThreshold"] as? Double
@@ -69,6 +64,12 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         clientIdV2 = rawValue["clientIdV2"] as? Data
         certificateV2 = rawValue["certificateV2"] as? String
         fleetKeyPublicKeyV2 = rawValue["fleetKeyPublicKeyV2"] as? Data
+
+        if let rawCalibrationMode = rawValue["calibrationMode"] as? CalibrationMode.RawValue {
+            calibrationMode = CalibrationMode(rawValue: rawCalibrationMode) ?? .Default
+        } else {
+            calibrationMode = .Default
+        }
 
         if let rawCalibrationPhase = rawValue["calibrationPhase"] as? CalibrationPhase.RawValue {
             calibrationPhase = CalibrationPhase(rawValue: rawCalibrationPhase) ?? .UNKNOWN
@@ -115,20 +116,16 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["delayBLEDisconnectionAlarm"] = delayBLEDisconnectionAlarm
         value["isDelayBLEDisconnectionAlarmSupported"] = isDelayBLEDisconnectionAlarmSupported
         value["lastCalibration"] = lastCalibration
-        value["phaseStart"] = phaseStart
-        value["oneCalibrationPhaseExists"] = oneCalibrationPhaseExists
-        value["isOneCalibrationPhase"] = isOneCalibrationPhase
+        value["calibrationMode"] = calibrationMode.rawValue
         value["calibrationCount"] = calibrationCount
         value["calibrationPhase"] = calibrationPhase.rawValue
         value["isGlucoseHighAlarmEnabled"] = isGlucoseHighAlarmEnabled
         value["lowGlucoseAlarmInMgDl"] = lowGlucoseAlarmInMgDl
         value["highGlucoseAlarmInMgDl"] = highGlucoseAlarmInMgDl
-        value["isPredictionEnabled"] = isPredictionEnabled
         value["isPredictionLowEnabled"] = isPredictionLowEnabled
         value["isPredictionHighEnabled"] = isPredictionHighEnabled
         value["predictionRisingInterval"] = predictionRisingInterval
         value["predictionFallingInterval"] = predictionFallingInterval
-        value["isRateEnabled"] = isRateEnabled
         value["isFallingRateEnabled"] = isFallingRateEnabled
         value["isRisingRateEnabled"] = isRisingRateEnabled
         value["rateFallingThreshold"] = rateFallingThreshold
@@ -176,10 +173,8 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var isDelayBLEDisconnectionAlarmSupported: Bool
 
     public var lastCalibration: Date?
-    public var phaseStart: Date?
 
-    public var oneCalibrationPhaseExists: Bool
-    public var isOneCalibrationPhase: Bool
+    public var calibrationMode: CalibrationMode
     public var calibrationPhase: CalibrationPhase
     public var calibrationCount: UInt16
 
@@ -187,13 +182,11 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var lowGlucoseAlarmInMgDl: UInt16
     public var highGlucoseAlarmInMgDl: UInt16
 
-    public var isPredictionEnabled: Bool
     public var isPredictionLowEnabled: Bool
     public var isPredictionHighEnabled: Bool
     public var predictionFallingInterval: TimeInterval?
     public var predictionRisingInterval: TimeInterval?
 
-    public var isRateEnabled: Bool
     public var isFallingRateEnabled: Bool
     public var isRisingRateEnabled: Bool
     public var rateFallingThreshold: Double?

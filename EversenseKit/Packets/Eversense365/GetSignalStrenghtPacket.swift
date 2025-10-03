@@ -25,6 +25,15 @@ extension Eversense365 {
             return CryptoUtil.shared.encrypt(data: data)
         }
 
+        /// Message parsing:
+        /// 42 1B -> CmdType & CmdId
+        /// 01 -> SensorType
+        /// 0A -> Sensor ID length
+        /// 00 00 00 00 00 00 00 00 00 00 -> Sensor ID
+        /// 86 2C 2E 02 00 00 00 00 -> Timestamp
+        /// FF 07 -> Signal Strength
+        /// 00 00 00 3F -> Signal Coupling
+        /// 00 -> Placement
         func parseResponse(data: Data) -> Eversense365.GetSignalStrenghtResponse {
             let sensorIdLength = Int(data[Offset.SENSOR_ID_LEN_START])
             let signalCoupling = UInt32(

@@ -14,7 +14,7 @@ struct TransmitterSettingsView: View {
         VStack {
             List {
                 toggleRow(
-                    label: LocalizedString("Enable vibration", comment: "label vibration mode"),
+                    label: LocalizedString("Enable transmitter alerts", comment: "label vibration mode"),
                     hint: LocalizedString(
                         "Disable this value if you wish to not receive any alerts from your transmitter",
                         comment: "hint vibration mode"

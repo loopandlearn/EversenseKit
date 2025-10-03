@@ -24,6 +24,8 @@ extension Eversense365 {
             return data
         }
 
+        /// Message parsed:
+        /// 0B 02 -> CmdType & CmdId
         func parseResponse(data _: Data) -> AuthIdentityResponse {
             AuthIdentityResponse()
         }
