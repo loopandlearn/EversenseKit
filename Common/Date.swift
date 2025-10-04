@@ -47,7 +47,7 @@ extension Date {
     }
 
     static func fromUnix2000(data: Data) -> Date {
-        Date(timeIntervalSince1970: UNIX_2000 + .milliseconds(Double(data.toInt64() * 1024)))
+        Date(timeIntervalSince1970: UNIX_2000 + .seconds(Double(data.toInt64() / 1024)))
     }
 
     static var defaultDayStartTime: Date {

@@ -1,8 +1,8 @@
 extension EversenseE3 {
-    class SetRateRisingAlertResponse {}
+    class SetRateRisingEnabledResponse {}
 
-    class SetRateRisingAlertPacket: BasePacket {
-        typealias T = SetRateRisingAlertResponse
+    class SetRateRisingEnabledPacket: BasePacket {
+        typealias T = SetRateRisingEnabledResponse
 
         var responseType: UInt8 {
             PacketIds.writeSingleByteSerialFlashRegisterResponseId.rawValue
@@ -21,8 +21,8 @@ extension EversenseE3 {
             CommandOperations.writeSingleByteSerialFlashRegister(memoryAddress: FlashMemory.rateRisingAlert, data: Data([value]))
         }
 
-        func parseResponse(data _: Data) -> SetRateRisingAlertResponse {
-            SetRateRisingAlertResponse()
+        func parseResponse(data _: Data) -> SetRateRisingEnabledResponse {
+            SetRateRisingEnabledResponse()
         }
     }
 }

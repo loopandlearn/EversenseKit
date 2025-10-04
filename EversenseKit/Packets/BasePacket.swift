@@ -134,6 +134,16 @@ enum Eversense365 {
     enum WriteIds: UInt8 {
         case CurrentDateTime = 1
         case AppVersion = 14
+        case VibrateMode = 16
+        case RateFallingEnabled = 20
+        case RateFallingThreshold = 21
+        case RateRisingEnabled = 22
+        case RateRisingThreshold = 23
+        case HighGlucoseAlarmEnable = 28
+        case HighGlucoseAlarm = 29
+        case HighGlucoseAlarmRepeat = 30
+        case LowGlucoseAlarm = 31
+        case LowGlucoseAlarmRepeat = 32
     }
 
     enum AuthTypes: UInt8 {

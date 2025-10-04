@@ -74,31 +74,27 @@ class TransmitterSettingsViewModel: ObservableObject {
                 return
             }
 
-            do {
-                let _: EversenseE3.SetVibrateModeResponse = try await cgmManager.bluetoothManager
-                    .write(EversenseE3.SetVibrateModePacket(enabled: self.vibrationMode))
+            let transmitterSettings = TransmitterSettings(
+                vibrationMode: self.vibrationMode,
+                enableGlucoseHighAlerts: self.enableGlucoseHighAlerts,
+                glucoseHighInMgDl: UInt16(self.glucoseHighInMgDl),
+                glucoseLowInMgDl: UInt16(self.glucoseLowInMgDl),
+                isFallingRateEnabled: self.isFallingRateEnabled,
+                isRisingRateEnabled: self.isRisingRateEnabled,
+                rateFallingThreshold: UInt8(self.rateFallingThreshold),
+                rateRisingThreshold: UInt8(self.rateRisingThreshold)
+            )
 
-                let _: EversenseE3.SetHighGlucoseAlarmEnabledResponse = try await cgmManager.bluetoothManager
-                    .write(EversenseE3.SetHighGlucoseAlarmEnabledPacket(enabled: self.enableGlucoseHighAlerts))
-                let _: EversenseE3.SetHighGlucoseAlarmResponse = try await cgmManager.bluetoothManager
-                    .write(EversenseE3.SetHighGlucoseAlarmPacket(value: UInt16(self.glucoseHighInMgDl)))
-                let _: EversenseE3.SetLowGlucoseAlarmResponse = try await cgmManager.bluetoothManager
-                    .write(EversenseE3.SetLowGlucoseAlarmPacket(value: UInt16(self.glucoseLowInMgDl)))
+            if !cgmManager.state.is365 {
+                await EversenseE3.writeTransmitterSettings(cgmManager: cgmManager, data: transmitterSettings)
+            } else {
+                await Eversense365.writeTransmitterSettings(cgmManager: cgmManager, data: transmitterSettings)
+            }
 
-                let _: EversenseE3.SetRateRisingAlertResponse = try await cgmManager.bluetoothManager
-                    .write(EversenseE3.SetRateRisingAlertPacket(enabled: self.isRisingRateEnabled))
-                let _: EversenseE3.SetRateRisingThresholdResponse = try await cgmManager.bluetoothManager
-                    .write(EversenseE3.SetRateRisingThresholdPacket(value: UInt8(self.rateRisingThreshold)))
-                let _: EversenseE3.SetRateFallingAlertResponse = try await cgmManager.bluetoothManager
-                    .write(EversenseE3.SetRateFallingAlertPacket(enabled: self.isFallingRateEnabled))
-                let _: EversenseE3.SetRateFallingThresholdResponse = try await cgmManager.bluetoothManager
-                    .write(EversenseE3.SetRateFallingThresholdPacket(value: UInt8(self.rateFallingThreshold)))
-
-                await MainActor.run {
-                    self.loading = true
-                    self.error = ""
-                }
-            } catch {}
+            await MainActor.run {
+                self.loading = false
+                self.error = ""
+            }
         }
     }
 }

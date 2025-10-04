@@ -36,6 +36,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         delayBLEDisconnectionAlarm = rawValue["delayBLEDisconnectionAlarm"] as? TimeInterval ?? .seconds(180)
         isDelayBLEDisconnectionAlarmSupported = rawValue["isDelayBLEDisconnectionAlarmSupported"] as? Bool ?? false
         lastCalibration = rawValue["lastCalibration"] as? Date
+        nextCalibration = rawValue["nextCalibration"] as? Date
         calibrationCount = rawValue["calibrationCount"] as? UInt16 ?? 0
         isGlucoseHighAlarmEnabled = rawValue["isGlucoseHighAlarmEnabled"] as? Bool ?? false
         lowGlucoseAlarmInMgDl = rawValue["lowGlucoseAlarmInMgDl"] as? UInt16 ?? 0
@@ -116,6 +117,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["delayBLEDisconnectionAlarm"] = delayBLEDisconnectionAlarm
         value["isDelayBLEDisconnectionAlarmSupported"] = isDelayBLEDisconnectionAlarmSupported
         value["lastCalibration"] = lastCalibration
+        value["nextCalibration"] = nextCalibration
         value["calibrationMode"] = calibrationMode.rawValue
         value["calibrationCount"] = calibrationCount
         value["calibrationPhase"] = calibrationPhase.rawValue
@@ -173,6 +175,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var isDelayBLEDisconnectionAlarmSupported: Bool
 
     public var lastCalibration: Date?
+    public var nextCalibration: Date?
 
     public var calibrationMode: CalibrationMode
     public var calibrationPhase: CalibrationPhase

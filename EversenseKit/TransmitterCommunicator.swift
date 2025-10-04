@@ -28,12 +28,12 @@ extension EversenseE3 {
                 NewGlucoseSample(
                     cgmManager: cgmManager,
                     value: recentGlucoseValue.valueInMgDl,
-                    trend: glucoseData.trend ?? .flat,
+                    trend: glucoseData.trend,
                     dateTime: dateTime
                 )
             ]))
 
-            logger.error("[E3] Glucose data read  - timestamp: \(Date())")
+            logger.info("[E3] Glucose data read  - timestamp: \(Date())")
         } catch {
             logger.error("[E3] Something went wrong during readGlucoseData: \(error)")
         }
@@ -82,18 +82,22 @@ extension EversenseE3 {
                 .write(GetLastCalibrationDatePacket())
             let lastCalibrationTime: GetLastCalibrationTimeResponse = try await peripheralManager
                 .write(GetLastCalibrationTimePacket())
-            cgmManager.state.lastCalibration = Date.fromComponents(
+            let lastCalibrationDatetime = Date.fromComponents(
                 date: lastCalibrationDate.date,
                 time: lastCalibrationTime.time
             )
+            cgmManager.state.lastCalibration = lastCalibrationDatetime
 
             // Get current calibration phase
+            let calibrationMode: CalibrationMode
             do {
                 let isOneCalPhase: GetIsOneCalPhaseResponse = try await peripheralManager
                     .write(GetIsOneCalPhasePacket())
 
-                cgmManager.state.calibrationMode = isOneCalPhase.value ? .DailySingle : .DailyDual
+                calibrationMode = isOneCalPhase.value ? .DailySingle : .DailyDual
+                cgmManager.state.calibrationMode = calibrationMode
             } catch {
+                calibrationMode = .Default
                 cgmManager.state.calibrationMode = .Default
             }
 
@@ -103,6 +107,7 @@ extension EversenseE3 {
                 .write(GetCurrentCalibrationPhasePacket())
             cgmManager.state.calibrationCount = calibrationCount.value
             cgmManager.state.calibrationPhase = calibrationPhase.phase
+            cgmManager.state.nextCalibration = lastCalibrationDatetime.addingTimeInterval(calibrationMode.toPeriod())
 
             // Get BLE disconnect alarm -> possible we get no reply, this feature might not be supported
             do {
@@ -185,6 +190,36 @@ extension EversenseE3 {
         cgmManager.notifyStateDidChange()
     }
 
+    static func writeTransmitterSettings(
+        cgmManager: EversenseCGMManager,
+        data: TransmitterSettings
+    ) async {
+        do {
+            let _: SetVibrateModeResponse = try await cgmManager.bluetoothManager
+                .write(SetVibrateModePacket(enabled: data.vibrationMode))
+
+            let _: SetHighGlucoseAlarmEnabledResponse = try await cgmManager.bluetoothManager
+                .write(SetHighGlucoseAlarmEnabledPacket(enabled: data.enableGlucoseHighAlerts))
+            let _: SetHighGlucoseAlarmResponse = try await cgmManager.bluetoothManager
+                .write(SetHighGlucoseAlarmPacket(value: data.glucoseHighInMgDl))
+            let _: SetLowGlucoseAlarmResponse = try await cgmManager.bluetoothManager
+                .write(SetLowGlucoseAlarmPacket(value: data.glucoseLowInMgDl))
+
+            let _: SetRateRisingEnabledResponse = try await cgmManager.bluetoothManager
+                .write(SetRateRisingEnabledPacket(enabled: data.isRisingRateEnabled))
+            let _: SetRateRisingThresholdResponse = try await cgmManager.bluetoothManager
+                .write(SetRateRisingThresholdPacket(value: data.rateRisingThreshold))
+            let _: SetRateFallingEnabledResponse = try await cgmManager.bluetoothManager
+                .write(SetRateFallingEnabledPacket(enabled: data.isFallingRateEnabled))
+            let _: SetRateFallingThresholdResponse = try await cgmManager.bluetoothManager
+                .write(SetRateFallingThresholdPacket(value: data.rateFallingThreshold))
+
+            logger.info("[E3] Transmitter settings have been written - timestamp: \(Date())")
+        } catch {
+            logger.error("[E3] Something went wrong during setting transmitter settings: \(error)")
+        }
+    }
+
     static func handleError(data: Data) {
         guard data.count >= 4 else {
             logger.error("Invalid error response length - length: \(data.count), data: \(data.hexString())")
@@ -205,6 +240,7 @@ extension EversenseE3 {
 extension Eversense365 {
     static let fakeAppVersion = "8.0.4"
     static let logger = EversenseLogger(category: "TransmitterState365")
+    static var sensorIdLength = 0x00
 
     static func readGlucoseData(
         peripheralManager: PeripheralManager,
@@ -221,12 +257,12 @@ extension Eversense365 {
                 NewGlucoseSample(
                     cgmManager: cgmManager,
                     value: glucoseData.glucoseInMgDl,
-                    trend: glucoseData.trend ?? .flat,
+                    trend: glucoseData.trend,
                     dateTime: glucoseData.glucoseDatetime
                 )
             ]))
 
-            logger.error("[365] Glucose data read  - timestamp: \(Date())")
+            logger.info("[365] Glucose data read  - timestamp: \(Date())")
         } catch {
             logger.error("[365] Something went wrong during readGlucoseData: \(error)")
         }
@@ -253,6 +289,7 @@ extension Eversense365 {
             cgmManager.state.batteryPercentage = sensorInformation.batteryLevel
             cgmManager.state.version = sensorInformation.version
             cgmManager.state.extVersion = sensorInformation.extVersion
+            sensorIdLength = sensorInformation.sensorIdLength
 
             let timeDifference = sensorInformation.transmitterDatetime.timeIntervalSince1970 - Date.nowWithTimezone()
                 .timeIntervalSince1970
@@ -274,6 +311,7 @@ extension Eversense365 {
             cgmManager.state.calibrationMode = calibrationInfo.calibrationMode
             cgmManager.state.calibrationPhase = calibrationInfo.currentPhase
             cgmManager.state.lastCalibration = calibrationInfo.lastCalibration
+            cgmManager.state.nextCalibration = calibrationInfo.nextCalibration
 
             logger.debug("Sending SetAppVersionPacket")
             let _: SetAppVersionResponse = try await peripheralManager.write(SetAppVersionPacket(appVersion: fakeAppVersion))
@@ -301,6 +339,36 @@ extension Eversense365 {
 
         cgmManager.state.isSyncing = false
         cgmManager.notifyStateDidChange()
+    }
+
+    static func writeTransmitterSettings(
+        cgmManager: EversenseCGMManager,
+        data: TransmitterSettings
+    ) async {
+        do {
+            let _: SetVibrateModeResponse = try await cgmManager.bluetoothManager
+                .write(SetVibrateModePacket(enabled: data.vibrationMode))
+
+            let _: SetHighGlucoseAlarmEnabledResponse = try await cgmManager.bluetoothManager
+                .write(SetHighGlucoseAlarmEnabledPacket(enabled: data.enableGlucoseHighAlerts))
+            let _: SetHighGlucoseAlarmResponse = try await cgmManager.bluetoothManager
+                .write(SetHighGlucoseAlarmPacket(value: data.glucoseHighInMgDl))
+            let _: SetLowGlucoseAlarmResponse = try await cgmManager.bluetoothManager
+                .write(SetLowGlucoseAlarmPacket(value: data.glucoseLowInMgDl))
+
+            let _: SetRateRisingEnabledResponse = try await cgmManager.bluetoothManager
+                .write(SetRateRisingEnabledPacket(enabled: data.isRisingRateEnabled))
+            let _: SetRateRisingThresholdResponse = try await cgmManager.bluetoothManager
+                .write(SetRateRisingThresholdPacket(value: data.rateRisingThreshold))
+            let _: SetRateFallingEnabledResponse = try await cgmManager.bluetoothManager
+                .write(SetRateFallingEnabledPacket(enabled: data.isFallingRateEnabled))
+            let _: SetRateFallingThresholdResponse = try await cgmManager.bluetoothManager
+                .write(SetRateFallingThresholdPacket(value: data.rateFallingThreshold))
+
+            logger.info("[365] Transmitter settings have been written - timestamp: \(Date())")
+        } catch {
+            logger.error("[365] Something went wrong setting transmitter settings: \(error)")
+        }
     }
 
     static func handleError(data: Data) {

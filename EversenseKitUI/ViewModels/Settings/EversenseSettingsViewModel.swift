@@ -63,14 +63,12 @@ extension EversenseSettingsViewModel: StateObserver {
             lastMeasurementDatetime = dateFormatter.string(from: value)
         }
 
-        if let value = state.lastCalibration {
-            lastCalibrationDatetime = dateFormatter.string(from: value)
-
+        if let lastCalibration = state.lastCalibration, let nextCalibration = state.nextCalibration {
             let calibrationPeriod = state.calibrationMode.toPeriod()
-            let nextCalibration = value.addingTimeInterval(calibrationPeriod)
-            let calibrationAge = value.timeIntervalSinceNow * -1
+            let calibrationAge = lastCalibration.timeIntervalSinceNow * -1
             let nextCalibrationIn = calibrationPeriod - calibrationAge
 
+            lastCalibrationDatetime = dateFormatter.string(from: lastCalibration)
             nextCalibrationDatetime = dateFormatter.string(from: nextCalibration)
             nextCalibrationProcess = min(calibrationAge / calibrationPeriod, 1)
             nextCalibrationHours = max(floor(nextCalibrationIn / .hours(1)), 0)

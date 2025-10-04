@@ -2,9 +2,9 @@ import LoopKit
 
 extension EversenseE3 {
     class GetGlucoseDataResponse {
-        let trend: GlucoseTrend?
+        let trend: GlucoseTrend
 
-        init(trend: GlucoseTrend?) {
+        init(trend: GlucoseTrend) {
             self.trend = trend
         }
     }
@@ -35,10 +35,10 @@ extension EversenseE3 {
             )
         }
 
-        func getTrend(value: UInt8) -> GlucoseTrend? {
+        func getTrend(value: UInt8) -> GlucoseTrend {
             switch value {
             case 0:
-                return nil // STALE
+                return .flat // STALE
             case 1:
                 return .downDown
             case 2:
@@ -50,7 +50,7 @@ extension EversenseE3 {
             case 5:
                 return .upUp
             default:
-                return nil // STALE
+                return .flat // STALE
             }
         }
     }

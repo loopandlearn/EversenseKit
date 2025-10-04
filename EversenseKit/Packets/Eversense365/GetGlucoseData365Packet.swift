@@ -2,11 +2,11 @@ import LoopKit
 
 extension Eversense365 {
     class GetGlucoseDataResponse {
-        let trend: GlucoseTrend?
+        let trend: GlucoseTrend
         let glucoseDatetime: Date
         let glucoseInMgDl: UInt16
 
-        init(trend: GlucoseTrend?, glucoseDatetime: Date, glucoseInMgDl: UInt16) {
+        init(trend: GlucoseTrend, glucoseDatetime: Date, glucoseInMgDl: UInt16) {
             self.trend = trend
             self.glucoseDatetime = glucoseDatetime
             self.glucoseInMgDl = glucoseInMgDl
@@ -38,7 +38,7 @@ extension Eversense365 {
         /// 00 18 82 cb c1 00 00 00 -> Most recent glucose datetime
         /// bc 00 -> Most recent glucose value
         /// 32 00 -> Signal strength
-        /// 00 00 -> Glucose unavailable reason
+        /// 00 00 -> Glucose unavailable reason (undocumented enum)
         /// 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 -> Measurement (length 136 bytes)
         /// 05 00 -> Trend value
         /// 04 -> Trend direction
@@ -57,22 +57,28 @@ extension Eversense365 {
         func parseResponse(data: Data) -> Eversense365.GetGlucoseDataResponse {
             var sensorIdLength = Int(data[Offset.SENSOR_ID_LENGTH])
             if sensorIdLength == 0x00 {
-                // Fallback for simulator transmitter...
-                sensorIdLength = 0x0A
+                // value fetched during GetSensorInformation
+                sensorIdLength = Eversense365.sensorIdLength
             }
 
             return GetGlucoseDataResponse(
                 trend: getTrend(value: data[Offset.TREND_DIRECTION + sensorIdLength]),
-                glucoseDatetime: Date
-                    .fromUnix2000(data: data.subdata(in: Offset.GLUCOSE_DATETIME_START ..< Offset.GLUCOSE_DATETIME_END)),
-                glucoseInMgDl: UInt16(data[Offset.GLUCOSE]) | (UInt16(data[Offset.GLUCOSE + 1]) << 8)
+                glucoseDatetime: Date.fromUnix2000(
+                    data: data
+                        .subdata(
+                            in: (Offset.GLUCOSE_DATETIME_START + sensorIdLength) ..<
+                                (Offset.GLUCOSE_DATETIME_END + sensorIdLength)
+                        )
+                ),
+                glucoseInMgDl: UInt16(data[Offset.GLUCOSE + sensorIdLength]) |
+                    (UInt16(data[Offset.GLUCOSE + sensorIdLength + 1]) << 8)
             )
         }
 
-        func getTrend(value: UInt8) -> GlucoseTrend? {
+        func getTrend(value: UInt8) -> GlucoseTrend {
             switch value {
             case 0:
-                return nil // STALE
+                return .flat // STALE
             case 1:
                 return .downDown
             case 2:
@@ -88,7 +94,7 @@ extension Eversense365 {
             case 64:
                 return .upUpUp
             default:
-                return nil // STALE
+                return .flat // STALE
             }
         }
 
@@ -98,9 +104,7 @@ extension Eversense365 {
 
             static let SENSOR_TYPE = 10
             static let SENSOR_ID_LENGTH = 11
-
-            static let SENSOR_ID_START = 11
-            static let SENSOR_ID_END = 11
+            static let SENSOR_ID = 11
 
             static let GLUCOSE_DATETIME_START = 12
             static let GLUCOSE_DATETIME_END = 20

@@ -7,6 +7,7 @@ extension Eversense365 {
         let batteryLevel: Int
         let version: String
         let extVersion: String
+        let sensorIdLength: Int
 
         init(
             serialNumber: String,
@@ -15,7 +16,8 @@ extension Eversense365 {
             mmaFeatures: UInt8,
             batteryLevel: Int,
             version: String,
-            extVersion: String
+            extVersion: String,
+            sensorIdLength: Int
         ) {
             self.serialNumber = serialNumber
             self.transmitterName = transmitterName
@@ -24,6 +26,7 @@ extension Eversense365 {
             self.batteryLevel = batteryLevel
             self.version = version
             self.extVersion = extVersion
+            self.sensorIdLength = sensorIdLength
         }
     }
 
@@ -95,7 +98,8 @@ extension Eversense365 {
                         in: Offset.OTHER_FIRMWARE_VERSION_START + doubleSensorIdLen ..< Offset
                             .OTHER_FIRMWARE_VERSION_END + doubleSensorIdLen
                     )
-                    .toUtf8String()
+                    .toUtf8String(),
+                sensorIdLength: Int(data[Offset.SENSOR_ID_LEN_START])
             )
         }
 
