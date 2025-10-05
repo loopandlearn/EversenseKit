@@ -256,7 +256,12 @@ extension PeripheralManager: CBPeripheralDelegate {
         }
 
         // From here we assume it is a normal packet
-        guard let packet = self.packet, packet.checkPacket(data: data, doChecksum: isE3) else {
+        guard let packet = self.packet else {
+            logger.error("No active packet - data: \(data.hexString())")
+            return
+        }
+        
+        if !packet.checkPacket(data: data, doChecksum: isE3) {
             logger.warning("Received invalid response, invalid response code or checksum failed - data: \(data.hexString())")
             return
         }

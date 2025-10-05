@@ -5,7 +5,7 @@ extension EversenseE3 {
         typealias T = SetLowGlucoseAlarmResponse
 
         var responseType: UInt8 {
-            PacketIds.readTwoByteSerialFlashRegisterResponseId.rawValue
+            PacketIds.writeTwoByteSerialFlashRegisterResponseId.rawValue
         }
 
         var responseId: UInt8? {
