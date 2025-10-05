@@ -106,8 +106,10 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                     cgmManager.notifyStateDidChange()
 
                     if let cgmManagerOnboardingDelegate = self.cgmManagerOnboardingDelegate {
-                        cgmManagerOnboardingDelegate.cgmManagerOnboarding(didOnboardCGMManager: cgmManager)
-                        cgmManagerOnboardingDelegate.cgmManagerOnboarding(didCreateCGMManager: cgmManager)
+                        DispatchQueue.main.async {
+                            cgmManagerOnboardingDelegate.cgmManagerOnboarding(didOnboardCGMManager: cgmManager)
+                            cgmManagerOnboardingDelegate.cgmManagerOnboarding(didCreateCGMManager: cgmManager)
+                        }
                     } else {
                         self.logger.warning("Not onboarded -> no onboardDelegate...")
                     }

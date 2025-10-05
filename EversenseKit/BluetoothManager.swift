@@ -31,16 +31,22 @@ class BluetoothManager: NSObject {
                 await completionAsync(result)
             }
         }
+        
+        guard let cgmManager = cgmManager else {
+            completion(.preconditionFailed(reason: "No cgm manager..."))
+            return
+        }
 
         if let _ = peripheral, let _ = peripheralManager {
+            cgmManager.state.connectionStatus = .connected
+            cgmManager.notifyStateDidChange()
+            
             completion(nil)
             return
         }
 
-        if let cgmManager = self.cgmManager {
-            cgmManager.state.connectionStatus = .connecting
-            cgmManager.notifyStateDidChange()
-        }
+        cgmManager.state.connectionStatus = .connecting
+        cgmManager.notifyStateDidChange()
 
         if let peripheral = peripheral {
             connect(peripheral: peripheral) { error in
@@ -54,7 +60,7 @@ class BluetoothManager: NSObject {
             return
         }
 
-        guard let bleUUIDString = cgmManager?.state.bleUUIDString else {
+        guard let bleUUIDString = cgmManager.state.bleUUIDString else {
             completion(.preconditionFailed(reason: "No ble uuid available"))
             return
         }
@@ -187,7 +193,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
     }
 
     func centralManager(_: CBCentralManager, didDisconnectPeripheral _: CBPeripheral, error: Error?) {
-//        peripheralManager = nil
+        peripheralManager = nil
 
         if let cgmManager = cgmManager {
             cgmManager.state.connectionStatus = .idle
