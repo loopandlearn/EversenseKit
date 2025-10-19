@@ -7,6 +7,7 @@ struct EversenseSettingsView: View {
     @EnvironmentObject private var displayGlucosePreference: DisplayGlucosePreference
 
     @ObservedObject var viewModel: EversenseSettingsViewModel
+    @State private var isSharePresented: Bool = false
 
     var removeCgmManagerActionSheet: ActionSheet {
         ActionSheet(
@@ -121,6 +122,12 @@ struct EversenseSettingsView: View {
             }
 
             Section {
+                Button(LocalizedString("Share Eversense logs", comment: "share logs")) {
+                    self.isSharePresented = true
+                }
+                .sheet(isPresented: $isSharePresented, onDismiss: {}, content: {
+                    ActivityViewController(activityItems: viewModel.getLogs())
+                })
                 Button(action: viewModel.readGlucose) {
                     Text(LocalizedString("Force sync", comment: "TEMP"))
                 }

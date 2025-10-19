@@ -23,6 +23,8 @@ class EversenseSettingsViewModel: ObservableObject {
         formatter.timeStyle = .medium
         return formatter
     }()
+    
+    private let logger = EversenseLogger(category: "SettingsViewModel")
 
     private let cgmManager: EversenseCGMManager?
     public let deleteCgm: () -> Void
@@ -38,6 +40,13 @@ class EversenseSettingsViewModel: ObservableObject {
 
         cgmManager.addStateObserver(state: self, queue: .main)
         stateDidUpdate(cgmManager.state)
+    }
+    
+    func getLogs() -> [URL] {
+        if let cgmManager = self.cgmManager {
+            logger.info(cgmManager.state.debugDescription)
+        }
+        return logger.getDebugLogs()
     }
 
     public func readGlucose() {
