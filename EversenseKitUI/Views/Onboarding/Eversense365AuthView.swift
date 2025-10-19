@@ -34,14 +34,14 @@ struct Eversense365Auth: View {
             }
 
             Button(action: viewModel.openRegistrationUrl) {
-                Text(LocalizedString("Create account", comment: "Create account"))
+                Text(LocalizedString("Create account", comment: "label to create account"))
             }
             .buttonStyle(ActionButtonStyle(.secondary))
             .disabled(viewModel.isLoading)
             .padding(.horizontal)
 
             Button(action: viewModel.login) {
-                Text(LocalizedString("Login", comment: "Continue"))
+                Text(LocalizedString("Login", comment: "label for Login"))
             }
             .disabled(viewModel.username.isEmpty || viewModel.password.isEmpty || viewModel.isLoading)
             .buttonStyle(ActionButtonStyle())

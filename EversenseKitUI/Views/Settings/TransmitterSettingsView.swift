@@ -37,7 +37,7 @@ struct TransmitterSettingsView: View {
                     )
 
                     valueRow(
-                        labelValue: LocalizedString("Glucose low", comment: "label glucose high"),
+                        labelValue: LocalizedString("Glucose low", comment: "label glucose low"),
                         hint: LocalizedString(
                             "Configure when to receive an alert for low glucose",
                             comment: "hint glucose low"

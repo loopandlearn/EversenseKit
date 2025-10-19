@@ -81,7 +81,7 @@ struct EversenseSettingsView: View {
 
             Section(header: SectionHeader(label: LocalizedString(
                 "Calibrations",
-                comment: "last reading"
+                comment: "calibration section"
             ))) {
                 SectionItem(
                     title: LocalizedString("Last calibration time", comment: "last calibration"),
@@ -95,7 +95,7 @@ struct EversenseSettingsView: View {
 
             Section(header: SectionHeader(label: LocalizedString(
                 "Transmitter information",
-                comment: "last reading"
+                comment: "transmitter section"
             ))) {
                 SectionItem(
                     title: LocalizedString("Current phase", comment: "current phase"),
@@ -129,7 +129,7 @@ struct EversenseSettingsView: View {
                     ActivityViewController(activityItems: viewModel.getLogs())
                 })
                 Button(action: viewModel.readGlucose) {
-                    Text(LocalizedString("Force sync", comment: "TEMP"))
+                    Text(LocalizedString("Force sync", comment: "force transmitter sync"))
                 }
                 Button(action: {
                     viewModel.showingDeleteConfirmation = true
