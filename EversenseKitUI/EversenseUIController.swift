@@ -121,12 +121,15 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
 
         case .settings:
             let deleteCgm = {
-                guard let cgmManager = self.cgmManager, let cgmManagerDelegate = cgmManager.cgmManagerDelegate else {
+                guard let cgmManager = self.cgmManager else {
                     return
                 }
 
-                cgmManagerDelegate.cgmManagerWantsDeletion(cgmManager)
-                self.completionDelegate?.completionNotifyingDidComplete(self)
+                cgmManager.notifyDelegateOfDeletion {
+                    DispatchQueue.main.async {
+                        self.completionDelegate?.completionNotifyingDidComplete(self)
+                    }
+                }
             }
             let toTransmitterSettings = {
                 self.navigateTo(.transmitterSettings)
