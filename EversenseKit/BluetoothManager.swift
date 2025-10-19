@@ -31,7 +31,7 @@ class BluetoothManager: NSObject {
                 await completionAsync(result)
             }
         }
-        
+
         guard let cgmManager = cgmManager else {
             completion(.preconditionFailed(reason: "No cgm manager..."))
             return
@@ -40,7 +40,7 @@ class BluetoothManager: NSObject {
         if let _ = peripheral, let _ = peripheralManager {
             cgmManager.state.connectionStatus = .connected
             cgmManager.notifyStateDidChange()
-            
+
             completion(nil)
             return
         }

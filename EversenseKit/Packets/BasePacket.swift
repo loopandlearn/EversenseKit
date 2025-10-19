@@ -164,10 +164,10 @@ protocol BasePacket<T> {
 }
 
 extension BasePacket {
-    fileprivate var logger : EversenseLogger {
+    private var logger: EversenseLogger {
         EversenseLogger(category: "BasePacket")
     }
-    
+
     var start: Int {
         if responseId != nil {
             return 2
@@ -190,7 +190,7 @@ extension BasePacket {
             logger.error("Response is too short - data: \(data.hexString())")
             return false
         }
-        
+
         // Check packetType
         guard data[0] == responseType else {
             logger.error("Invalid responseType, expected: \(responseType), got: \(data[0])")
@@ -216,7 +216,7 @@ extension BasePacket {
             logger.error("Checksum failed, expected: \(calculatedChecksum.hexString()), got: \(recievedChecksum.hexString())")
             return false
         }
-        
+
         return true
     }
 }

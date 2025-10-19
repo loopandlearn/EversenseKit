@@ -23,13 +23,13 @@ extension EversenseE3 {
 
             cgmManager.state.recentGlucoseInMgDl = recentGlucoseValue.valueInMgDl
             cgmManager.state.recentGlucoseDateTime = dateTime
-            
+
             delegate.notify { cgmManagerDelegate in
                 guard let cgmManagerDelegate = cgmManagerDelegate else {
                     logger.warning("No cgmManagerDelegate...")
                     return
                 }
-                
+
                 cgmManagerDelegate.cgmManager(cgmManager, hasNew: .newData([
                     NewGlucoseSample(
                         cgmManager: cgmManager,
@@ -258,13 +258,13 @@ extension Eversense365 {
             let glucoseData: GetGlucoseDataResponse = try await peripheralManager.write(GetGlucoseDataPacket())
             cgmManager.state.recentGlucoseInMgDl = glucoseData.glucoseInMgDl
             cgmManager.state.recentGlucoseDateTime = glucoseData.glucoseDatetime
-            
+
             delegate.notify { cgmManagerDelegate in
                 guard let cgmManagerDelegate = cgmManagerDelegate else {
                     logger.warning("No cgmManagerDelegate...")
                     return
                 }
-                
+
                 cgmManagerDelegate.cgmManager(cgmManager, hasNew: .newData([
                     NewGlucoseSample(
                         cgmManager: cgmManager,
