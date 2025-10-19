@@ -7,7 +7,7 @@ extension EversenseE3 {
     static func readGlucoseData(
         peripheralManager: PeripheralManager,
         cgmManager: EversenseCGMManager,
-        cgmManagerDelegate: CGMManagerDelegate
+        delegate: WeakSynchronizedDelegate<CGMManagerDelegate>
     ) async {
         do {
             let glucoseData: GetGlucoseDataResponse = try await peripheralManager.write(GetGlucoseDataPacket())
@@ -23,15 +23,22 @@ extension EversenseE3 {
 
             cgmManager.state.recentGlucoseInMgDl = recentGlucoseValue.valueInMgDl
             cgmManager.state.recentGlucoseDateTime = dateTime
-
-            cgmManagerDelegate.cgmManager(cgmManager, hasNew: .newData([
-                NewGlucoseSample(
-                    cgmManager: cgmManager,
-                    value: recentGlucoseValue.valueInMgDl,
-                    trend: glucoseData.trend,
-                    dateTime: dateTime
-                )
-            ]))
+            
+            delegate.notify { cgmManagerDelegate in
+                guard let cgmManagerDelegate = cgmManagerDelegate else {
+                    logger.warning("No cgmManagerDelegate...")
+                    return
+                }
+                
+                cgmManagerDelegate.cgmManager(cgmManager, hasNew: .newData([
+                    NewGlucoseSample(
+                        cgmManager: cgmManager,
+                        value: recentGlucoseValue.valueInMgDl,
+                        trend: glucoseData.trend,
+                        dateTime: dateTime
+                    )
+                ]))
+            }
 
             logger.info("[E3] Glucose data read  - timestamp: \(Date())")
         } catch {
@@ -245,22 +252,28 @@ extension Eversense365 {
     static func readGlucoseData(
         peripheralManager: PeripheralManager,
         cgmManager: EversenseCGMManager,
-        cgmManagerDelegate: CGMManagerDelegate
+        delegate: WeakSynchronizedDelegate<CGMManagerDelegate>
     ) async {
         do {
-            // TODO: Check glucose datetime
             let glucoseData: GetGlucoseDataResponse = try await peripheralManager.write(GetGlucoseDataPacket())
             cgmManager.state.recentGlucoseInMgDl = glucoseData.glucoseInMgDl
             cgmManager.state.recentGlucoseDateTime = glucoseData.glucoseDatetime
-
-            cgmManagerDelegate.cgmManager(cgmManager, hasNew: .newData([
-                NewGlucoseSample(
-                    cgmManager: cgmManager,
-                    value: glucoseData.glucoseInMgDl,
-                    trend: glucoseData.trend,
-                    dateTime: glucoseData.glucoseDatetime
-                )
-            ]))
+            
+            delegate.notify { cgmManagerDelegate in
+                guard let cgmManagerDelegate = cgmManagerDelegate else {
+                    logger.warning("No cgmManagerDelegate...")
+                    return
+                }
+                
+                cgmManagerDelegate.cgmManager(cgmManager, hasNew: .newData([
+                    NewGlucoseSample(
+                        cgmManager: cgmManager,
+                        value: glucoseData.glucoseInMgDl,
+                        trend: glucoseData.trend,
+                        dateTime: glucoseData.glucoseDatetime
+                    )
+                ]))
+            }
 
             logger.info("[365] Glucose data read  - timestamp: \(Date())")
         } catch {

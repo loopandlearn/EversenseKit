@@ -2,8 +2,8 @@ import LoopKit
 import SwiftUI
 
 class Eversense365AuthViewModel: ObservableObject {
-    @Published var username: String = "bastiankpn7800@gmail.com"
-    @Published var password: String = "pirfi9-sibkam-vIqnic"
+    @Published var username: String = ""
+    @Published var password: String = ""
     @Published var error: String = ""
     @Published var isLoading: Bool = false
 

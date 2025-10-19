@@ -32,11 +32,19 @@ extension EversenseCGMManager: CGMManagerUI {
     }
 
     public static var onboardingImage: UIImage? {
-        nil
+        UIImage(
+            named: "transmitter",
+            in: Bundle(for: EversenseUIController.self),
+            compatibleWith: nil
+        )!
     }
 
     public var smallImage: UIImage? {
-        nil
+        UIImage(
+            named: "transmitter",
+            in: Bundle(for: EversenseUIController.self),
+            compatibleWith: nil
+        )
     }
 
     public var cgmStatusHighlight: (any LoopKit.DeviceStatusHighlight)? {

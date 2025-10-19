@@ -17,8 +17,8 @@ class TransmitterSettingsViewModel: ObservableObject {
     @Published var rateRisingThreshold: Double = 0
 
     public let rateAllowedOptions: [Double] = (0 ..< 8).map { 1.5 + Double($0) * 0.5 }
-    public let glucoseHighAllowedOptions: [Double] = (180 ... 400).map { Double($0) }
-    public let glucoseLowAllowedOptions: [Double] = (40 ... 70).map { Double($0) }
+    public let glucoseHighAllowedOptions: [Double] = (0 ... 110).map { Double($0 * 2 + 180) }
+    public let glucoseLowAllowedOptions: [Double] = (0 ... 15).map { Double($0 * 2 + 40) }
 
     private let cgmManager: EversenseCGMManager?
     private let unit: HKUnit

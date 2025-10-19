@@ -164,6 +164,10 @@ protocol BasePacket<T> {
 }
 
 extension BasePacket {
+    fileprivate var logger : EversenseLogger {
+        EversenseLogger(category: "BasePacket")
+    }
+    
     var start: Int {
         if responseId != nil {
             return 2
@@ -181,20 +185,23 @@ extension BasePacket {
     }
 
     func checkPacket(data: Data, doChecksum: Bool) -> Bool {
+        // Minlength of a packet is 2
+        guard data.count >= 2 else {
+            logger.error("Response is too short - data: \(data.hexString())")
+            return false
+        }
+        
         // Check packetType
         guard data[0] == responseType else {
+            logger.error("Invalid responseType, expected: \(responseType), got: \(data[0])")
             return false
         }
 
         if let responseId = responseId {
             guard data[1] == responseId else {
+                logger.error("Invalid responseId, expected: \(responseId), got: \(data[1])")
                 return false
             }
-        }
-
-        // Minlength of a packet is 2
-        guard data.count >= 2 else {
-            return false
         }
 
         if !doChecksum {
@@ -203,7 +210,13 @@ extension BasePacket {
 
         let packet = Data(data.dropLast(2))
         let calculatedChecksum = BinaryOperations.dataFrom16Bits(value: BinaryOperations.generateChecksumCRC16(data: packet))
+        let recievedChecksum = Data(data.subdata(in: data.count - 2 ..< data.count))
 
-        return calculatedChecksum == Data(data.subdata(in: data.count - 2 ..< data.count))
+        if calculatedChecksum != recievedChecksum {
+            logger.error("Checksum failed, expected: \(calculatedChecksum.hexString()), got: \(recievedChecksum.hexString())")
+            return false
+        }
+        
+        return true
     }
 }
