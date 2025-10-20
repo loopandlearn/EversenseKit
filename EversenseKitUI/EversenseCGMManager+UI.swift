@@ -36,12 +36,12 @@ extension EversenseCGMManager: CGMManagerUI {
             named: "transmitter",
             in: Bundle(for: EversenseUIController.self),
             compatibleWith: nil
-        )!
+        )
     }
 
     public var smallImage: UIImage? {
         UIImage(
-            named: "transmitter",
+            named: state.is365 ? "transmitter365" : "transmitter",
             in: Bundle(for: EversenseUIController.self),
             compatibleWith: nil
         )

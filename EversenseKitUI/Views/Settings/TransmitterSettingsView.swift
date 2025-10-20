@@ -102,10 +102,11 @@ struct TransmitterSettingsView: View {
                 Toggle(isOn: value) {
                     Text(label)
                 }
-                Text(hint)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
             }
+        } footer: {
+            Text(hint)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -125,10 +126,10 @@ struct TransmitterSettingsView: View {
                 }
                 HStack {
                     Text(labelValue)
-                        .foregroundStyle(pickerRisingRate ? .blue : .primary)
+                        .foregroundStyle(statePicker.wrappedValue ? .blue : .primary)
                     Spacer()
                     Text(viewModel.toRateFormatted(valueValue.wrappedValue))
-                        .foregroundStyle(pickerRisingRate ? .blue : .secondary)
+                        .foregroundStyle(statePicker.wrappedValue ? .blue : .secondary)
                 }
                 .onTapGesture {
                     statePicker.wrappedValue.toggle()
@@ -141,11 +142,11 @@ struct TransmitterSettingsView: View {
                         formatter: { viewModel.toRateFormatted($0) }
                     )
                 }
-
-                Text(hint)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
             }
+        } footer: {
+            Text(hint)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -165,9 +166,10 @@ struct TransmitterSettingsView: View {
                 }
                 HStack {
                     Text(labelValue)
+                        .foregroundStyle(statePicker.wrappedValue ? .blue : .primary)
                     Spacer()
                     Text(displayGlucosePreference.format(viewModel.toHkQuantity(valueValue.wrappedValue)))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(statePicker.wrappedValue ? .blue : .secondary)
                 }
                 .onTapGesture {
                     statePicker.wrappedValue.toggle()
@@ -180,11 +182,11 @@ struct TransmitterSettingsView: View {
                         formatter: { displayGlucosePreference.format(viewModel.toHkQuantity($0)) }
                     )
                 }
-
-                Text(hint)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
             }
+        } footer: {
+            Text(hint)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -199,9 +201,10 @@ struct TransmitterSettingsView: View {
             VStack(alignment: .leading, spacing: 20) {
                 HStack {
                     Text(labelValue)
+                        .foregroundStyle(statePicker.wrappedValue ? .blue : .primary)
                     Spacer()
                     Text(displayGlucosePreference.format(viewModel.toHkQuantity(valueValue.wrappedValue)))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(statePicker.wrappedValue ? .blue : .secondary)
                 }
                 .onTapGesture {
                     statePicker.wrappedValue.toggle()
@@ -214,11 +217,11 @@ struct TransmitterSettingsView: View {
                         formatter: { displayGlucosePreference.format(viewModel.toHkQuantity($0)) }
                     )
                 }
-
-                Text(hint)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
             }
+        } footer: {
+            Text(hint)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
         }
     }
 }

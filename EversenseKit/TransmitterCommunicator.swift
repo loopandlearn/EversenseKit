@@ -197,6 +197,19 @@ extension EversenseE3 {
         cgmManager.notifyStateDidChange()
     }
 
+    static func updateSignalStrength(cgmManager: EversenseCGMManager) async {
+        do {
+            let rawSignalStrength: GetSignalStrengthRawResponse = try await cgmManager.bluetoothManager
+                .write(GetSignalStrengthRawPacket())
+            cgmManager.state.signalStrength = rawSignalStrength.value
+            cgmManager.state.signalStrengthRaw = rawSignalStrength.rawValue
+
+            cgmManager.notifyStateDidChange()
+        } catch {
+            logger.error("Failed to update signal strength - error: \(error)")
+        }
+    }
+
     static func writeTransmitterSettings(
         cgmManager: EversenseCGMManager,
         data: TransmitterSettings
@@ -381,6 +394,18 @@ extension Eversense365 {
             logger.info("[365] Transmitter settings have been written - timestamp: \(Date())")
         } catch {
             logger.error("[365] Something went wrong setting transmitter settings: \(error)")
+        }
+    }
+
+    static func updateSignalStrength(cgmManager: EversenseCGMManager) async {
+        do {
+            let signalStrength: GetSignalStrenghtResponse = try await cgmManager.bluetoothManager.write(GetSignalStrenghtPacket())
+            cgmManager.state.signalStrengthRaw = signalStrength.rawValue
+            cgmManager.state.signalStrength = signalStrength.signalStrength
+
+            cgmManager.notifyStateDidChange()
+        } catch {
+            logger.error("Failed to update signal strength - error: \(error)")
         }
     }
 

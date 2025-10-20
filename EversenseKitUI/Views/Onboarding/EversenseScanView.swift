@@ -17,6 +17,11 @@ struct Eversense365ScanView: View {
             }
             .padding(.horizontal)
 
+            if !viewModel.error.isEmpty {
+                Text(viewModel.error)
+                    .foregroundStyle(.red)
+            }
+
             Divider()
             content
         }

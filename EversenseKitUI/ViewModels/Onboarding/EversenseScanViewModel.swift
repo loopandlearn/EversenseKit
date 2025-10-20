@@ -27,12 +27,21 @@ class EversenseScanViewModel: ObservableObject {
 
     func start() {
         guard let cgmManager = cgmManager else {
+            error = "No cgmManager"
             logger.error("No cgmManager...")
             return
         }
 
-        cgmManager.bluetoothManager.scan { item in
-            guard !self.results.contains(where: { $0.bleIdentifier == item.peripheral.identifier.uuidString }) else {
+        cgmManager.bluetoothManager.scan { item, error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.error = error.describe
+                }
+                return
+            }
+            guard let item = item,
+                  !self.results.contains(where: { $0.bleIdentifier == item.peripheral.identifier.uuidString })
+            else {
                 return
             }
 
@@ -58,6 +67,7 @@ class EversenseScanViewModel: ObservableObject {
         guard let scanItem = actualResults.first(where: { $0.peripheral.identifier.uuidString == item.bleIdentifier }),
               let cgmManager = self.cgmManager
         else {
+            error = "No cgmManager"
             return
         }
 

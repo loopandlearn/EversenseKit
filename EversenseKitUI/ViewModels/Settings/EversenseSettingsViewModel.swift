@@ -15,6 +15,7 @@ class EversenseSettingsViewModel: ObservableObject {
     @Published var batteryLevel: String = "0%"
     @Published var signalStrength: String = ""
     @Published var connectionStatus: String = ""
+    @Published var is365: Bool = false
 
     @Published var showingDeleteConfirmation: Bool = false
 
@@ -29,10 +30,17 @@ class EversenseSettingsViewModel: ObservableObject {
     private let cgmManager: EversenseCGMManager?
     public let deleteCgm: () -> Void
     public let toTransmitterSettings: () -> Void
-    init(cgmManager: EversenseCGMManager?, deleteCgm: @escaping () -> Void, toTransmitterSettings: @escaping () -> Void) {
+    public let toPlacementGuide: () -> Void
+    init(
+        cgmManager: EversenseCGMManager?,
+        deleteCgm: @escaping () -> Void,
+        toTransmitterSettings: @escaping () -> Void,
+        toPlacementGuide: @escaping () -> Void
+    ) {
         self.cgmManager = cgmManager
         self.deleteCgm = deleteCgm
         self.toTransmitterSettings = toTransmitterSettings
+        self.toPlacementGuide = toPlacementGuide
 
         guard let cgmManager = cgmManager else {
             return
@@ -57,6 +65,7 @@ class EversenseSettingsViewModel: ObservableObject {
 extension EversenseSettingsViewModel: StateObserver {
     func stateDidUpdate(_ state: EversenseCGMState) {
         transmitterModel = state.modelStr ?? "UNKNOWN"
+        is365 = state.is365
         transmitterName = state.bleNameString
         connectionStatus = state.connectionStatus.title
         currentPhase = state.calibrationPhase.getTitle(calibrationMode: state.calibrationMode)

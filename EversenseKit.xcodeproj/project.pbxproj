@@ -79,13 +79,6 @@
 			);
 			target = 3E02C8A92DC8DEA600108B7A /* EversenseKit */;
 		};
-		3E6696F32E927F0400AAE4F1 /* Exceptions for "EversenseKitPlugin" folder in "EversenseKitPlugin" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 3E6696E52E927EB900AAE4F1 /* EversenseKitPlugin */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -109,9 +102,6 @@
 		};
 		3E6696E72E927EB900AAE4F1 /* EversenseKitPlugin */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				3E6696F32E927F0400AAE4F1 /* Exceptions for "EversenseKitPlugin" folder in "EversenseKitPlugin" target */,
-			);
 			path = EversenseKitPlugin;
 			sourceTree = "<group>";
 		};

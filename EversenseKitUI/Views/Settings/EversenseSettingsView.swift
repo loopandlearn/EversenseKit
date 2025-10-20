@@ -34,7 +34,7 @@ struct EversenseSettingsView: View {
                     HStack {
                         Spacer()
                         Image(uiImage: UIImage(
-                            named: "transmitter",
+                            named: viewModel.is365 ? "transmitter365" : "transmitter",
                             in: Bundle(for: EversenseUIController.self),
                             compatibleWith: nil
                         )!)
@@ -119,6 +119,19 @@ struct EversenseSettingsView: View {
                     }
                 }
                 .buttonStyle(PlainButtonStyle())
+
+                if #available(iOS 16.0, *) {
+                    Button(action: viewModel.toPlacementGuide) {
+                        HStack {
+                            Text(LocalizedString("Placement Guide", comment: "Title for placement guide"))
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: UIFont.systemFontSize, weight: .medium))
+                                .opacity(0.35)
+                        }
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
             }
 
             Section {

@@ -9,7 +9,7 @@ class BluetoothManager: NSObject {
     internal var peripheral: CBPeripheral?
     internal var peripheralManager: PeripheralManager?
 
-    private var scanCompletion: ((ScanItem) -> Void)?
+    private var scanCompletion: ((ScanItem?, ScanError?) -> Void)?
     private var connectCompletion: ((ConnectFailure?) -> Void)?
 
     override init() {
@@ -65,8 +65,8 @@ class BluetoothManager: NSObject {
             return
         }
 
-        scan { result in
-            guard result.peripheral.identifier.uuidString == bleUUIDString else {
+        scan { result, error in
+            guard error == nil, let result = result, result.peripheral.identifier.uuidString == bleUUIDString else {
                 return
             }
 
@@ -90,9 +90,10 @@ class BluetoothManager: NSObject {
         return try await peripheralManager.write(packet)
     }
 
-    func scan(completion: @escaping (ScanItem) -> Void) {
+    func scan(completion: @escaping (ScanItem?, ScanError?) -> Void) {
         guard let manager = manager else {
             logger.error("No CBCentralManager available...")
+            completion(nil, .noCbCentralManager)
             return
         }
 
@@ -109,6 +110,7 @@ class BluetoothManager: NSObject {
     private func connect(peripheral: CBPeripheral, completion: @escaping (ConnectFailure?) -> Void) {
         logger.debug("Connecting to: \(peripheral.name ?? "Unknown")")
         guard let manager = manager else {
+            completion(.unknown(reason: "No CBCentralManager available"))
             logger.error("No CBCentralManager available...")
             return
         }
@@ -163,7 +165,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
         }
 
         logger.info("Device found! \(name), \(advertisementData)")
-        scanCompletion(.init(name: name, rssi: rssi.intValue, peripheral: peripheral))
+        scanCompletion(ScanItem(name: name, rssi: rssi.intValue, peripheral: peripheral), nil)
     }
 
     func centralManager(_: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -174,6 +176,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
 
         guard let cgmManager = self.cgmManager else {
             logger.error("No cgmManager available")
+            connectCompletion(.unknown(reason: "No cgmManager available"))
             return
         }
 

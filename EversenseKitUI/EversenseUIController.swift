@@ -8,6 +8,7 @@ enum EversenseUIScreen {
 
     case settings
     case transmitterSettings
+    case placementGuide
 }
 
 class EversenseUIController: UINavigationController, CGMManagerOnboarding, CompletionNotifying, UINavigationControllerDelegate {
@@ -134,16 +135,27 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
             let toTransmitterSettings = {
                 self.navigateTo(.transmitterSettings)
             }
+            let toPlacementGuide = {
+                self.navigateTo(.placementGuide)
+            }
 
             let viewModel = EversenseSettingsViewModel(
                 cgmManager: cgmManager,
                 deleteCgm: deleteCgm,
-                toTransmitterSettings: toTransmitterSettings
+                toTransmitterSettings: toTransmitterSettings,
+                toPlacementGuide: toPlacementGuide
             )
             return hostingController(rootView: EversenseSettingsView(viewModel: viewModel))
         case .transmitterSettings:
             let viewModel = TransmitterSettingsViewModel(cgmManager: cgmManager, unit: displayGlucosePreference.unit)
             return hostingController(rootView: TransmitterSettingsView(viewModel: viewModel))
+        case .placementGuide:
+            if #available(iOS 16.0, *) {
+                let viewModel = PlacementGuideViewModel(cgmManager: cgmManager)
+                return hostingController(rootView: PlacementGuideView(viewModel: viewModel))
+            } else {
+                return hostingController(rootView: PlacementGuideEmpty())
+            }
         }
     }
 
