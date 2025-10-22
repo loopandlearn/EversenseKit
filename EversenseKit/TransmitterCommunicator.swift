@@ -7,7 +7,8 @@ extension EversenseE3 {
     static func readGlucoseData(
         peripheralManager: PeripheralManager,
         cgmManager: EversenseCGMManager,
-        delegate: WeakSynchronizedDelegate<CGMManagerDelegate>
+        delegate: WeakSynchronizedDelegate<CGMManagerDelegate>,
+        lastGlucoseTimestamp: Date
     ) async {
         do {
             let glucoseData: GetGlucoseDataResponse = try await peripheralManager.write(GetGlucoseDataPacket())
@@ -20,6 +21,16 @@ extension EversenseE3 {
                 date: recentGlucoseDate.date,
                 time: recentGlucoseTime.time
             )
+            
+            guard recentGlucoseValue.valueInMgDl < 0x03E8 else { // 1000 mg/dl
+                logger.error("Received invalid Glucose data - value: \(recentGlucoseValue.valueInMgDl) mg/dl, timestamp sample: \(dateTime)")
+                return
+            }
+            
+            guard dateTime > lastGlucoseTimestamp else {
+                logger.warning("Received old glucose data - value: \(recentGlucoseValue.valueInMgDl) mg/dl, timestamp sample: \(dateTime)")
+                return
+            }
 
             cgmManager.state.recentGlucoseInMgDl = recentGlucoseValue.valueInMgDl
             cgmManager.state.recentGlucoseDateTime = dateTime
@@ -265,10 +276,23 @@ extension Eversense365 {
     static func readGlucoseData(
         peripheralManager: PeripheralManager,
         cgmManager: EversenseCGMManager,
-        delegate: WeakSynchronizedDelegate<CGMManagerDelegate>
+        delegate: WeakSynchronizedDelegate<CGMManagerDelegate>,
+        lastGlucoseTimestamp: Date
     ) async {
         do {
+            logger.debug("sending GetGlucoseDataResponse...")
+            
             let glucoseData: GetGlucoseDataResponse = try await peripheralManager.write(GetGlucoseDataPacket())
+            guard glucoseData.glucoseInMgDl < 0x03E8 else { // 1000 mg/dl
+                logger.error("Received invalid Glucose data - value: \(glucoseData.glucoseInMgDl) mg/dl, timestamp sample: \(glucoseData.glucoseDatetime)")
+                return
+            }
+            
+            guard glucoseData.glucoseDatetime > lastGlucoseTimestamp else {
+                logger.warning("Received old glucose data - value: \(glucoseData.glucoseInMgDl) mg/dl, timestamp sample: \(glucoseData.glucoseDatetime)")
+                return
+            }
+            
             cgmManager.state.recentGlucoseInMgDl = glucoseData.glucoseInMgDl
             cgmManager.state.recentGlucoseDateTime = glucoseData.glucoseDatetime
 
@@ -372,22 +396,35 @@ extension Eversense365 {
         data: TransmitterSettings
     ) async {
         do {
+            logger.debug("sending SetVibrateModePacket...")
             let _: SetVibrateModeResponse = try await cgmManager.bluetoothManager
                 .write(SetVibrateModePacket(enabled: data.vibrationMode))
 
+            logger.debug("sending SetHighGlucoseAlarmEnabledPacket...")
             let _: SetHighGlucoseAlarmEnabledResponse = try await cgmManager.bluetoothManager
                 .write(SetHighGlucoseAlarmEnabledPacket(enabled: data.enableGlucoseHighAlerts))
+            
+            logger.debug("sending SetHighGlucoseAlarmPacket...")
             let _: SetHighGlucoseAlarmResponse = try await cgmManager.bluetoothManager
                 .write(SetHighGlucoseAlarmPacket(value: data.glucoseHighInMgDl))
+            
+            logger.debug("sending SetLowGlucoseAlarmPacket...")
             let _: SetLowGlucoseAlarmResponse = try await cgmManager.bluetoothManager
                 .write(SetLowGlucoseAlarmPacket(value: data.glucoseLowInMgDl))
 
+            logger.debug("sending SetRateRisingEnabledPacket...")
             let _: SetRateRisingEnabledResponse = try await cgmManager.bluetoothManager
                 .write(SetRateRisingEnabledPacket(enabled: data.isRisingRateEnabled))
+            
+            logger.debug("sending SetRateRisingThresholdPacket...")
             let _: SetRateRisingThresholdResponse = try await cgmManager.bluetoothManager
                 .write(SetRateRisingThresholdPacket(value: data.rateRisingThreshold))
+            
+            logger.debug("sending SetRateFallingEnabledPacket...")
             let _: SetRateFallingEnabledResponse = try await cgmManager.bluetoothManager
                 .write(SetRateFallingEnabledPacket(enabled: data.isFallingRateEnabled))
+            
+            logger.debug("sending SetRateFallingThresholdPacket...")
             let _: SetRateFallingThresholdResponse = try await cgmManager.bluetoothManager
                 .write(SetRateFallingThresholdPacket(value: data.rateFallingThreshold))
 
@@ -399,6 +436,7 @@ extension Eversense365 {
 
     static func updateSignalStrength(cgmManager: EversenseCGMManager) async {
         do {
+            logger.debug("sending GetSignalStrenghtResponse...")
             let signalStrength: GetSignalStrenghtResponse = try await cgmManager.bluetoothManager.write(GetSignalStrenghtPacket())
             cgmManager.state.signalStrengthRaw = signalStrength.rawValue
             cgmManager.state.signalStrength = signalStrength.signalStrength

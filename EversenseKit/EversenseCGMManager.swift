@@ -138,6 +138,8 @@ extension EversenseCGMManager {
             logger.error("No peripheralManager")
             return
         }
+        
+        let lastGlucoseTimestamp = self.cgmManagerDelegate?.startDateToFilterNewData(for: self) ?? Date.distantPast
 
         bluetoothManager.ensureConnected { error in
             if let internalError = error {
@@ -149,14 +151,16 @@ extension EversenseCGMManager {
                 await EversenseE3.readGlucoseData(
                     peripheralManager: peripheralManager,
                     cgmManager: self,
-                    delegate: self.delegate
+                    delegate: self.delegate,
+                    lastGlucoseTimestamp: lastGlucoseTimestamp
                 )
                 await EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
             } else {
                 await Eversense365.readGlucoseData(
                     peripheralManager: peripheralManager,
                     cgmManager: self,
-                    delegate: self.delegate
+                    delegate: self.delegate,
+                    lastGlucoseTimestamp: lastGlucoseTimestamp
                 )
                 await Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
             }

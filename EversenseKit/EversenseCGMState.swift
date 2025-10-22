@@ -233,7 +233,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
 
     public var debugDescription: String {
         [
-            "TODO"
+            "Current timezone: \(TimeZone.current.identifier)"
         ].joined(separator: "\n")
     }
 }
