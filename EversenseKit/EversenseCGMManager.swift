@@ -138,8 +138,8 @@ extension EversenseCGMManager {
             logger.error("No peripheralManager")
             return
         }
-        
-        let lastGlucoseTimestamp = self.cgmManagerDelegate?.startDateToFilterNewData(for: self) ?? Date.distantPast
+
+        let lastGlucoseTimestamp = cgmManagerDelegate?.startDateToFilterNewData(for: self) ?? Date.distantPast
 
         bluetoothManager.ensureConnected { error in
             if let internalError = error {
