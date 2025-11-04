@@ -18,6 +18,7 @@ class PeripheralManager: NSObject {
     private var requestCharacteristic: CBCharacteristic?
     private var responseCharacteristic: CBCharacteristic?
 
+    private var buffer = Data([])
     private var packet: (any BasePacket)?
     private var writeTimeoutTask: Task<Void, Never>?
     private var writeQueue: (AsyncThrowingStream<AnyObject, Error>.Continuation)?
@@ -37,7 +38,7 @@ class PeripheralManager: NSObject {
         self.peripheral.delegate = self
     }
 
-    func write<T>(_ packet: any BasePacket) async throws -> T {
+    func write<T>(_ packet: any BasePacket, timeout: TimeInterval = .seconds(5)) async throws -> T {
         guard writeQueue == nil, let characteristic = requestCharacteristic else {
             throw NSError(domain: "Command already running", code: 0)
         }
@@ -61,7 +62,7 @@ class PeripheralManager: NSObject {
             }
         }
 
-        startTimeoutTimer(packet: packet)
+        startTimeoutTimer(packet: packet, timeout)
         return try await firstValue(from: stream)
     }
 
@@ -76,10 +77,10 @@ class PeripheralManager: NSObject {
         throw NSError(domain: "Got no response", code: 0)
     }
 
-    private func startTimeoutTimer(packet _: any BasePacket) {
+    private func startTimeoutTimer(packet _: any BasePacket, _ timeout: TimeInterval) {
         writeTimeoutTask = Task {
             do {
-                try await Task.sleep(nanoseconds: UInt64(.seconds(5)) * 1_000_000_000)
+                try await Task.sleep(nanoseconds: UInt64(timeout) * 1_000_000_000)
                 guard let stream = self.writeQueue else {
                     // We did what we must, so exist and be happy :)
                     return
@@ -210,29 +211,39 @@ extension PeripheralManager: CBPeripheralDelegate {
         logger.debug("Received data: \(data.hexString())")
         let isE3 = cgmManager.state.security == .none
 
-        if !isE3 {
-            data = data.subdata(in: 3 ..< data.count)
+        buffer.append(data.subdata(in: (buffer.isEmpty ? 3 : 2) ..< data.count))
+        var actualData = Data(buffer)
 
-            if data[0] != Eversense365.PacketIds.AuthenticateV2ResponseId.rawValue {
+        if !isE3 {
+            if data[0] != data[1] {
+                // Data is chuncked, lets store this and wait
+                return
+            }
+
+            if buffer[0] != Eversense365.PacketIds.AuthenticateV2ResponseId.rawValue {
                 // Only decrypt if packet is not for Authentication
-                data = CryptoUtil.shared.decrypt(data: data)
-                guard !data.isEmpty else {
+                actualData = CryptoUtil.shared.decrypt(data: actualData)
+                guard !actualData.isEmpty else {
                     logger.error("Failed to decrypt payload")
+                    buffer = Data()
                     return
                 }
 
-                logger.debug("Decrypted payload: \(data.hexString())")
+                logger.debug("Decrypted payload: \(actualData.hexString())")
             }
         }
+        buffer = Data()
 
-        if data[0] == EversenseE3.PacketIds.keepAlivePush.rawValue || data[0] == Eversense365.PacketIds.NotificationId.rawValue {
+        if actualData[0] == EversenseE3.PacketIds.keepAlivePush.rawValue || actualData[0] == Eversense365.PacketIds.NotificationId
+            .rawValue
+        {
             logger.debug("Got keep alive message")
             cgmManager.heartbeathOperation()
             return
         }
 
-        if data[0] == EversenseE3.PacketIds.errorResponseId.rawValue {
-            EversenseE3.handleError(data: data)
+        if actualData[0] == EversenseE3.PacketIds.errorResponseId.rawValue {
+            EversenseE3.handleError(data: actualData)
 
             guard let stream = writeQueue else {
                 logger.warning("No pending writeQueue")
@@ -243,8 +254,8 @@ extension PeripheralManager: CBPeripheralDelegate {
             return
         }
 
-        if data[0] == Eversense365.PacketIds.ErrorResponseId.rawValue {
-            Eversense365.handleError(data: data)
+        if actualData[0] == Eversense365.PacketIds.ErrorResponseId.rawValue {
+            Eversense365.handleError(data: actualData)
 
             guard let stream = writeQueue else {
                 logger.warning("No pending writeQueue")
@@ -257,23 +268,24 @@ extension PeripheralManager: CBPeripheralDelegate {
 
         // From here we assume it is a normal packet
         guard let packet = self.packet else {
-            logger.error("No active packet - data: \(data.hexString())")
+            logger.error("No active packet - data: \(actualData.hexString())")
             return
         }
 
-        if !packet.checkPacket(data: data, doChecksum: isE3) {
-            logger.warning("Received invalid response, invalid response code or checksum failed - data: \(data.hexString())")
+        if !packet.checkPacket(data: actualData, doChecksum: isE3) {
+            logger
+                .warning("Received invalid response, invalid response code or checksum failed - data: \(actualData.hexString())")
             return
         }
 
         if isE3 {
-            data = data.subdata(in: 1 ..< data.count - 2)
+            actualData = actualData.subdata(in: 1 ..< actualData.count - 2)
         }
 
-        let response = packet.parseResponse(data: data) as AnyObject
+        let response = packet.parseResponse(data: actualData) as AnyObject
 
         guard let stream = writeQueue else {
-            logger.warning("No pending writeQueue - data: \(data.hexString())")
+            logger.warning("No pending writeQueue - data: \(actualData.hexString())")
             return
         }
 
@@ -323,7 +335,7 @@ extension PeripheralManager {
         }
 
         do {
-            if cgmManager.state.certificateV2 == nil || cgmManager.state.fleetKeyPublicKeyV2 == nil {
+            if cgmManager.state.certificateV2 == nil {
                 guard
                     let username = cgmManager.state.username,
                     let password = cgmManager.state.password,

@@ -1,0 +1,117 @@
+import LoopKit
+
+extension Eversense365 {
+    struct GlucoseHistoryItem {
+        let valueInMgDl: UInt16
+        let datetime: Date
+        let trend: GlucoseTrend
+    }
+
+    class GetLogValueResponse {
+        let type: UInt8
+        let count: Int
+        let glucoseHistory: [GlucoseHistoryItem]
+
+        init(type: UInt8, count: Int, glucoseHistory: [GlucoseHistoryItem]) {
+            self.type = type
+            self.count = count
+            self.glucoseHistory = glucoseHistory
+        }
+    }
+
+    class GetLogValuePacket: BasePacket {
+        typealias T = GetLogValueResponse
+
+        var responseType: UInt8 {
+            PacketIds.ReadLogsId.rawValue
+        }
+
+        var responseId: UInt8? {
+            ReadIds.GetLogValue.rawValue
+        }
+
+        let from: UInt32
+        let to: UInt32
+        init(from: UInt32, to: UInt32) {
+            self.from = from
+            self.to = to
+        }
+
+        func getRequestData() -> Data {
+            var data = Data([PacketIds.ReadCommandId.rawValue, ReadIds.GetLogValue.rawValue, LogTypes.Glucose.rawValue])
+            data.append(BinaryOperations.dataFrom32Bits(value: from))
+            data.append(BinaryOperations.dataFrom32Bits(value: to))
+            return CryptoUtil.shared.encrypt(data: data)
+        }
+
+        func parseResponse(data: Data) -> Eversense365.GetLogValueResponse {
+            logger.info("Glucose data: \(data.hexString())")
+
+            let type = data[6]
+            let actualData = Data(data.subdata(in: 7 ..< data.count))
+            let length: UInt32 = 193
+
+            logger.info("Actual data: \(actualData.hexString())")
+
+            // Offset glucose value = sensorId + datetime + recordLength
+            let offsetGlucose = Eversense365.sensorIdLength + 8 + 4
+
+            // Offset trendDirection = offset Glucose + trend value
+            let trendDirection = offsetGlucose + 4
+
+            var history: [GlucoseHistoryItem] = []
+            var i: UInt32 = 0
+            while i + length < actualData.count {
+                let end = i + length
+                let chunk = Data(actualData.subdata(in: Int(i) ..< Int(end)))
+
+                logger.debug("Chunk: \(chunk.hexString())")
+
+                let datetime = Date.fromUnix2000(data: chunk.subdata(in: 4 ..< 12))
+                let glucose = UInt16(chunk[offsetGlucose]) + (UInt16(chunk[offsetGlucose + 1]) << 8)
+                let trend = getTrend(value: chunk[trendDirection])
+
+                history.append(GlucoseHistoryItem(
+                    valueInMgDl: glucose,
+                    datetime: datetime,
+                    trend: trend
+                ))
+
+                logger
+                    .debug(
+                        "Datetime: \(datetime), Glucose: \(glucose) mg/dl, trend: \(trend.symbol) [\(trend.rawValue), \(chunk[trendDirection])]"
+                    )
+                i = end
+            }
+
+            return GetLogValueResponse(
+                type: type,
+                count: history.count,
+                glucoseHistory: history
+            )
+        }
+
+        private func getTrend(value: UInt8) -> GlucoseTrend {
+            switch value {
+            case 0:
+                return .flat // STALE
+            case 1:
+                return .downDown
+            case 2:
+                return .down
+            case 4:
+                return .flat
+            case 8:
+                return .up
+            case 16:
+                return .upUp
+            case 32:
+                return .downDownDown
+            case 64:
+                return .upUpUp
+            default:
+                return .flat // STALE
+            }
+        }
+    }
+}

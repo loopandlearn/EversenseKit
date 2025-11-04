@@ -139,7 +139,12 @@ extension EversenseCGMManager {
             return
         }
 
-        let lastGlucoseTimestamp = cgmManagerDelegate?.startDateToFilterNewData(for: self) ?? Date.distantPast
+        var lastGlucoseTimestamp = cgmManagerDelegate?.startDateToFilterNewData(for: self) ?? Date.now
+            .addingTimeInterval(.hours(-4))
+
+        if lastGlucoseTimestamp > Date.now.addingTimeInterval(.hours(-4)) {
+            lastGlucoseTimestamp = Date.now.addingTimeInterval(.hours(-4))
+        }
 
         bluetoothManager.ensureConnected { error in
             if let internalError = error {

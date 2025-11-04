@@ -7,9 +7,12 @@ class EversenseSettingsViewModel: ObservableObject {
     @Published var currentPhase: String = ""
     @Published var lastMeasurement = HKQuantity(unit: .milligramsPerDeciliter, doubleValue: 0)
     @Published var lastMeasurementDatetime: String = ""
-    @Published var lastCalibrationDatetime: String = ""
-    @Published var nextCalibrationDatetime: String = ""
+    @Published var lastCalibrationTime: String = ""
+    @Published var lastCalibrationDate: String = ""
+    @Published var nextCalibrationTime: String = ""
+    @Published var nextCalibrationDate: String = ""
     @Published var nextCalibrationProcess: Double = 0
+    @Published var nextCalibrationDays: Double = 0
     @Published var nextCalibrationHours: Double = 0
     @Published var nextCalibrationMinutes: Double = 0
     @Published var batteryLevel: String = "0%"
@@ -19,9 +22,15 @@ class EversenseSettingsViewModel: ObservableObject {
 
     @Published var showingDeleteConfirmation: Bool = false
 
-    private let dateFormatter = {
+    private let timeFormatter = {
         let formatter = DateFormatter()
         formatter.timeStyle = .medium
+        return formatter
+    }()
+
+    private let dateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
         return formatter
     }()
 
@@ -78,7 +87,7 @@ extension EversenseSettingsViewModel: StateObserver {
         }
 
         if let value = state.recentGlucoseDateTime {
-            lastMeasurementDatetime = dateFormatter.string(from: value)
+            lastMeasurementDatetime = timeFormatter.string(from: value)
         }
 
         if let lastCalibration = state.lastCalibration, let nextCalibration = state.nextCalibration {
@@ -86,10 +95,14 @@ extension EversenseSettingsViewModel: StateObserver {
             let calibrationAge = lastCalibration.timeIntervalSinceNow * -1
             let nextCalibrationIn = calibrationPeriod - calibrationAge
 
-            lastCalibrationDatetime = dateFormatter.string(from: lastCalibration)
-            nextCalibrationDatetime = dateFormatter.string(from: nextCalibration)
+            lastCalibrationDate = dateFormatter.string(from: lastCalibration)
+            lastCalibrationTime = timeFormatter.string(from: lastCalibration)
+            nextCalibrationDate = dateFormatter.string(from: nextCalibration)
+            nextCalibrationTime = timeFormatter.string(from: nextCalibration)
             nextCalibrationProcess = min(calibrationAge / calibrationPeriod, 1)
-            nextCalibrationHours = max(floor(nextCalibrationIn / .hours(1)), 0)
+
+            nextCalibrationDays = max(floor(nextCalibrationIn / .days(1)), 0)
+            nextCalibrationHours = max(nextCalibrationIn.truncatingRemainder(dividingBy: .days(1)) / .hours(1), 0)
             nextCalibrationMinutes = max(nextCalibrationIn.truncatingRemainder(dividingBy: .hours(1)) / .minutes(1), 0)
         }
     }

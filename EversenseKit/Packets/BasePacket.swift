@@ -113,6 +113,7 @@ enum Eversense365 {
 
         case ReadCommandId = 2
         case ReadResponseId = 66
+        case ReadLogsId = 98
 
         case WriteCommandId = 3
         case WriteResponseId = 67
@@ -124,11 +125,14 @@ enum Eversense365 {
 
     enum ReadIds: UInt8 {
         case Ping = 1
+        case GetLogRangeOld = 9
         case GetSignalStrength = 27
         case GetCalibrationInfo = 29
         case GetGlucoseData = 31
         case GetSensorInformation = 32
         case GetPatientInformation = 33
+        case GetLogRange = 56
+        case GetLogValue = 58
     }
 
     enum WriteIds: UInt8 {
@@ -150,6 +154,10 @@ enum Eversense365 {
         case AuthenticateV2WhoAmI = 1
         case AuthenticateV2Identity = 2
         case AuthenticateV2Start = 3
+    }
+
+    enum LogTypes: UInt8 {
+        case Glucose = 13
     }
 }
 

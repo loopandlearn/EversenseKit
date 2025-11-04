@@ -83,14 +83,28 @@ struct EversenseSettingsView: View {
                 "Calibrations",
                 comment: "calibration section"
             ))) {
-                SectionItem(
-                    title: LocalizedString("Last calibration time", comment: "last calibration"),
-                    value: viewModel.lastCalibrationDatetime
-                )
-                SectionItem(
-                    title: LocalizedString("Next calibration time", comment: "next calibration"),
-                    value: viewModel.nextCalibrationDatetime
-                )
+                HStack {
+                    Text(LocalizedString("Last calibration time", comment: "last calibration"))
+                    Spacer()
+                    VStack(alignment: .trailing) {
+                        Text(viewModel.lastCalibrationDate)
+                            .foregroundColor(.secondary)
+
+                        Text(viewModel.lastCalibrationTime)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                HStack {
+                    Text(LocalizedString("Next calibration time", comment: "last calibration"))
+                    Spacer()
+                    VStack(alignment: .trailing) {
+                        Text(viewModel.nextCalibrationDate)
+                            .foregroundColor(.secondary)
+
+                        Text(viewModel.nextCalibrationTime)
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
 
             Section(header: SectionHeader(label: LocalizedString(
@@ -184,13 +198,25 @@ struct EversenseSettingsView: View {
 
     @ViewBuilder private var calibarationTimer: some View {
         HStack(alignment: .bottom) {
-            Group {
-                Text("\(viewModel.nextCalibrationHours, specifier: "%.0f")")
-                    .font(.system(size: 28))
-                    .fontWeight(.heavy)
-                    .foregroundColor(.primary)
-                Text(LocalizedString("h", comment: "hour"))
-                    .foregroundColor(.secondary)
+            if viewModel.nextCalibrationDays > 0 {
+                Group {
+                    Text("\(viewModel.nextCalibrationDays, specifier: "%.0f")")
+                        .font(.system(size: 28))
+                        .fontWeight(.heavy)
+                        .foregroundColor(.primary)
+                    Text(LocalizedString("h", comment: "hour"))
+                        .foregroundColor(.secondary)
+                }
+            }
+            if viewModel.nextCalibrationHours > 0 {
+                Group {
+                    Text("\(viewModel.nextCalibrationHours, specifier: "%.0f")")
+                        .font(.system(size: 28))
+                        .fontWeight(.heavy)
+                        .foregroundColor(.primary)
+                    Text(LocalizedString("h", comment: "hour"))
+                        .foregroundColor(.secondary)
+                }
             }
             Group {
                 Text("\(viewModel.nextCalibrationMinutes, specifier: "%.0f")")

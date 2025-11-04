@@ -286,27 +286,46 @@ extension Eversense365 {
         lastGlucoseTimestamp: Date
     ) async {
         do {
-            logger.debug("sending GetGlucoseDataResponse...")
+            logger.debug("sending GetGlucoseLogRangePacket...")
 
-            let glucoseData: GetGlucoseDataResponse = try await peripheralManager.write(GetGlucoseDataPacket())
-            guard glucoseData.glucoseInMgDl < 0x03E8 else { // 1000 mg/dl
-                logger
-                    .error(
-                        "Received invalid Glucose data - value: \(glucoseData.glucoseInMgDl) mg/dl, timestamp sample: \(glucoseData.glucoseDatetime)"
-                    )
+            let glucoseRange: GetGlucoseLogRangeResponse = try await peripheralManager
+                .write(GetGlucoseLogRangePacket(communicationVersion: cgmManager.state.communicationProtocol))
+            logger.info("Got Blood glucose range from: \(glucoseRange.rangeFrom) - \(glucoseRange.rangeTo)")
+
+            guard glucoseRange.rangeFrom > 0 else {
+                logger.warning("No glucose data available...")
                 return
             }
 
-            guard glucoseData.glucoseDatetime > lastGlucoseTimestamp else {
-                logger
-                    .warning(
-                        "Received old glucose data - value: \(glucoseData.glucoseInMgDl) mg/dl, timestamp sample: \(glucoseData.glucoseDatetime)"
-                    )
+            let timeDiff = (Date.now.timeIntervalSince(lastGlucoseTimestamp) / TimeInterval.minutes(5)).rounded(.up)
+
+            // Maximum page fetch = 20
+            let pageCount = min(UInt32(timeDiff + 2), 20)
+            var from = glucoseRange.rangeTo - pageCount
+            if from < 0 || from < glucoseRange.rangeFrom {
+                from = glucoseRange.rangeFrom
+            }
+
+            logger
+                .info(
+                    "GetLogValuePacket -  from: \(from), to: \(glucoseRange.rangeTo), lastGlucoseTimestamp: \(lastGlucoseTimestamp)"
+                )
+            let history: GetLogValueResponse = try await peripheralManager
+                .write(GetLogValuePacket(from: from, to: glucoseRange.rangeTo), timeout: .seconds(15))
+
+            guard !history.glucoseHistory.isEmpty, let recentGlucose = history.glucoseHistory.last else {
+                logger.warning("History is empty")
                 return
             }
 
-            cgmManager.state.recentGlucoseInMgDl = glucoseData.glucoseInMgDl
-            cgmManager.state.recentGlucoseDateTime = glucoseData.glucoseDatetime
+            cgmManager.state.recentGlucoseInMgDl = recentGlucose.valueInMgDl
+            cgmManager.state.recentGlucoseDateTime = recentGlucose.datetime
+
+            let relevantHistory = history.glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }
+            guard !relevantHistory.isEmpty else {
+                logger.info("No new glucose data")
+                return
+            }
 
             delegate.notify { cgmManagerDelegate in
                 guard let cgmManagerDelegate = cgmManagerDelegate else {
@@ -314,17 +333,18 @@ extension Eversense365 {
                     return
                 }
 
-                cgmManagerDelegate.cgmManager(cgmManager, hasNew: .newData([
+                let glucoseSample = relevantHistory.map {
                     NewGlucoseSample(
                         cgmManager: cgmManager,
-                        value: glucoseData.glucoseInMgDl,
-                        trend: glucoseData.trend,
-                        dateTime: glucoseData.glucoseDatetime
+                        value: $0.valueInMgDl,
+                        trend: $0.trend,
+                        dateTime: $0.datetime
                     )
-                ]))
+                }
+                cgmManagerDelegate.cgmManager(cgmManager, hasNew: .newData(glucoseSample))
             }
 
-            logger.info("[365] Glucose data read  - timestamp: \(Date())")
+            logger.info("[365] Glucose data read  - timestamp: \(Date()), count: \(history.count)")
         } catch {
             logger.error("[365] Something went wrong during readGlucoseData: \(error)")
         }
@@ -351,6 +371,7 @@ extension Eversense365 {
             cgmManager.state.batteryPercentage = sensorInformation.batteryLevel
             cgmManager.state.version = sensorInformation.version
             cgmManager.state.extVersion = sensorInformation.extVersion
+            cgmManager.state.communicationProtocol = sensorInformation.communicationProtocolVersion
             sensorIdLength = sensorInformation.sensorIdLength
 
             let timeDifference = sensorInformation.transmitterDatetime.timeIntervalSince1970 - Date.nowWithTimezone()

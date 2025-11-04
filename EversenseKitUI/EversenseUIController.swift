@@ -115,6 +115,8 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                         self.logger.warning("Not onboarded -> no onboardDelegate...")
                     }
                 }
+                
+                self.navigateTo(.settings)
             }
 
             let viewModel = EversenseScanViewModel(cgmManager, completion)
