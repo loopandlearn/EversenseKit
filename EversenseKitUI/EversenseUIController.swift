@@ -110,13 +110,14 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                         DispatchQueue.main.async {
                             cgmManagerOnboardingDelegate.cgmManagerOnboarding(didOnboardCGMManager: cgmManager)
                             cgmManagerOnboardingDelegate.cgmManagerOnboarding(didCreateCGMManager: cgmManager)
+                            self.completionDelegate?.completionNotifyingDidComplete(self)
                         }
                     } else {
                         self.logger.warning("Not onboarded -> no onboardDelegate...")
                     }
                 }
                 
-                self.navigateTo(.settings)
+//                self.navigateTo(.settings)
             }
 
             let viewModel = EversenseScanViewModel(cgmManager, completion)

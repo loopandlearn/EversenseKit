@@ -139,35 +139,37 @@ extension EversenseCGMManager {
             return
         }
 
-        var lastGlucoseTimestamp = cgmManagerDelegate?.startDateToFilterNewData(for: self) ?? Date.now
-            .addingTimeInterval(.hours(-4))
-
-        if lastGlucoseTimestamp > Date.now.addingTimeInterval(.hours(-4)) {
-            lastGlucoseTimestamp = Date.now.addingTimeInterval(.hours(-4))
-        }
-
-        bluetoothManager.ensureConnected { error in
-            if let internalError = error {
-                self.logger.error("Failed to connect to CGM: \(internalError.describe)")
-                return
+        delegateQueue.async {
+            var lastGlucoseTimestamp = self.cgmManagerDelegate?.startDateToFilterNewData(for: self) ?? Date.now
+                .addingTimeInterval(.hours(-4))
+            
+            if lastGlucoseTimestamp > Date.now.addingTimeInterval(.hours(-4)) {
+                lastGlucoseTimestamp = Date.now.addingTimeInterval(.hours(-4))
             }
-
-            if !self.state.is365 {
-                await EversenseE3.readGlucoseData(
-                    peripheralManager: peripheralManager,
-                    cgmManager: self,
-                    delegate: self.delegate,
-                    lastGlucoseTimestamp: lastGlucoseTimestamp
-                )
-                await EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
-            } else {
-                await Eversense365.readGlucoseData(
-                    peripheralManager: peripheralManager,
-                    cgmManager: self,
-                    delegate: self.delegate,
-                    lastGlucoseTimestamp: lastGlucoseTimestamp
-                )
-                await Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+            
+            self.bluetoothManager.ensureConnected { error in
+                if let internalError = error {
+                    self.logger.error("Failed to connect to CGM: \(internalError.describe)")
+                    return
+                }
+                
+                if !self.state.is365 {
+                    await EversenseE3.readGlucoseData(
+                        peripheralManager: peripheralManager,
+                        cgmManager: self,
+                        delegate: self.delegate,
+                        lastGlucoseTimestamp: lastGlucoseTimestamp
+                    )
+                    await EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                } else {
+                    await Eversense365.readGlucoseData(
+                        peripheralManager: peripheralManager,
+                        cgmManager: self,
+                        delegate: self.delegate,
+                        lastGlucoseTimestamp: lastGlucoseTimestamp
+                    )
+                    await Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                }
             }
         }
     }
