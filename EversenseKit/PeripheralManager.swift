@@ -420,6 +420,9 @@ extension PeripheralManager {
             connectCompletion = nil
 
         } catch {
+            cgmManager.state.certificateV2 = nil
+            cgmManager.notifyStateDidChange()
+
             logger.error("Failed to write Auth v2 - \(error.localizedDescription)")
             connectCompletion?(.failedToFetchFleetKey(reason: "Failed to write Auth v2 - \(error.localizedDescription)"))
             return

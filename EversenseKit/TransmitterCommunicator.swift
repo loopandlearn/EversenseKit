@@ -288,6 +288,8 @@ extension Eversense365 {
         do {
             logger.debug("sending GetGlucoseLogRangePacket...")
 
+            let mostRecentGlucose = await getRecentGlucose(peripheralManager: peripheralManager)
+
             let glucoseRange: GetGlucoseLogRangeResponse = try await peripheralManager
                 .write(GetGlucoseLogRangePacket(communicationVersion: cgmManager.state.communicationProtocol))
             logger.info("Got Blood glucose range from: \(glucoseRange.rangeFrom) - \(glucoseRange.rangeTo)")
@@ -307,22 +309,44 @@ extension Eversense365 {
             }
 
             logger
-                .info(
+                .debug(
                     "GetLogValuePacket -  from: \(from), to: \(glucoseRange.rangeTo), lastGlucoseTimestamp: \(lastGlucoseTimestamp)"
                 )
-            let history: GetLogValueResponse = try await peripheralManager
+            let historyResponse: GetLogValueResponse = try await peripheralManager
                 .write(GetLogValuePacket(from: from, to: glucoseRange.rangeTo), timeout: .seconds(15))
 
-            guard !history.glucoseHistory.isEmpty, let recentGlucose = history.glucoseHistory.last else {
-                logger.warning("History is empty")
-                return
+            if let mostRecentGlucose = mostRecentGlucose,
+               mostRecentGlucose.glucoseDatetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
+            {
+                cgmManager.state.recentGlucoseInMgDl = mostRecentGlucose.glucoseInMgDl
+                cgmManager.state.recentGlucoseDateTime = mostRecentGlucose.glucoseDatetime
+            } else if let recentGlucose = historyResponse.glucoseHistory.last,
+                      recentGlucose.datetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
+            {
+                cgmManager.state.recentGlucoseInMgDl = recentGlucose.valueInMgDl
+                cgmManager.state.recentGlucoseDateTime = recentGlucose.datetime
             }
 
-            cgmManager.state.recentGlucoseInMgDl = recentGlucose.valueInMgDl
-            cgmManager.state.recentGlucoseDateTime = recentGlucose.datetime
+            var samples = historyResponse.glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
+                NewGlucoseSample(
+                    cgmManager: cgmManager,
+                    value: $0.valueInMgDl,
+                    trend: $0.trend,
+                    dateTime: $0.datetime
+                )
+            }
 
-            let relevantHistory = history.glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }
-            guard !relevantHistory.isEmpty else {
+            if let mostRecentGlucose = mostRecentGlucose {
+                samples.append(
+                    NewGlucoseSample(
+                        cgmManager: cgmManager,
+                        value: mostRecentGlucose.glucoseInMgDl,
+                        trend: mostRecentGlucose.trend,
+                        dateTime: mostRecentGlucose.glucoseDatetime
+                    )
+                )
+            }
+            guard !samples.isEmpty else {
                 logger.info("No new glucose data")
                 return
             }
@@ -333,20 +357,30 @@ extension Eversense365 {
                     return
                 }
 
-                let glucoseSample = relevantHistory.map {
-                    NewGlucoseSample(
-                        cgmManager: cgmManager,
-                        value: $0.valueInMgDl,
-                        trend: $0.trend,
-                        dateTime: $0.datetime
-                    )
-                }
-                cgmManagerDelegate.cgmManager(cgmManager, hasNew: .newData(glucoseSample))
+                cgmManagerDelegate.cgmManager(cgmManager, hasNew: .newData(samples))
             }
 
-            logger.info("[365] Glucose data read  - timestamp: \(Date()), count: \(history.count)")
+            logger.info("[365] Glucose data read  - timestamp: \(Date()), count: \(samples.count)")
         } catch {
             logger.error("[365] Something went wrong during readGlucoseData: \(error)")
+        }
+    }
+
+    private static func getRecentGlucose(peripheralManager: PeripheralManager) async -> GetGlucoseDataResponse? {
+        do {
+            let response: GetGlucoseDataResponse = try await peripheralManager.write(GetGlucoseDataPacket())
+            guard response.glucoseInMgDl < 0x03E8 else {
+                logger
+                    .error(
+                        "Invalid Glucose data - value: \(response.glucoseInMgDl) mg/dl, timestamp: \(response.glucoseDatetime)"
+                    )
+                return nil
+            }
+
+            return response
+        } catch {
+            logger.error("Failed to fetch Glucose data - error: \(error.localizedDescription)")
+            return nil
         }
     }
 

@@ -142,17 +142,17 @@ extension EversenseCGMManager {
         delegateQueue.async {
             var lastGlucoseTimestamp = self.cgmManagerDelegate?.startDateToFilterNewData(for: self) ?? Date.now
                 .addingTimeInterval(.hours(-4))
-            
+
             if lastGlucoseTimestamp > Date.now.addingTimeInterval(.hours(-4)) {
                 lastGlucoseTimestamp = Date.now.addingTimeInterval(.hours(-4))
             }
-            
+
             self.bluetoothManager.ensureConnected { error in
                 if let internalError = error {
                     self.logger.error("Failed to connect to CGM: \(internalError.describe)")
                     return
                 }
-                
+
                 if !self.state.is365 {
                     await EversenseE3.readGlucoseData(
                         peripheralManager: peripheralManager,
