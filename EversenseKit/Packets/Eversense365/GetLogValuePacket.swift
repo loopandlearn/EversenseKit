@@ -57,7 +57,7 @@ extension Eversense365 {
             let offsetGlucose = Eversense365.sensorIdLength + 8 + 4
 
             // Offset trendDirection = offset Glucose + trend value
-            let trendDirection = offsetGlucose + 4
+            let trendDirection = offsetGlucose + 2 + 4
 
             var history: [GlucoseHistoryItem] = []
             var i: UInt32 = 0
