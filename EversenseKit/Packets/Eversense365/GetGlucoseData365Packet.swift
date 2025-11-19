@@ -29,6 +29,31 @@ extension Eversense365 {
             return CryptoUtil.shared.encrypt(data: data)
         }
 
+        /// 42 1F -> CmdType & CmdId
+        /// B2 74 4A BD C2 00 00 00 -> Current datetime
+        /// 01 -> Sensor type
+        /// 0A -> Sensor ID length
+        /// 14 71 15 71 87 2A 3C 60 18 E0 -> Sensor ID
+        /// 2A DC 45 BD C2 00 00 00 -> glucose datetime
+        /// 45 00 -> Glucose value = 69 mg/dl = 3.8 mmol/L
+        /// A1 00 -> Signal strength
+        /// 00 00 -> Glucose unavailable reason (undocumented enum)
+        /// 00000000E107911E03025F17151BFD014530E21E0C023D1D8E030C02862D28000000750000000D027E1EFD01131EA4140C025230D11E0B027D1D78030D02892D28000000EA000000CF08B61EAA015316E51AB60140308C1EB801741DD403B701872D280000005F010000B301A71EB201561FD113B0016430831EB801481EBC03B801842D28000000 -> Measurement (length 136 bytes)
+        /// 00 00 -> Trend value
+        /// 04 -> Trend direction
+        /// 00 00 00 00 -> Sensor temperature
+        /// 00 00 00 00 -> MSP
+        /// 00 00 00 00 -> MEP spike
+        /// 00 00 00 00 -> MEP low ref
+        /// 00 00 00 00 -> MEP drift
+        /// 00 00 00 00 -> MEP ref channel
+        /// 00 00 00 00 -> MEP value
+        /// 5F -> Battery percentage
+        /// 00 00 00 00 -> Transmitter temperature
+        /// 00 00 00 00 -> AccelerometerXAxis
+        /// 00 00 00 00 -> AccelerometerYAxis
+        /// 00 00 00 00 -> AccelerometerZAxis
+
         /// Parsed message:
         /// 42 1F -> CmdType & CmdId
         /// F6 95 86 CB C1 00 00 00 -> Current datetime
@@ -43,8 +68,8 @@ extension Eversense365 {
         /// 05 00 -> Trend value
         /// 04 -> Trend direction
         /// 00 00 00 00 -> Sensor temperature
-        /// 00 00 00 05 -> MSP
-        /// 00 04 00 00 -> MEP spike
+        /// 00 00 00 00 -> MSP
+        /// 00 00 00 00 -> MEP spike
         /// 00 00 00 00 -> MEP low ref
         /// 00 00 00 00 -> MEP drift
         /// 00 00 00 00 -> MEP ref channel

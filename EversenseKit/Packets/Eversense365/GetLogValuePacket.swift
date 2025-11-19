@@ -65,11 +65,14 @@ extension Eversense365 {
                 let end = i + length
                 let chunk = Data(actualData.subdata(in: Int(i) ..< Int(end)))
 
-                logger.debug("Chunk: \(chunk.hexString())")
-
                 let datetime = Date.fromUnix2000(data: chunk.subdata(in: 4 ..< 12))
                 let glucose = UInt16(chunk[offsetGlucose]) + (UInt16(chunk[offsetGlucose + 1]) << 8)
                 let trend = getTrend(value: chunk[trendDirection])
+
+                guard glucose < 0x03E8 else {
+                    logger.warning("WARNING: glucose exceeds safety limits - value: \(glucose) mg/dl, datetime: \(datetime)")
+                    continue
+                }
 
                 history.append(GlucoseHistoryItem(
                     valueInMgDl: glucose,
@@ -79,7 +82,7 @@ extension Eversense365 {
 
                 logger
                     .debug(
-                        "Datetime: \(datetime), Glucose: \(glucose) mg/dl, trend: \(trend.symbol) [\(trend.rawValue), \(chunk[trendDirection])]"
+                        "Datetime: \(datetime), Glucose: \(glucose) mg/dl, trend: \(trend.symbol)"
                     )
                 i = end
             }
