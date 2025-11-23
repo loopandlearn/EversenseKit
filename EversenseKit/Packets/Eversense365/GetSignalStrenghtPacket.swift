@@ -17,11 +17,11 @@ extension Eversense365 {
         }
 
         var responseId: UInt8? {
-            ReadIds.GetSignalStrength.rawValue
+            ReadIds.SignalStrength.rawValue
         }
 
         func getRequestData() -> Data {
-            let data = Data([PacketIds.ReadCommandId.rawValue, ReadIds.GetSignalStrength.rawValue])
+            let data = Data([PacketIds.ReadCommandId.rawValue, ReadIds.SignalStrength.rawValue])
             return CryptoUtil.shared.encrypt(data: data)
         }
 

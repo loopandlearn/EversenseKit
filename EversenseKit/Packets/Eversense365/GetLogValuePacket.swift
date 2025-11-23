@@ -27,7 +27,7 @@ extension Eversense365 {
         }
 
         var responseId: UInt8? {
-            ReadIds.GetLogValue.rawValue
+            ReadIds.LogValue.rawValue
         }
 
         let from: UInt32
@@ -38,7 +38,7 @@ extension Eversense365 {
         }
 
         func getRequestData() -> Data {
-            var data = Data([PacketIds.ReadCommandId.rawValue, ReadIds.GetLogValue.rawValue, LogTypes.Glucose.rawValue])
+            var data = Data([PacketIds.ReadCommandId.rawValue, ReadIds.LogValue.rawValue, LogTypes.Glucose.rawValue])
             data.append(BinaryOperations.dataFrom32Bits(value: from))
             data.append(BinaryOperations.dataFrom32Bits(value: to))
             return CryptoUtil.shared.encrypt(data: data)

@@ -204,6 +204,8 @@ extension EversenseE3 {
             cgmManager.state.signalStrength = rawSignalStrength.value
             cgmManager.state.signalStrengthRaw = rawSignalStrength.rawValue
 
+            // TODO: Get active alarms
+
             logger.info("[E3] Sync completed - timestamp: \(Date())")
 
         } catch {
@@ -447,6 +449,10 @@ extension Eversense365 {
             cgmManager.state.isRisingRateEnabled = patientSettings.isRisingRateEnabled
             cgmManager.state.rateFallingThreshold = patientSettings.rateFallingThreshold
             cgmManager.state.rateRisingThreshold = patientSettings.rateRisingThreshold
+
+            logger.debug("Sending GetActiveAlarmsPacket")
+            let activeAlarms: GetActiveAlarmsResponse = try await peripheralManager.write(GetActiveAlarmsPacket())
+            cgmManager.state.activeAlarms = activeAlarms.alarms
 
             logger.info("[365] Sync completed - timestamp: \(Date())")
 

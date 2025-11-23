@@ -21,11 +21,11 @@ extension Eversense365 {
         }
 
         var responseId: UInt8? {
-            ReadIds.GetGlucoseData.rawValue
+            ReadIds.GlucoseData.rawValue
         }
 
         func getRequestData() -> Data {
-            let data = Data([PacketIds.ReadCommandId.rawValue, ReadIds.GetGlucoseData.rawValue])
+            let data = Data([PacketIds.ReadCommandId.rawValue, ReadIds.GlucoseData.rawValue])
             return CryptoUtil.shared.encrypt(data: data)
         }
 

@@ -95,6 +95,17 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         } else {
             security = .none
         }
+
+        do {
+            if let activeAlarmsData = rawValue["activeAlarms"] as? Data {
+                activeAlarms = try JSONDecoder().decode([ActiveAlarm].self, from: activeAlarmsData)
+            } else {
+                activeAlarms = []
+            }
+        } catch {
+            EversenseLogger(category: "EversenseCGMState").error("Failed to decode activeAlarms - \(error.localizedDescription)")
+            activeAlarms = []
+        }
     }
 
     public var rawValue: RawValue {
@@ -147,6 +158,12 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["clientIdV2"] = clientIdV2
         value["certificateV2"] = certificateV2
         value["fleetKeyPublicKeyV2"] = fleetKeyPublicKeyV2
+
+        do {
+            value["activeAlarms"] = try JSONEncoder().encode(activeAlarms)
+        } catch {
+            EversenseLogger(category: "EversenseCGMState").error("Failed to encode activeAlarms - \(error.localizedDescription)")
+        }
 
         return value
     }
@@ -201,6 +218,8 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var recentGlucoseInMgDl: UInt16?
     public var recentGlucoseDateTime: Date?
     public var recentGlucoseTrend: GlucoseTrend
+
+    public var activeAlarms: [ActiveAlarm]
 
     // Eversense 365
     public var security: SecurityType = .none

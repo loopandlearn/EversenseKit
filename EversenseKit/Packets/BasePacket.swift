@@ -125,14 +125,15 @@ enum Eversense365 {
 
     enum ReadIds: UInt8 {
         case Ping = 1
-        case GetLogRangeOld = 9
-        case GetSignalStrength = 27
-        case GetCalibrationInfo = 29
-        case GetGlucoseData = 31
-        case GetSensorInformation = 32
-        case GetPatientInformation = 33
-        case GetLogRange = 56
-        case GetLogValue = 58
+        case LogRangeOld = 9
+        case SignalStrength = 27
+        case CalibrationInfo = 29
+        case GlucoseData = 31
+        case SensorInformation = 32
+        case PatientInformation = 33
+        case ActiveAlerts = 34
+        case LogRange = 56
+        case LogValue = 58
     }
 
     enum WriteIds: UInt8 {

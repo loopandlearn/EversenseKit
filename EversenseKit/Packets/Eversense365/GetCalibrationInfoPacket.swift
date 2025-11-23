@@ -29,11 +29,11 @@ extension Eversense365 {
         }
 
         var responseId: UInt8? {
-            ReadIds.GetCalibrationInfo.rawValue
+            ReadIds.CalibrationInfo.rawValue
         }
 
         func getRequestData() -> Data {
-            let data = Data([PacketIds.ReadCommandId.rawValue, ReadIds.GetCalibrationInfo.rawValue])
+            let data = Data([PacketIds.ReadCommandId.rawValue, ReadIds.CalibrationInfo.rawValue])
             return CryptoUtil.shared.encrypt(data: data)
         }
 
@@ -53,7 +53,7 @@ extension Eversense365 {
         /// 00 00 00 00 00 00 00 00 -> Last calibration datetime
         func parseResponse(data: Data) -> Eversense365.GetCalibrationInfoResponse {
             GetCalibrationInfoResponse(
-                currentPhase: CalibrationPhase.from365(rawValue: data[Offset.CURRENT_CALIBRATION_PHASE_START]),
+                currentPhase: CalibrationPhase.from365(rawValue: data[Offset.CURRENT_CALIBRATION_PHASE]),
                 calibrationMode: CalibrationMode.from365(rawValue: data[Offset.CALIBRATIONS_PER_DAY]),
                 countCalibrations: data[Offset.CALIBRATIONS_IN_PHASE],
                 nextCalibration: Date.fromUnix2000(
@@ -68,11 +68,8 @@ extension Eversense365 {
         }
 
         enum Offset {
-            static let CURRENT_CALIBRATION_PHASE_START = 1
-            static let CURRENT_CALIBRATION_PHASE_END = 2
-
-            static let READY_FOR_CALIBRATIONS_START = 2
-            static let READY_FOR_CALIBRATIONS_END = 3
+            static let CURRENT_CALIBRATION_PHASE = 2
+            static let READY_FOR_CALIBRATIONS = 3
 
             static let NEXT_CALIBRATION_DATETIME_START = 4
             static let NEXT_CALIBRATION_DATETIME_END = 12

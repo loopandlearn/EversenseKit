@@ -23,9 +23,9 @@ extension Eversense365 {
         private let readId: UInt8
         init(communicationVersion: Double) {
             if communicationVersion >= 1.06 {
-                readId = ReadIds.GetLogRange.rawValue
+                readId = ReadIds.LogRange.rawValue
             } else {
-                readId = ReadIds.GetLogRangeOld.rawValue
+                readId = ReadIds.LogRangeOld.rawValue
             }
         }
 
