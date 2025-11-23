@@ -138,6 +138,7 @@ enum Eversense365 {
 
     enum WriteIds: UInt8 {
         case CurrentDateTime = 1
+        case Calibration = 12
         case AppVersion = 14
         case VibrateMode = 16
         case RateFallingEnabled = 20

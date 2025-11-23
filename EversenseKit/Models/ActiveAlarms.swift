@@ -1,9 +1,9 @@
 public class ActiveAlarm: Codable, Equatable {
-    let code: UInt8
+    let code: Alarm
     let flag: UInt8
     let priority: UInt8
 
-    init(code: UInt8, flag: UInt8, priority: UInt8) {
+    init(code: Alarm, flag: UInt8, priority: UInt8) {
         self.code = code
         self.flag = flag
         self.priority = priority

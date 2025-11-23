@@ -96,6 +96,12 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
             security = .none
         }
 
+        if let rawCalibrationReadiness = rawValue["calibrationReadiness"] as? CalibrationReadiness.RawValue {
+            calibrationReadiness = CalibrationReadiness(rawValue: rawCalibrationReadiness) ?? .Unknown
+        } else {
+            calibrationReadiness = .Unknown
+        }
+
         do {
             if let activeAlarmsData = rawValue["activeAlarms"] as? Data {
                 activeAlarms = try JSONDecoder().decode([ActiveAlarm].self, from: activeAlarmsData)
@@ -132,6 +138,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["calibrationMode"] = calibrationMode.rawValue
         value["calibrationCount"] = calibrationCount
         value["calibrationPhase"] = calibrationPhase.rawValue
+        value["calibrationReadiness"] = calibrationReadiness.rawValue
         value["isGlucoseHighAlarmEnabled"] = isGlucoseHighAlarmEnabled
         value["lowGlucoseAlarmInMgDl"] = lowGlucoseAlarmInMgDl
         value["highGlucoseAlarmInMgDl"] = highGlucoseAlarmInMgDl
@@ -197,6 +204,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var calibrationMode: CalibrationMode
     public var calibrationPhase: CalibrationPhase
     public var calibrationCount: UInt16
+    public var calibrationReadiness: CalibrationReadiness
 
     public var isGlucoseHighAlarmEnabled: Bool
     public var lowGlucoseAlarmInMgDl: UInt16

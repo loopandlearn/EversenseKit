@@ -16,6 +16,42 @@
         }
       }
     },
+    "1 Weekly Calibration Phase" : {
+      "comment" : "title for OneCal",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 Weekly Calibration Phase"
+          }
+        }
+      }
+    },
+    "A calibration has not been performed in 24 hours. Your system is now in re-initialization phase and you will have to perform 4 fingerstick calibration tests." : {
+      "comment" : "description for CalibrationExpiredAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A calibration has not been performed in 24 hours. Your system is now in re-initialization phase and you will have to perform 4 fingerstick calibration tests."
+          }
+        }
+      }
+    },
+    "A new sensor has been detected. If you have a new sensor and/or transmitter, please link your sensor and transmitter." : {
+      "comment" : "description for InvalidSensorAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A new sensor has been detected. If you have a new sensor and/or transmitter, please link your sensor and transmitter."
+          }
+        }
+      }
+    },
     "Are you sure you want to stop using Eversense CGM?" : {
       "comment" : "Message for CgmManager deletion action sheet",
       "extractionState" : "manual",
@@ -28,6 +64,30 @@
         }
       }
     },
+    "Battery Empty" : {
+      "comment" : "title for EmptyBatteryAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Battery Empty"
+          }
+        }
+      }
+    },
+    "Battery Error" : {
+      "comment" : "title for BatteryErrorAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Battery Error"
+          }
+        }
+      }
+    },
     "Battery percentage" : {
       "comment" : "transmitter battery level",
       "extractionState" : "manual",
@@ -36,6 +96,81 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Battery percentage"
+          }
+        }
+      }
+    },
+    "Battery Status" : {
+      "comment" : "title for BatteryStatusAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Battery Status"
+          }
+        }
+      }
+    },
+    "Calibrate" : {
+
+    },
+    "Calibrate Again" : {
+      "comment" : "title for CalibrationFailedAlert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calibrate Again"
+          }
+        }
+      }
+    },
+    "Calibrate Now" : {
+      "comment" : "title for CalibrationRequiredAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calibrate Now"
+          }
+        }
+      }
+    },
+    "Calibration Expired" : {
+      "comment" : "title for CalibrationExpiredAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calibration Expired"
+          }
+        }
+      }
+    },
+    "Calibration in progress" : {
+      "comment" : "title for Calibrating",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calibration in progress"
+          }
+        }
+      }
+    },
+    "Calibration Past Due" : {
+      "comment" : "title for CalibrationGracePeriodAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calibration Past Due"
           }
         }
       }
@@ -60,6 +195,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "Check the connection between the transmitter, app, and sensor." : {
+      "comment" : "description for TransmitterOrSensorConnectionLostDuringLinking",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check the connection between the transmitter, app, and sensor."
           }
         }
       }
@@ -100,6 +247,18 @@
         }
       }
     },
+    "Connection Lost" : {
+      "comment" : "title for TransmitterOrSensorConnectionLostDuringLinking",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection Lost"
+          }
+        }
+      }
+    },
     "Continue" : {
       "comment" : "Text for continue button",
       "extractionState" : "manual",
@@ -136,6 +295,18 @@
         }
       }
     },
+    "Data Unavailable" : {
+      "comment" : "title for TransmitterKeepAliveNotReceived",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data Unavailable"
+          }
+        }
+      }
+    },
     "Delete CGM" : {
       "comment" : "Label for CgmManager deletion button",
       "extractionState" : "manual",
@@ -160,6 +331,18 @@
         }
       }
     },
+    "Disconnect detected" : {
+      "comment" : "title for LedDisconnectDetected",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disconnect detected"
+          }
+        }
+      }
+    },
     "Done" : {
       "comment" : "done button title",
       "extractionState" : "manual",
@@ -168,6 +351,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Done"
+          }
+        }
+      }
+    },
+    "Dropout phase" : {
+      "comment" : "title for DropoutPhase",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dropout phase"
           }
         }
       }
@@ -340,6 +535,18 @@
         }
       }
     },
+    "Glucose is too high" : {
+      "comment" : "title for GlucoseTooHigh",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glucose is too high"
+          }
+        }
+      }
+    },
     "Glucose low" : {
       "comment" : "label glucose low",
       "extractionState" : "manual",
@@ -348,6 +555,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Glucose low"
+          }
+        }
+      }
+    },
+    "Glucose Suspend" : {
+      "comment" : "title for GeneralGlucoseSuspended",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glucose Suspend"
           }
         }
       }
@@ -376,6 +595,42 @@
         }
       }
     },
+    "High Glucose" : {
+      "comment" : "title for HighGlucoseAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High Glucose"
+          }
+        }
+      }
+    },
+    "High Sensor Temperature" : {
+      "comment" : "title for SensorTemperatureAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High Sensor Temperature"
+          }
+        }
+      }
+    },
+    "High Transmitter Temperature" : {
+      "comment" : "title for ReaderTemperatureAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High Transmitter Temperature"
+          }
+        }
+      }
+    },
     "If your Eversense 365 is already active, please make sure to use the same account" : {
       "comment" : "login footer same account",
       "extractionState" : "manual",
@@ -388,6 +643,42 @@
         }
       }
     },
+    "In 4 hours, your calibration will be past due and no glucose will be displayed. Please enter a fingerstick blood glucose calibration now." : {
+      "comment" : "description for CalibrationNowAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In 4 hours, your calibration will be past due and no glucose will be displayed. Please enter a fingerstick blood glucose calibration now."
+          }
+        }
+      }
+    },
+    "Incompatible Transmitter" : {
+      "comment" : "title for IncompatibleTx",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incompatible Transmitter"
+          }
+        }
+      }
+    },
+    "Incompatible transmitter detected. Please try again. If the error persists, contact Eversense Customer Support." : {
+      "comment" : "description for IncompatibleTx",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incompatible transmitter detected. Please try again. If the error persists, contact Eversense Customer Support."
+          }
+        }
+      }
+    },
     "Information" : {
       "comment" : "The information section",
       "extractionState" : "manual",
@@ -396,6 +687,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Information"
+          }
+        }
+      }
+    },
+    "Invalid Transmitter Time" : {
+      "comment" : "title for InvalidClockAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid Transmitter Time"
           }
         }
       }
@@ -448,6 +751,42 @@
         }
       }
     },
+    "Low Battery" : {
+      "comment" : "title for VeryLowBatteryAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low Battery"
+          }
+        }
+      }
+    },
+    "Low Glucose" : {
+      "comment" : "title for LowGlucoseAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low Glucose"
+          }
+        }
+      }
+    },
+    "Low Sensor Temperature" : {
+      "comment" : "title for SensorLowTemperatureAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low Sensor Temperature"
+          }
+        }
+      }
+    },
     "Make sure your Eversense is resetted and put into pairing mode. Please read the manual to learn how to do this." : {
       "comment" : "Scanning hint",
       "extractionState" : "manual",
@@ -484,6 +823,30 @@
         }
       }
     },
+    "New Calibration Needed" : {
+      "comment" : "title for CalibrationSuspiciousAlert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Calibration Needed"
+          }
+        }
+      }
+    },
+    "New Sensor Detected" : {
+      "comment" : "title for InvalidSensorAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Sensor Detected"
+          }
+        }
+      }
+    },
     "Next calibration in" : {
       "comment" : "Calibration hint",
       "extractionState" : "manual",
@@ -508,6 +871,30 @@
         }
       }
     },
+    "No Sensor Detected" : {
+      "comment" : "title for SensorAwolAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Sensor Detected"
+          }
+        }
+      }
+    },
+    "No sensor linked" : {
+      "comment" : "title for NoSensorLinked",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No sensor linked"
+          }
+        }
+      }
+    },
     "No signal" : {
       "comment" : "signalStrength no signal",
       "extractionState" : "manual",
@@ -516,6 +903,90 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No signal"
+          }
+        }
+      }
+    },
+    "Not enough data" : {
+      "comment" : "title for NotEnoughData",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not enough data"
+          }
+        }
+      }
+    },
+    "Not enough data was collected after your calibration entry. Please enter a fingerstick blood glucose calibration now." : {
+      "comment" : "description for CalibrationFailedAlert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not enough data was collected after your calibration entry. Please enter a fingerstick blood glucose calibration now."
+          }
+        }
+      }
+    },
+    "Ok" : {
+      "comment" : "label ok",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ok"
+          }
+        }
+      }
+    },
+    "Out of Range High Glucose" : {
+      "comment" : "title for SeriouslyHighAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Out of Range High Glucose"
+          }
+        }
+      }
+    },
+    "Out of Range Low Glucose" : {
+      "comment" : "title for SeriouslyLowAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Out of Range Low Glucose"
+          }
+        }
+      }
+    },
+    "Pairing Error" : {
+      "comment" : "title for TxPairingError",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pairing Error"
+          }
+        }
+      }
+    },
+    "Pairing Metrics" : {
+      "comment" : "title for PairingMetricsError",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pairing Metrics"
           }
         }
       }
@@ -544,6 +1015,18 @@
         }
       }
     },
+    "Please try again. If the error persists, contact Eversense Customer Support." : {
+      "comment" : "description for TxPairingError",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please try again. If the error persists, contact Eversense Customer Support."
+          }
+        }
+      }
+    },
     "Poor" : {
       "comment" : "signalStrength poor",
       "extractionState" : "manual",
@@ -556,6 +1039,30 @@
         }
       }
     },
+    "Predicted High Glucose" : {
+      "comment" : "title for PredictiveHighAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Predicted High Glucose"
+          }
+        }
+      }
+    },
+    "Predicted Low Glucose" : {
+      "comment" : "title for PredictiveLowAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Predicted Low Glucose"
+          }
+        }
+      }
+    },
     "Rate change" : {
       "comment" : "label alarming rate change",
       "extractionState" : "manual",
@@ -564,6 +1071,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rate change"
+          }
+        }
+      }
+    },
+    "Rate Falling" : {
+      "comment" : "title for RateFallingAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate Falling"
+          }
+        }
+      }
+    },
+    "Rate Rising" : {
+      "comment" : "title for RateRisingAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate Rising"
+          }
+        }
+      }
+    },
+    "Ready for calibration" : {
+      "comment" : "title for Ready",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ready for calibration"
           }
         }
       }
@@ -604,6 +1147,126 @@
         }
       }
     },
+    "Sensor Check" : {
+      "comment" : "title for SensorStability",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor Check"
+          }
+        }
+      }
+    },
+    "Sensor Connection" : {
+      "comment" : "title for SensorConnection",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor Connection"
+          }
+        }
+      }
+    },
+    "Sensor File" : {
+      "comment" : "title for SensorFile",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor File"
+          }
+        }
+      }
+    },
+    "Sensor is expired" : {
+      "comment" : "title for SensorEol",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor is expired"
+          }
+        }
+      }
+    },
+    "Sensor Linking Error" : {
+      "comment" : "title for RomeSensorUnlinkable",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor Linking Error"
+          }
+        }
+      }
+    },
+    "Sensor Linking Failed" : {
+      "comment" : "title for RomeSensorLinkFail",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor Linking Failed"
+          }
+        }
+      }
+    },
+    "Sensor Re-link" : {
+      "comment" : "title for SensorRelink",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor Re-link"
+          }
+        }
+      }
+    },
+    "Sensor Replacement" : {
+      "comment" : "title for SensorRetiredAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor Replacement"
+          }
+        }
+      }
+    },
+    "Sensor Retirement Area" : {
+      "comment" : "title for EarlySensorRetirement",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor Retirement Area"
+          }
+        }
+      }
+    },
+    "Sensor Sync Confirmed" : {
+      "comment" : "title for SensorSyncConfirmedAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor Sync Confirmed"
+          }
+        }
+      }
+    },
     "Share Eversense logs" : {
       "comment" : "share logs",
       "extractionState" : "manual",
@@ -628,6 +1291,18 @@
         }
       }
     },
+    "SMF Sync Failed" : {
+      "comment" : "title for SmfSyncFailed",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SMF Sync Failed"
+          }
+        }
+      }
+    },
     "State" : {
       "comment" : "Transmitter state",
       "extractionState" : "manual",
@@ -636,6 +1311,66 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "State"
+          }
+        }
+      }
+    },
+    "System Time" : {
+      "comment" : "title for SystemTime",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System Time"
+          }
+        }
+      }
+    },
+    "The connection between your sensor and transmitter is lost. No glucose data is available until the connection is restored." : {
+      "comment" : "description for SensorAwolAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The connection between your sensor and transmitter is lost. No glucose data is available until the connection is restored."
+          }
+        }
+      }
+    },
+    "The connection between your sensor and transmitter is not stable. Please position your transmitter for better signal strength." : {
+      "comment" : "description for SensorConnection",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The connection between your sensor and transmitter is not stable. Please position your transmitter for better signal strength."
+          }
+        }
+      }
+    },
+    "The system has detected a problem with your transmitter's battery. You can continue to use your system, but please contact Eversense Customer Support for a replacement transmitter." : {
+      "comment" : "description for BatteryErrorAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The system has detected a problem with your transmitter's battery. You can continue to use your system, but please contact Eversense Customer Support for a replacement transmitter."
+          }
+        }
+      }
+    },
+    "The system requires calibration once a week." : {
+      "comment" : "description for OneCal",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The system requires calibration once a week."
           }
         }
       }
@@ -676,6 +1411,78 @@
         }
       }
     },
+    "Too soon" : {
+      "comment" : "title for TooSoon",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Too soon"
+          }
+        }
+      }
+    },
+    "Transmitter Active" : {
+      "comment" : "title for TxUndockedAlert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transmitter Active"
+          }
+        }
+      }
+    },
+    "Transmitter Connected" : {
+      "comment" : "title for TransmitterReconnected",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transmitter Connected"
+          }
+        }
+      }
+    },
+    "Transmitter Disconnected" : {
+      "comment" : "title for TransmitterDisconnected",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transmitter Disconnected"
+          }
+        }
+      }
+    },
+    "Transmitter Error" : {
+      "comment" : "title for CriticalFaultAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transmitter Error"
+          }
+        }
+      }
+    },
+    "Transmitter Inactive" : {
+      "comment" : "title for TxDockedAlert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transmitter Inactive"
+          }
+        }
+      }
+    },
     "Transmitter information" : {
       "comment" : "transmitter section",
       "extractionState" : "manual",
@@ -688,6 +1495,18 @@
         }
       }
     },
+    "Transmitter is expired" : {
+      "comment" : "title for TransmitterEol",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transmitter is expired"
+          }
+        }
+      }
+    },
     "Transmitter Name" : {
       "comment" : "Transmitter name",
       "extractionState" : "manual",
@@ -696,6 +1515,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Transmitter Name"
+          }
+        }
+      }
+    },
+    "Transmitter Replacement" : {
+      "comment" : "title for TransmitterEOL",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transmitter Replacement"
+          }
+        }
+      }
+    },
+    "Transmitter Reset" : {
+      "comment" : "title for ResetLogReport",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transmitter Reset"
           }
         }
       }
@@ -724,6 +1567,66 @@
         }
       }
     },
+    "Unable to download sensor files. Please try again. If the error persists, contact Eversense Customer Support." : {
+      "comment" : "description for SensorFile",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to download sensor files. Please try again. If the error persists, contact Eversense Customer Support."
+          }
+        }
+      }
+    },
+    "Unknown" : {
+      "comment" : "title for Unknown",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
+          }
+        }
+      }
+    },
+    "Unknown error" : {
+      "comment" : "title for unknown",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown error"
+          }
+        }
+      }
+    },
+    "Unsupported" : {
+      "comment" : "title for UnsupportedMode",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unsupported"
+          }
+        }
+      }
+    },
+    "Use your BG meter to monitor your glucose. Contact Eversense Customer Support if the issue persists." : {
+      "comment" : "description for GeneralGlucoseSuspended",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use your BG meter to monitor your glucose. Contact Eversense Customer Support if the issue persists."
+          }
+        }
+      }
+    },
     "Very low" : {
       "comment" : "signalStrength very low",
       "extractionState" : "manual",
@@ -732,6 +1635,246 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Very low"
+          }
+        }
+      }
+    },
+    "Vibration Motor" : {
+      "comment" : "title for VibrationCurrentAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vibration Motor"
+          }
+        }
+      }
+    },
+    "Warm-Up Complete" : {
+      "comment" : "title for WarmUpPhaseCompleteAlert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warm-Up Complete"
+          }
+        }
+      }
+    },
+    "Your 24-hour Warm-up Phase is complete." : {
+      "comment" : "description for WarmUpPhaseCompleteAlert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your 24-hour Warm-up Phase is complete."
+          }
+        }
+      }
+    },
+    "Your calibration is due. Please perform a fingerstick blood glucose meter calibration now." : {
+      "comment" : "description for CalibrationRequiredAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your calibration is due. Please perform a fingerstick blood glucose meter calibration now."
+          }
+        }
+      }
+    },
+    "Your sensor glucose value is too high. Please measure your glucose manually using your blood glucose meter." : {
+      "comment" : "description for SeriouslyHighAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your sensor glucose value is too high. Please measure your glucose manually using your blood glucose meter."
+          }
+        }
+      }
+    },
+    "Your sensor glucose value is too low. Please measure your glucose manually using your blood glucose meter." : {
+      "comment" : "description for SeriouslyLowAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your sensor glucose value is too low. Please measure your glucose manually using your blood glucose meter."
+          }
+        }
+      }
+    },
+    "Your sensor has passed day 365. Contact your health care provider to schedule a replacement." : {
+      "comment" : "description for MSPAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your sensor has passed day 365. Contact your health care provider to schedule a replacement."
+          }
+        }
+      }
+    },
+    "Your sensor life has expired. Please contact your health care provider to schedule a replacement." : {
+      "comment" : "description for SensorGraceAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your sensor life has expired. Please contact your health care provider to schedule a replacement."
+          }
+        }
+      }
+    },
+    "Your sensor's temperature is too high. Please go to a cooler place to resume receiving sensor glucose values. If the problem persists, contact Eversense Customer Support." : {
+      "comment" : "description for SensorTemperatureAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your sensor's temperature is too high. Please go to a cooler place to resume receiving sensor glucose values. If the problem persists, contact Eversense Customer Support."
+          }
+        }
+      }
+    },
+    "Your sensor's temperature is too low. Please go to a warmer place to resume receiving sensor glucose readings. If the problem persists, contact Eversense Customer Support." : {
+      "comment" : "description for SensorLowTemperatureAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your sensor's temperature is too low. Please go to a warmer place to resume receiving sensor glucose readings. If the problem persists, contact Eversense Customer Support."
+          }
+        }
+      }
+    },
+    "Your transmitter battery has approximately 24 hours of life remaining." : {
+      "comment" : "description for BatteryStatusAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your transmitter battery has approximately 24 hours of life remaining."
+          }
+        }
+      }
+    },
+    "Your transmitter has detected an error. Please contact Eversense Customer Support." : {
+      "comment" : "description for CriticalFaultAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your transmitter has detected an error. Please contact Eversense Customer Support."
+          }
+        }
+      }
+    },
+    "Your transmitter has detected an issue with the vibration motor and can no longer provide vibe alerts. Please contact Eversense Customer Support for a replacement transmitter." : {
+      "comment" : "description for VibrationCurrentAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your transmitter has detected an issue with the vibration motor and can no longer provide vibe alerts. Please contact Eversense Customer Support for a replacement transmitter."
+          }
+        }
+      }
+    },
+    "Your transmitter has old or invalid date/time stamp." : {
+      "comment" : "description for InvalidClockAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your transmitter has old or invalid date/time stamp."
+          }
+        }
+      }
+    },
+    "Your transmitter has synced with your sensor." : {
+      "comment" : "description for SensorSyncConfirmedAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your transmitter has synced with your sensor."
+          }
+        }
+      }
+    },
+    "Your transmitter is out of warranty and will no longer provide glucose values. Contact your distributor to order a new transmitter." : {
+      "comment" : "description for TransmitterEOL396",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your transmitter is out of warranty and will no longer provide glucose values. Contact your distributor to order a new transmitter."
+          }
+        }
+      }
+    },
+    "Your transmitter is out of warranty and will soon no longer provide glucose values. Contact your distributor to order a new transmitter." : {
+      "comment" : "description for TransmitterEOL",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your transmitter is out of warranty and will soon no longer provide glucose values. Contact your distributor to order a new transmitter."
+          }
+        }
+      }
+    },
+    "Your Transmitter is past due for Calibration. Sensor Glucose values will no longer be displayed." : {
+      "comment" : "description for CalibrationGracePeriodAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Transmitter is past due for Calibration. Sensor Glucose values will no longer be displayed."
+          }
+        }
+      }
+    },
+    "Your transmitter's battery is empty. Please recharge transmitter now to resume sensor glucose display." : {
+      "comment" : "description for EmptyBatteryAlarm\"",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your transmitter's battery is empty. Please recharge transmitter now to resume sensor glucose display."
+          }
+        }
+      }
+    },
+    "Your transmitter's temperature is too high. Go to a cooler area to resume receiving sensor glucose readings. If the problem persists, contact Eversense Customer Support." : {
+      "comment" : "description for ReaderTemperatureAlarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your transmitter's temperature is too high. Go to a cooler area to resume receiving sensor glucose readings. If the problem persists, contact Eversense Customer Support."
           }
         }
       }

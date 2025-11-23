@@ -427,6 +427,7 @@ extension Eversense365 {
             logger.debug("Sending GetCalibrationInfoPacket")
             let calibrationInfo: GetCalibrationInfoResponse = try await peripheralManager.write(GetCalibrationInfoPacket())
             cgmManager.state.calibrationCount = UInt16(calibrationInfo.countCalibrations)
+            cgmManager.state.calibrationReadiness = calibrationInfo.calibrationReadiness
             cgmManager.state.calibrationMode = calibrationInfo.calibrationMode
             cgmManager.state.calibrationPhase = calibrationInfo.currentPhase
             cgmManager.state.lastCalibration = calibrationInfo.lastCalibration
@@ -517,6 +518,17 @@ extension Eversense365 {
             cgmManager.notifyStateDidChange()
         } catch {
             logger.error("Failed to update signal strength - error: \(error)")
+        }
+    }
+
+    static func calibrateSensors(cgmManager: EversenseCGMManager, glucoseInMgDl: UInt16) async {
+        do {
+            let _: SetBloodGlucosePointResponse = try await cgmManager.bluetoothManager
+                .write(SetBloodGlucosePointPacket(glucoseInMgDl: glucoseInMgDl, timestamp: Date.now))
+
+            logger.info("[365] Calibation has been send - timestamp: \(Date())")
+        } catch {
+            logger.error("[365] Something went wrong during calibration: \(error)")
         }
     }
 

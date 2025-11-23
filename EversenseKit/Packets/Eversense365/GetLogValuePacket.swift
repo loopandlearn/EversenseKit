@@ -69,6 +69,8 @@ extension Eversense365 {
                 let glucose = UInt16(chunk[offsetGlucose]) + (UInt16(chunk[offsetGlucose + 1]) << 8)
                 let trend = getTrend(value: chunk[trendDirection])
 
+                i = end
+
                 guard glucose < 0x03E8 else {
                     logger.warning("WARNING: glucose exceeds safety limits - value: \(glucose) mg/dl, datetime: \(datetime)")
                     continue
@@ -80,11 +82,8 @@ extension Eversense365 {
                     trend: trend
                 ))
 
-                logger
-                    .debug(
-                        "Datetime: \(datetime), Glucose: \(glucose) mg/dl, trend: \(trend.symbol)"
-                    )
-                i = end
+                let message = "Datetime: \(datetime), Glucose: \(glucose) mg/dl, trend: \(trend.symbol)"
+                logger.debug(message)
             }
 
             return GetLogValueResponse(

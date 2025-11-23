@@ -27,8 +27,16 @@ extension Eversense365 {
 
         /// Parsed message:
         /// 42 22 -> CmdType & CmdId
-        /// 01 -> Blood glucose
-        /// 01 01 01 -> Active alarm
+        /// 03 -> Active alarm count
+        /// 06 07 0b -> Alarm 1: SensorAwolAlarm
+        /// 43 03 36 -> Alarm 2: SmfSyncFailed
+        /// 45 00 38 -> Alarm 3: OtaUpgradeComplete
+        ///
+        /// 42 22 -> CmdType & CmdId
+        /// 03 -> Active alarm count
+        /// 0b 00 16 -> Alarm 1: LowGlucoseAlarm
+        /// 17 04 19 -> Alarm 2: SensorRetiringSoon6Alarm
+        /// 04 07 09 -> Alarm 3: SensorLowTemperatureAlarm
         func parseResponse(data: Data) -> GetActiveAlarmsResponse {
             let count = data[Offset.NoOfAlerts]
             var alarms: [ActiveAlarm] = []
@@ -36,20 +44,20 @@ extension Eversense365 {
             for i in 0 ..< Int(count) {
                 let offsetStart = i * 3 + 3
                 guard data.count >= offsetStart + 2 else {
-                    logger
-                        .warning(
-                            "Message has less alarms then expected - data: \(data.hexString()), count: \(count), offsetStart: \(offsetStart)"
-                        )
+                    let message =
+                        "Missing data for alarms - data: \(data.hexString()), count: \(count), offsetStart: \(offsetStart)"
+                    logger.warning(message)
                     break
                 }
 
                 alarms.append(ActiveAlarm(
-                    code: data[offsetStart],
+                    code: Alarm(rawValue: data[offsetStart]) ?? .unknown,
                     flag: data[offsetStart + 1],
                     priority: data[offsetStart + 2],
                 ))
             }
 
+            alarms.sort(by: { $0.priority < $1.priority })
             return GetActiveAlarmsResponse(
                 count: count,
                 alarms: alarms

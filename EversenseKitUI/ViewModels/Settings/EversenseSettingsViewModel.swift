@@ -18,7 +18,13 @@ class EversenseSettingsViewModel: ObservableObject {
     @Published var batteryLevel: String = "0%"
     @Published var signalStrength: String = ""
     @Published var connectionStatus: String = ""
+    @Published var glucoseForCalibration: String = ""
+    @Published var activeAlarm: ActiveAlarm? = nil
+    @Published var calibrationReadiness: CalibrationReadiness = .Unknown
     @Published var is365: Bool = false
+    @Published var forceSyncing: Bool = false
+    @Published var allowCalibrations: Bool = false
+    @Published var isPromptingCalibration: Bool = false
 
     @Published var showingDeleteConfirmation: Bool = false
 
@@ -51,6 +57,10 @@ class EversenseSettingsViewModel: ObservableObject {
         self.toTransmitterSettings = toTransmitterSettings
         self.toPlacementGuide = toPlacementGuide
 
+        if let allowCalibrations = Bundle.main.object(forInfoDictionaryKey: "EVERSENSE_ALLOW_CALIBRATIONS") as? Bool {
+            self.allowCalibrations = allowCalibrations
+        }
+
         guard let cgmManager = cgmManager else {
             return
         }
@@ -67,7 +77,27 @@ class EversenseSettingsViewModel: ObservableObject {
     }
 
     public func readGlucose() {
-        cgmManager?.heartbeathOperation(force: true)
+        forceSyncing = true
+        cgmManager?.heartbeathOperation(force: true) {
+            DispatchQueue.main.async {
+                self.forceSyncing = false
+            }
+        }
+    }
+
+    public func startCalibration() {
+        guard let cgmManager = cgmManager else {
+            return
+        }
+
+        isPromptingCalibration = false
+
+        Task {
+            if let glucose = UInt16(glucoseForCalibration) {
+                await Eversense365.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose)
+                cgmManager.heartbeathOperation(force: true)
+            }
+        }
     }
 }
 
@@ -78,6 +108,7 @@ extension EversenseSettingsViewModel: StateObserver {
         transmitterName = state.bleNameString
         connectionStatus = state.connectionStatus.title
         currentPhase = state.calibrationPhase.getTitle(calibrationMode: state.calibrationMode)
+        calibrationReadiness = state.calibrationReadiness
 
         signalStrength = state.signalStrength.title
         batteryLevel = "\(state.batteryPercentage)%"
@@ -104,6 +135,10 @@ extension EversenseSettingsViewModel: StateObserver {
             nextCalibrationDays = max(floor(nextCalibrationIn / .days(1)), 0)
             nextCalibrationHours = max(nextCalibrationIn.truncatingRemainder(dividingBy: .days(1)) / .hours(1), 0)
             nextCalibrationMinutes = max(nextCalibrationIn.truncatingRemainder(dividingBy: .hours(1)) / .minutes(1), 0)
+        }
+
+        if let alarm = state.activeAlarms.first {
+            activeAlarm = alarm
         }
     }
 }

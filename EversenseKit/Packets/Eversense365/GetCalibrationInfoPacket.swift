@@ -1,6 +1,7 @@
 extension Eversense365 {
     class GetCalibrationInfoResponse {
         let currentPhase: CalibrationPhase
+        let calibrationReadiness: CalibrationReadiness
         let calibrationMode: CalibrationMode
         let countCalibrations: UInt8
         let nextCalibration: Date
@@ -8,12 +9,14 @@ extension Eversense365 {
 
         init(
             currentPhase: CalibrationPhase,
+            calibrationReadiness: CalibrationReadiness,
             calibrationMode: CalibrationMode,
             countCalibrations: UInt8,
             nextCalibration: Date,
             lastCalibration: Date
         ) {
             self.currentPhase = currentPhase
+            self.calibrationReadiness = calibrationReadiness
             self.calibrationMode = calibrationMode
             self.countCalibrations = countCalibrations
             self.nextCalibration = nextCalibration
@@ -54,6 +57,7 @@ extension Eversense365 {
         func parseResponse(data: Data) -> Eversense365.GetCalibrationInfoResponse {
             GetCalibrationInfoResponse(
                 currentPhase: CalibrationPhase.from365(rawValue: data[Offset.CURRENT_CALIBRATION_PHASE]),
+                calibrationReadiness: CalibrationReadiness(rawValue: data[Offset.READY_FOR_CALIBRATIONS]) ?? .Unknown,
                 calibrationMode: CalibrationMode.from365(rawValue: data[Offset.CALIBRATIONS_PER_DAY]),
                 countCalibrations: data[Offset.CALIBRATIONS_IN_PHASE],
                 nextCalibration: Date.fromUnix2000(

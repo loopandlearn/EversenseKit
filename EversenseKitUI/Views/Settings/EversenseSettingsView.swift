@@ -63,6 +63,37 @@ struct EversenseSettingsView: View {
                     transmitterSerial
                 }
                 .padding(.bottom, 5)
+
+                if let activeAlarm = viewModel.activeAlarm {
+                    VStack(alignment: .leading) {
+                        HStack(spacing: 5) {
+                            switch activeAlarm.code.type {
+                            case .Info:
+                                Image(systemName: "info.circle.fill")
+                                    .font(.headline)
+                                    .foregroundStyle(.blue)
+                            case .Warning:
+                                Image(systemName: "exclamationmark.octagon.fill")
+                                    .font(.headline)
+                                    .foregroundStyle(.orange)
+                            case .Critical:
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .font(.headline)
+                                    .foregroundStyle(.red)
+                            }
+
+                            Text(activeAlarm.code.title)
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                        }
+                        .padding(.bottom, 5)
+
+                        if let description = activeAlarm.code.description {
+                            Text(description)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
             }
 
             Section(header: SectionHeader(label: LocalizedString(
@@ -105,6 +136,16 @@ struct EversenseSettingsView: View {
                             .foregroundColor(.secondary)
                     }
                 }
+                Button(action: { viewModel.isPromptingCalibration = true }) {
+                    HStack {
+                        Text("Calibrate")
+                        Spacer()
+                        if viewModel.calibrationReadiness != .Ready {
+                            Text(viewModel.calibrationReadiness.description)
+                        }
+                    }
+                }
+                .disabled(viewModel.calibrationReadiness != .Ready)
             }
 
             Section(header: SectionHeader(label: LocalizedString(
@@ -155,9 +196,18 @@ struct EversenseSettingsView: View {
                 .sheet(isPresented: $isSharePresented, onDismiss: {}, content: {
                     ActivityViewController(activityItems: viewModel.getLogs())
                 })
+
                 Button(action: viewModel.readGlucose) {
-                    Text(LocalizedString("Force sync", comment: "force transmitter sync"))
+                    HStack {
+                        Text(LocalizedString("Force sync", comment: "force transmitter sync"))
+                        Spacer()
+                        if viewModel.forceSyncing {
+                            ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                        }
+                    }
                 }
+                .disabled(viewModel.forceSyncing)
+
                 Button(action: {
                     viewModel.showingDeleteConfirmation = true
                 }) {
@@ -168,6 +218,20 @@ struct EversenseSettingsView: View {
                     removeCgmManagerActionSheet
                 }
             }
+        }
+        .alert(
+            LocalizedString("Calibrate Transmitter", comment: ""),
+            isPresented: $viewModel.isPromptingCalibration
+        ) {
+            Button(LocalizedString("Cancel", comment: "Cancel button title"), role: .cancel) {
+                viewModel.isPromptingCalibration = false
+            }
+            Button(LocalizedString("Ok", comment: "label Okay")) {
+                viewModel.startCalibration()
+            }
+
+            TextField(LocalizedString("Glucose in mg/dl", comment: ""), text: $viewModel.glucoseForCalibration)
+                .keyboardType(.numberPad)
         }
         .listStyle(InsetGroupedListStyle())
         .navigationBarItems(trailing: Button(LocalizedString("Done", comment: "done button title"), action: dismiss))
