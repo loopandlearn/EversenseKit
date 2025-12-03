@@ -8,9 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3E02C8BB2DC8DF7700108B7A /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8B92DC8DF7700108B7A /* LoopKit.framework */; };
-		3E02C8BC2DC8DF7700108B7A /* LoopKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8B92DC8DF7700108B7A /* LoopKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3E02C8BD2DC8DF7700108B7A /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8BA2DC8DF7700108B7A /* LoopKitUI.framework */; };
-		3E02C8BE2DC8DF7700108B7A /* LoopKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8BA2DC8DF7700108B7A /* LoopKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3E6696ED2E927ED600AAE4F1 /* EversenseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8AA2DC8DEA600108B7A /* EversenseKit.framework */; };
 		3E6696EE2E927ED600AAE4F1 /* EversenseKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8AA2DC8DEA600108B7A /* EversenseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3E9218922E51F667004B6D0B /* SwiftASN1 in Frameworks */ = {isa = PBXBuildFile; productRef = 3E9218912E51F667004B6D0B /* SwiftASN1 */; };
@@ -38,18 +36,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		3E02C8BF2DC8DF7700108B7A /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				3E02C8BC2DC8DF7700108B7A /* LoopKit.framework in Embed Frameworks */,
-				3E02C8BE2DC8DF7700108B7A /* LoopKitUI.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		3E6696F12E927ED600AAE4F1 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -218,7 +204,6 @@
 				3E02C8A62DC8DEA600108B7A /* Sources */,
 				3E02C8A72DC8DEA600108B7A /* Frameworks */,
 				3E02C8A82DC8DEA600108B7A /* Resources */,
-				3E02C8BF2DC8DF7700108B7A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
