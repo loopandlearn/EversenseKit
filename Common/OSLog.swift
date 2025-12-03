@@ -6,7 +6,7 @@ class EversenseLogger {
     private let fileManager = FileManager.default
 
     init(category: String) {
-        logger = Logger(subsystem: "com.nightscout.EverSenseKit", category: category)
+        logger = Logger(subsystem: "org.nightscout.EversenseKit", category: category)
     }
 
     public func debug(_ msg: String, file: String = #file, _ function: String = #function, _ line: Int = #line) {
