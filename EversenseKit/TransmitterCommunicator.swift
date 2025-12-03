@@ -213,6 +213,7 @@ extension EversenseE3 {
         }
 
         cgmManager.state.isSyncing = false
+        cgmManager.state.lastSynced = Date.now
         cgmManager.notifyStateDidChange()
     }
 
@@ -462,6 +463,7 @@ extension Eversense365 {
         }
 
         cgmManager.state.isSyncing = false
+        cgmManager.state.lastSynced = Date.now
         cgmManager.notifyStateDidChange()
     }
 

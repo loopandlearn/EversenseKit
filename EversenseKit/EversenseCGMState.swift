@@ -1,3 +1,4 @@
+import HealthKit
 import LoopKit
 
 public enum ConnectionStatus: UInt8 {
@@ -17,6 +18,25 @@ public enum ConnectionStatus: UInt8 {
     }
 }
 
+public struct GlucoseDisplay: GlucoseDisplayable {
+    public let isStateValid: Bool
+    public let trendType: LoopKit.GlucoseTrend?
+    public let trendRate: HKQuantity? = nil
+    public let isLocal: Bool = true
+    public let glucoseRangeCategory: LoopKit.GlucoseRangeCategory? = nil
+
+    // TODO: Fix the placeholder glucoseRangeCategory & trendRate
+    public init(state: EversenseCGMState) {
+        if let lastSynced = state.lastSynced {
+            isStateValid = abs(lastSynced.timeIntervalSinceNow) <= TimeInterval(minutes: 15)
+        } else {
+            isStateValid = false
+        }
+
+        trendType = state.recentGlucoseTrend
+    }
+}
+
 public struct EversenseCGMState: RawRepresentable, Equatable {
     public typealias RawValue = CGMManager.RawStateValue
 
@@ -26,6 +46,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         bleUUIDString = rawValue["bleUUIDString"] as? String
         isOnboarded = rawValue["isOnboarded"] as? Bool ?? false
         isSyncing = rawValue["isSyncing"] as? Bool ?? false
+        lastSynced = rawValue["lastSynced"] as? Date
         version = rawValue["version"] as? String
         extVersion = rawValue["extVersion"] as? String
         communicationProtocol = rawValue["communicationProtocol"] as? Double ?? 0
@@ -39,8 +60,8 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         nextCalibration = rawValue["nextCalibration"] as? Date
         calibrationCount = rawValue["calibrationCount"] as? UInt16 ?? 0
         isGlucoseHighAlarmEnabled = rawValue["isGlucoseHighAlarmEnabled"] as? Bool ?? false
-        lowGlucoseAlarmInMgDl = rawValue["lowGlucoseAlarmInMgDl"] as? UInt16 ?? 0
-        highGlucoseAlarmInMgDl = rawValue["highGlucoseAlarmInMgDl"] as? UInt16 ?? 0
+        lowGlucoseAlarmInMgDl = rawValue["lowGlucoseAlarmInMgDl"] as? UInt16 ?? 40
+        highGlucoseAlarmInMgDl = rawValue["highGlucoseAlarmInMgDl"] as? UInt16 ?? 200
         isPredictionLowEnabled = rawValue["isPredictionLowEnabled"] as? Bool ?? false
         isPredictionHighEnabled = rawValue["isPredictionHighEnabled"] as? Bool ?? false
         predictionRisingInterval = rawValue["predictionRisingInterval"] as? TimeInterval
@@ -121,6 +142,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["bleUUIDString"] = bleUUIDString
         value["isOnboarded"] = isOnboarded
         value["isSyncing"] = isSyncing
+        value["lastSynced"] = lastSynced
         value["version"] = version
         value["extVersion"] = extVersion
         value["communicationProtocol"] = communicationProtocol
@@ -180,6 +202,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var bleNameString: String
     public var isOnboarded: Bool
     public var isSyncing: Bool
+    public var lastSynced: Date?
     public var version: String?
     public var extVersion: String?
     public var communicationProtocol: Double

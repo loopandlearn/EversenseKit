@@ -25,15 +25,17 @@ public class EversenseCGMManager: CGMManager {
     }
 
     public var shouldSyncToRemoteService: Bool {
-        false
+        true
     }
 
-    public var glucoseDisplay: (any LoopKit.GlucoseDisplayable)?
+    public var glucoseDisplay: (any LoopKit.GlucoseDisplayable)? {
+        GlucoseDisplay(state: state)
+    }
 
     public var cgmManagerStatus: LoopKit.CGMManagerStatus {
         LoopKit.CGMManagerStatus(
-            hasValidSensorSession: false,
-            lastCommunicationDate: nil,
+            hasValidSensorSession: state.isOnboarded && state.recentGlucoseDateTime != nil,
+            lastCommunicationDate: state.lastSynced,
             device: device
         )
     }
