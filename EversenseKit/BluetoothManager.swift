@@ -28,6 +28,9 @@ class BluetoothManager: NSObject {
                     cgmManager.notifyStateDidChange()
                 }
 
+                self.stopScan()
+                self.scanCompletion = nil
+                self.connectCompletion = nil
                 await completionAsync(result)
             }
         }
@@ -41,6 +44,8 @@ class BluetoothManager: NSObject {
             cgmManager.state.connectionStatus = .connected
             cgmManager.notifyStateDidChange()
 
+            logger.debug("Already connected!")
+            
             completion(nil)
             return
         }
@@ -49,6 +54,7 @@ class BluetoothManager: NSObject {
         cgmManager.notifyStateDidChange()
 
         if let peripheral = peripheral {
+            logger.debug("Reconnecting to device...")
             connect(peripheral: peripheral) { error in
                 if let error = error {
                     completion(error)
@@ -65,6 +71,7 @@ class BluetoothManager: NSObject {
             return
         }
 
+        logger.debug("Scanning for device...")
         scan { result, error in
             guard error == nil, let result = result, result.peripheral.identifier.uuidString == bleUUIDString else {
                 return
@@ -97,9 +104,7 @@ class BluetoothManager: NSObject {
             return
         }
 
-        if manager.isScanning {
-            manager.stopScan()
-        }
+        stopScan()
 
         scanCompletion = completion
         manager.scanForPeripherals(withServices: [PeripheralManager.serviceUUID])
@@ -121,9 +126,7 @@ class BluetoothManager: NSObject {
         }
 
         stopScan()
-
         connectCompletion = completion
-
         manager.connect(peripheral)
     }
 
@@ -142,14 +145,18 @@ class BluetoothManager: NSObject {
 extension BluetoothManager: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         logger.debug("State update: \(central.state)")
-
-        guard central.state == .poweredOn else {
+        
+        if central.state == .resetting {
+            peripheral = nil
+            peripheralManager = nil
             return
         }
 
-        ensureConnected { error in
-            if let error = error {
-                self.logger.error("Failed to auto reconnect: \(error.describe)")
+        if central.state == .poweredOn {
+            ensureConnected { error in
+                if let error = error {
+                    self.logger.error("Failed to auto reconnect: \(error.describe)")
+                }
             }
         }
     }
@@ -192,7 +199,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
         )
 
         logger.debug("Connected to transmitter -> Start discovering services...")
-        peripheral.discoverServices(nil)
+        peripheral.discoverServices([PeripheralManager.serviceUUID])
     }
 
     func centralManager(_: CBCentralManager, didDisconnectPeripheral _: CBPeripheral, error: Error?) {

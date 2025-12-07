@@ -54,9 +54,10 @@ class PeripheralManager: NSObject {
             peripheral.writeValue(data, for: characteristic, type: .withoutResponse)
         } else {
             let encodedMessage = EncodingOperations.encode(data: data, chunkSize: maxPacketSize)
-            logger.debug("[ENCODED] Writing data -> \(encodedMessage.hexString())")
-
+            
             for message in EncodingOperations.split(data: encodedMessage, chunkSize: maxPacketSize) {
+                logger.debug("[ENCODED] Writing data -> \(message.hexString())")
+                
                 peripheral.writeValue(message, for: characteristic, type: .withoutResponse)
                 try await Task.sleep(nanoseconds: 100_000_000) // 100ms
             }
@@ -85,6 +86,8 @@ class PeripheralManager: NSObject {
                     // We did what we must, so exist and be happy :)
                     return
                 }
+                
+                logger.error("Timeout has been triggered...")
 
                 stream.finish()
 
@@ -203,7 +206,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             return
         }
 
-        guard var data = characteristic.value else {
+        guard let data = characteristic.value else {
             logger.warning("Empty data received")
             return
         }
@@ -272,7 +275,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             return
         }
 
-        if !packet.checkPacket(data: actualData, doChecksum: isE3) {
+        guard packet.checkPacket(data: actualData, doChecksum: isE3) else {
             logger
                 .warning("Received invalid response, invalid response code or checksum failed - data: \(actualData.hexString())")
             return

@@ -7,9 +7,8 @@ extension EversenseE3 {
     static func readGlucoseData(
         peripheralManager: PeripheralManager,
         cgmManager: EversenseCGMManager,
-        delegate: WeakSynchronizedDelegate<CGMManagerDelegate>,
         lastGlucoseTimestamp: Date
-    ) async {
+    ) async -> [NewGlucoseSample] {
         do {
             let glucoseData: GetGlucoseDataResponse = try await peripheralManager.write(GetGlucoseDataPacket())
             let recentGlucoseValue: GetRecentGlucoseValueResponse = try await peripheralManager
@@ -23,43 +22,35 @@ extension EversenseE3 {
             )
 
             guard recentGlucoseValue.valueInMgDl < 0x03E8 else { // 1000 mg/dl
-                logger
-                    .error(
-                        "Received invalid Glucose data - value: \(recentGlucoseValue.valueInMgDl) mg/dl, timestamp sample: \(dateTime)"
-                    )
-                return
+                let message = "Received invalid Glucose data - value: \(recentGlucoseValue.valueInMgDl) mg/dl, timestamp sample: \(dateTime)"
+                logger.error(message)
+                return []
             }
 
             guard dateTime > lastGlucoseTimestamp else {
-                logger
-                    .warning(
-                        "Received old glucose data - value: \(recentGlucoseValue.valueInMgDl) mg/dl, timestamp sample: \(dateTime)"
-                    )
-                return
+                let message = "Received old glucose data - value: \(recentGlucoseValue.valueInMgDl) mg/dl, timestamp sample: \(dateTime)"
+                logger.warning(message)
+                return []
             }
 
             cgmManager.state.recentGlucoseInMgDl = recentGlucoseValue.valueInMgDl
             cgmManager.state.recentGlucoseDateTime = dateTime
-
-            delegate.notify { cgmManagerDelegate in
-                guard let cgmManagerDelegate = cgmManagerDelegate else {
-                    logger.warning("No cgmManagerDelegate...")
-                    return
-                }
-
-                cgmManagerDelegate.cgmManager(cgmManager, hasNew: .newData([
-                    NewGlucoseSample(
-                        cgmManager: cgmManager,
-                        value: recentGlucoseValue.valueInMgDl,
-                        trend: glucoseData.trend,
-                        dateTime: dateTime
-                    )
-                ]))
-            }
+            
+            // TODO: Read history
 
             logger.info("[E3] Glucose data read  - timestamp: \(Date())")
+            
+            return [
+                NewGlucoseSample(
+                    cgmManager: cgmManager,
+                    value: recentGlucoseValue.valueInMgDl,
+                    trend: glucoseData.trend,
+                    dateTime: dateTime
+                )
+            ]
         } catch {
             logger.error("[E3] Something went wrong during readGlucoseData: \(error)")
+            return []
         }
     }
 
@@ -285,21 +276,20 @@ extension Eversense365 {
     static func readGlucoseData(
         peripheralManager: PeripheralManager,
         cgmManager: EversenseCGMManager,
-        delegate: WeakSynchronizedDelegate<CGMManagerDelegate>,
         lastGlucoseTimestamp: Date
-    ) async {
+    ) async -> [NewGlucoseSample] {
         do {
-            logger.debug("sending GetGlucoseLogRangePacket...")
-
+            logger.debug("sending GetRecentGlucosePacket...")
             let mostRecentGlucose = await getRecentGlucose(peripheralManager: peripheralManager)
 
+            logger.debug("sending GetGlucoseLogRangePacket...")
             let glucoseRange: GetGlucoseLogRangeResponse = try await peripheralManager
                 .write(GetGlucoseLogRangePacket(communicationVersion: cgmManager.state.communicationProtocol))
             logger.info("Got Blood glucose range from: \(glucoseRange.rangeFrom) - \(glucoseRange.rangeTo)")
 
             guard glucoseRange.rangeFrom > 0 else {
                 logger.warning("No glucose data available...")
-                return
+                return []
             }
 
             let timeDiff = (Date.now.timeIntervalSince(lastGlucoseTimestamp) / TimeInterval.minutes(5)).rounded(.up)
@@ -349,23 +339,12 @@ extension Eversense365 {
                     )
                 )
             }
-            guard !samples.isEmpty else {
-                logger.info("No new glucose data")
-                return
-            }
-
-            delegate.notify { cgmManagerDelegate in
-                guard let cgmManagerDelegate = cgmManagerDelegate else {
-                    logger.warning("No cgmManagerDelegate...")
-                    return
-                }
-
-                cgmManagerDelegate.cgmManager(cgmManager, hasNew: .newData(samples))
-            }
-
+            
             logger.info("[365] Glucose data read  - timestamp: \(Date()), count: \(samples.count)")
+            return samples
         } catch {
             logger.error("[365] Something went wrong during readGlucoseData: \(error)")
+            return []
         }
     }
 
@@ -373,10 +352,8 @@ extension Eversense365 {
         do {
             let response: GetGlucoseDataResponse = try await peripheralManager.write(GetGlucoseDataPacket())
             guard response.glucoseInMgDl < 0x03E8 else {
-                logger
-                    .error(
-                        "Invalid Glucose data - value: \(response.glucoseInMgDl) mg/dl, timestamp: \(response.glucoseDatetime)"
-                    )
+                let message = "Invalid Glucose data - value: \(response.glucoseInMgDl) mg/dl, timestamp: \(response.glucoseDatetime)"
+                logger.warning(message)
                 return nil
             }
 

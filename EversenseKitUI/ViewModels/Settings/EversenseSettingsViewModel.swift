@@ -78,7 +78,7 @@ class EversenseSettingsViewModel: ObservableObject {
 
     public func readGlucose() {
         forceSyncing = true
-        cgmManager?.heartbeathOperation(force: true) {
+        cgmManager?.heartbeathOperation {
             DispatchQueue.main.async {
                 self.forceSyncing = false
             }
@@ -95,7 +95,7 @@ class EversenseSettingsViewModel: ObservableObject {
         Task {
             if let glucose = UInt16(glucoseForCalibration) {
                 await Eversense365.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose)
-                cgmManager.heartbeathOperation(force: true)
+                cgmManager.heartbeathOperation { }
             }
         }
     }

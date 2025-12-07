@@ -1,4 +1,4 @@
-enum ConnectFailure {
+enum ConnectFailure : Error {
     case failedToDiscoverServices
     case failedToDiscoverCharacteristics
     case failedToFetchFleetKey(reason: String)

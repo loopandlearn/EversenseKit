@@ -1,7 +1,7 @@
 public enum CalibrationPhase: UInt8 {
     case WARM_UP = 1
-    case INITIALIZATION = 3
     case DAILY_CALIBRATION = 2
+    case INITIALIZATION = 3
     case SUSPICIOUS = 4
     case UNKNOWN = 5
     case DEBUG = 6
@@ -39,8 +39,8 @@ public enum CalibrationPhase: UInt8 {
         switch rawValue {
         case 0: return .UNKNOWN
         case 1: return .WARM_UP
-        case 2: return .INITIALIZATION
-        case 3: return .DAILY_CALIBRATION
+        case 2: return .DAILY_CALIBRATION
+        case 3: return .INITIALIZATION
         case 4: return .SUSPICIOUS
         case 5: return .DROPOUT
         case 6: return .DEBUG
