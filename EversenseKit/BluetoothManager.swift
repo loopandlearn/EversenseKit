@@ -45,7 +45,7 @@ class BluetoothManager: NSObject {
             cgmManager.notifyStateDidChange()
 
             logger.debug("Already connected!")
-            
+
             completion(nil)
             return
         }
@@ -145,7 +145,7 @@ class BluetoothManager: NSObject {
 extension BluetoothManager: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         logger.debug("State update: \(central.state)")
-        
+
         if central.state == .resetting {
             peripheral = nil
             peripheralManager = nil

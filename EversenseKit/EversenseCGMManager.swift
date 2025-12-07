@@ -126,13 +126,13 @@ public class EversenseCGMManager: CGMManager {
 extension EversenseCGMManager {
     public func fetchNewDataIfNeeded(_ completion: @escaping (CGMReadingResult) -> Void) {
         logger.info("Starting fetchNewDataIfNeeded...")
-        
+
         guard let peripheralManager = bluetoothManager.peripheralManager else {
             logger.error("No peripheralManager")
             completion(.noData)
             return
         }
-        
+
         delegateQueue.async {
             var lastGlucoseTimestamp = self.cgmManagerDelegate?.startDateToFilterNewData(for: self) ?? Date.now
                 .addingTimeInterval(.hours(-4))
@@ -165,7 +165,7 @@ extension EversenseCGMManager {
                     )
                     await Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
                 }
-                
+
                 if samples.isEmpty {
                     completion(.noData)
                 } else {
@@ -173,20 +173,20 @@ extension EversenseCGMManager {
                 }
             }
         }
-        
+
         completion(.noData)
     }
 
     /// Responsible for handling fetching Glucose data when ready
     func heartbeathOperation(completion: (() -> Void)? = nil) {
-        fetchNewDataIfNeeded{ samples in
-            
-            if case .newData(let data) = samples {
+        fetchNewDataIfNeeded { samples in
+
+            if case let .newData(data) = samples {
                 self.delegate.notify { delegate in
                     delegate?.cgmManager(self, hasNew: .newData(data))
                 }
             }
-            
+
             completion?()
         }
     }

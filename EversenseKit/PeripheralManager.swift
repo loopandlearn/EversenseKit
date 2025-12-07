@@ -54,10 +54,10 @@ class PeripheralManager: NSObject {
             peripheral.writeValue(data, for: characteristic, type: .withoutResponse)
         } else {
             let encodedMessage = EncodingOperations.encode(data: data, chunkSize: maxPacketSize)
-            
+
             for message in EncodingOperations.split(data: encodedMessage, chunkSize: maxPacketSize) {
                 logger.debug("[ENCODED] Writing data -> \(message.hexString())")
-                
+
                 peripheral.writeValue(message, for: characteristic, type: .withoutResponse)
                 try await Task.sleep(nanoseconds: 100_000_000) // 100ms
             }
@@ -86,7 +86,7 @@ class PeripheralManager: NSObject {
                     // We did what we must, so exist and be happy :)
                     return
                 }
-                
+
                 logger.error("Timeout has been triggered...")
 
                 stream.finish()

@@ -22,24 +22,26 @@ extension EversenseE3 {
             )
 
             guard recentGlucoseValue.valueInMgDl < 0x03E8 else { // 1000 mg/dl
-                let message = "Received invalid Glucose data - value: \(recentGlucoseValue.valueInMgDl) mg/dl, timestamp sample: \(dateTime)"
+                let message =
+                    "Received invalid Glucose data - value: \(recentGlucoseValue.valueInMgDl) mg/dl, timestamp sample: \(dateTime)"
                 logger.error(message)
                 return []
             }
 
             guard dateTime > lastGlucoseTimestamp else {
-                let message = "Received old glucose data - value: \(recentGlucoseValue.valueInMgDl) mg/dl, timestamp sample: \(dateTime)"
+                let message =
+                    "Received old glucose data - value: \(recentGlucoseValue.valueInMgDl) mg/dl, timestamp sample: \(dateTime)"
                 logger.warning(message)
                 return []
             }
 
             cgmManager.state.recentGlucoseInMgDl = recentGlucoseValue.valueInMgDl
             cgmManager.state.recentGlucoseDateTime = dateTime
-            
+
             // TODO: Read history
 
             logger.info("[E3] Glucose data read  - timestamp: \(Date())")
-            
+
             return [
                 NewGlucoseSample(
                     cgmManager: cgmManager,
@@ -339,7 +341,7 @@ extension Eversense365 {
                     )
                 )
             }
-            
+
             logger.info("[365] Glucose data read  - timestamp: \(Date()), count: \(samples.count)")
             return samples
         } catch {
@@ -352,7 +354,8 @@ extension Eversense365 {
         do {
             let response: GetGlucoseDataResponse = try await peripheralManager.write(GetGlucoseDataPacket())
             guard response.glucoseInMgDl < 0x03E8 else {
-                let message = "Invalid Glucose data - value: \(response.glucoseInMgDl) mg/dl, timestamp: \(response.glucoseDatetime)"
+                let message =
+                    "Invalid Glucose data - value: \(response.glucoseInMgDl) mg/dl, timestamp: \(response.glucoseDatetime)"
                 logger.warning(message)
                 return nil
             }

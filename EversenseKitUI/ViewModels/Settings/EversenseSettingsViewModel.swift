@@ -95,7 +95,7 @@ class EversenseSettingsViewModel: ObservableObject {
         Task {
             if let glucose = UInt16(glucoseForCalibration) {
                 await Eversense365.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose)
-                cgmManager.heartbeathOperation { }
+                cgmManager.heartbeathOperation {}
             }
         }
     }
