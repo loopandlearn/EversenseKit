@@ -52,6 +52,7 @@ extension Eversense365 {
 
                 alarms.append(ActiveAlarm(
                     code: Alarm(rawValue: data[offsetStart]) ?? .unknown,
+                    codeRaw: data[offsetStart],
                     flag: data[offsetStart + 1],
                     priority: data[offsetStart + 2],
                 ))

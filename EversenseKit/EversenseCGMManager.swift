@@ -9,6 +9,7 @@ public class EversenseCGMManager: CGMManager {
     public static var pluginIdentifier: String = "EversenseKit"
 
     private let logger = EversenseLogger(category: "CGMManager")
+    private var isFetchingData = false
     internal let bluetoothManager: BluetoothManager
 
     public var state: EversenseCGMState
@@ -127,12 +128,28 @@ extension EversenseCGMManager {
     public func fetchNewDataIfNeeded(_ completion: @escaping (CGMReadingResult) -> Void) {
         logger.info("Starting fetchNewDataIfNeeded...")
 
-        guard let peripheralManager = bluetoothManager.peripheralManager else {
-            logger.error("No peripheralManager")
+        guard !isFetchingData else {
+            logger.error("Is already running...")
             completion(.noData)
             return
         }
 
+        completion(.noData)
+
+        heartbeathOperation {
+            self.logger.info("fetchNewDataIfNeeded completed")
+        }
+    }
+
+    /// Responsible for handling fetching Glucose data when ready
+    func heartbeathOperation(completion: (() -> Void)? = nil) {
+        guard let peripheralManager = bluetoothManager.peripheralManager else {
+            logger.error("No peripheralManager")
+            completion?()
+            return
+        }
+
+        isFetchingData = true
         delegateQueue.async {
             var lastGlucoseTimestamp = self.cgmManagerDelegate?.startDateToFilterNewData(for: self) ?? Date.now
                 .addingTimeInterval(.hours(-4))
@@ -144,8 +161,9 @@ extension EversenseCGMManager {
 
             self.bluetoothManager.ensureConnected { error in
                 if let internalError = error {
+                    self.isFetchingData = false
                     self.logger.error("Failed to connect to CGM: \(internalError.describe)")
-                    completion(.error(internalError))
+                    completion?()
                     return
                 }
 
@@ -166,28 +184,15 @@ extension EversenseCGMManager {
                     await Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
                 }
 
-                if samples.isEmpty {
-                    completion(.noData)
-                } else {
-                    completion(.newData(samples))
+                self.isFetchingData = false
+                if !samples.isEmpty {
+                    self.delegate.notify { delegate in
+                        delegate?.cgmManager(self, hasNew: .newData(samples))
+                    }
                 }
+
+                completion?()
             }
-        }
-
-        completion(.noData)
-    }
-
-    /// Responsible for handling fetching Glucose data when ready
-    func heartbeathOperation(completion: (() -> Void)? = nil) {
-        fetchNewDataIfNeeded { samples in
-
-            if case let .newData(data) = samples {
-                self.delegate.notify { delegate in
-                    delegate?.cgmManager(self, hasNew: .newData(data))
-                }
-            }
-
-            completion?()
         }
     }
 

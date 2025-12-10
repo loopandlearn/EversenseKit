@@ -226,5 +226,19 @@ extension BluetoothManager: CBCentralManagerDelegate {
 
     func centralManager(_: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         logger.error("Failed to connect to \(peripheral.name ?? "unknown") - error \(error?.localizedDescription ?? "unknown")")
+
+        if error != nil {
+            logger.debug("Clearing old reference to Transmitter...")
+            self.peripheral = nil
+            peripheralManager = nil
+        }
+
+        ensureConnected { error in
+            if let error = error {
+                self.logger.error("Failed to reconnect: \(error.describe)")
+            }
+
+            self.logger.info("Reconnect succesfull!")
+        }
     }
 }

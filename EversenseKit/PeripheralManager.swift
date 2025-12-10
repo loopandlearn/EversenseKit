@@ -240,8 +240,8 @@ extension PeripheralManager: CBPeripheralDelegate {
         if actualData[0] == EversenseE3.PacketIds.keepAlivePush.rawValue || actualData[0] == Eversense365.PacketIds.NotificationId
             .rawValue
         {
+            // TODO: Detect alarm notification
             logger.debug("Got keep alive message")
-            cgmManager.heartbeathOperation()
             return
         }
 

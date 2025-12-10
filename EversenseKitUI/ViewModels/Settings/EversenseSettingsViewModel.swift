@@ -137,7 +137,7 @@ extension EversenseSettingsViewModel: StateObserver {
             nextCalibrationMinutes = max(nextCalibrationIn.truncatingRemainder(dividingBy: .hours(1)) / .minutes(1), 0)
         }
 
-        if let alarm = state.activeAlarms.first {
+        if let alarm = state.activeAlarms.first(where: { $0.code.type != .Info }) {
             activeAlarm = alarm
         }
     }

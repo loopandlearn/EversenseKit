@@ -16,6 +16,9 @@
         }
       }
     },
+    "%u" : {
+
+    },
     "1 Weekly Calibration Phase" : {
       "comment" : "title for OneCal",
       "extractionState" : "manual",
@@ -84,6 +87,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Battery Error"
+          }
+        }
+      }
+    },
+    "Battery optimization" : {
+      "comment" : "title BatteryOptimization",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Battery optimization"
           }
         }
       }
@@ -1659,6 +1674,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Warm-Up Complete"
+          }
+        }
+      }
+    },
+    "Weekly calibration" : {
+      "comment" : "phase weekly calibration",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekly calibration"
           }
         }
       }

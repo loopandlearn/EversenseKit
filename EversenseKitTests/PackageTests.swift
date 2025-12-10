@@ -26,7 +26,7 @@ struct PackageTest {
     }
 
     @Test func calibrationData() async throws {
-        let data = Data(hex: "421d030043047984c20000000104000000000d00f43e632fc00000006d011800d61d42048f5fc2000000")
+        let data = Data(hex: "421d03005eb38e50c30000000104000000000000ac4bb32bc30000006d0118009b265db3a42bc3000000")
 
         Eversense365.sensorIdLength = 0x0A
         let calibrationData = Eversense365.GetCalibrationInfoPacket()
@@ -61,6 +61,16 @@ struct PackageTest {
         let packet = Eversense365.GetLogValuePacket(from: 38166, to: 38217)
         let result = packet.parseResponse(data: data)
 
-        #expect(result.isEmpty)
+        #expect(!result.isEmpty)
+    }
+
+    @Test func activeAlarms() async throws {
+        let data = Data(hex: "42220139002c")
+
+        Eversense365.sensorIdLength = 0x0A
+        let packet = Eversense365.GetActiveAlarmsPacket()
+        let result = packet.parseResponse(data: data)
+
+        #expect(result.count == 1)
     }
 }

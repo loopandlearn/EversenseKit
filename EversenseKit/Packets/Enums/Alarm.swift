@@ -61,7 +61,7 @@ public enum Alarm: UInt8, Codable {
     case SensorFile = 54
     case SensorRelink = 55
 //    case NewPasswordDetected = 56
-//    case BatteryOptimization = 57
+    case BatteryOptimization = 57
     case WarmUpPhaseCompleteAlert = 58
     case ResetLogReport = 59
     case InValidTx = 60
@@ -77,7 +77,8 @@ public enum Alarm: UInt8, Codable {
 
     var type: AlarmType {
         switch self {
-        case .BatteryStatusAlarm,
+        case .BatteryOptimization,
+             .BatteryStatusAlarm,
              .OneCal,
              .ResetLogReport,
              .SensorRetiringSoon1Alarm,
@@ -210,6 +211,8 @@ public enum Alarm: UInt8, Codable {
             return LocalizedString("Sensor File", comment: "title for SensorFile")
         case .SensorRelink:
             return LocalizedString("Sensor Re-link", comment: "title for SensorRelink")
+        case .BatteryOptimization:
+            return LocalizedString("Battery optimization", comment: "title for BatteryOptimization")
         case .WarmUpPhaseCompleteAlert:
             return LocalizedString("Warm-Up Complete", comment: "title for WarmUpPhaseCompleteAlert")
         case .ResetLogReport:

@@ -82,9 +82,17 @@ struct EversenseSettingsView: View {
                                     .foregroundStyle(.red)
                             }
 
-                            Text(activeAlarm.code.title)
-                                .font(.headline)
-                                .foregroundStyle(.primary)
+                            HStack(spacing: 5) {
+                                Text(activeAlarm.code.title)
+                                    .font(.headline)
+                                    .foregroundStyle(.primary)
+
+                                if activeAlarm.code == .unknown {
+                                    Text("\(activeAlarm.codeRaw)")
+                                        .font(.headline)
+                                        .foregroundStyle(.primary)
+                                }
+                            }
                         }
                         .padding(.bottom, 5)
 
@@ -282,13 +290,15 @@ struct EversenseSettingsView: View {
                         .foregroundColor(.secondary)
                 }
             }
-            Group {
-                Text("\(viewModel.nextCalibrationMinutes, specifier: "%.0f")")
-                    .font(.system(size: 28))
-                    .fontWeight(.heavy)
-                    .foregroundColor(.primary)
-                Text(LocalizedString("min", comment: "minute"))
-                    .foregroundColor(.secondary)
+            if viewModel.nextCalibrationDays == 0 {
+                Group {
+                    Text("\(viewModel.nextCalibrationMinutes, specifier: "%.0f")")
+                        .font(.system(size: 28))
+                        .fontWeight(.heavy)
+                        .foregroundColor(.primary)
+                    Text(LocalizedString("min", comment: "minute"))
+                        .foregroundColor(.secondary)
+                }
             }
         }
     }
