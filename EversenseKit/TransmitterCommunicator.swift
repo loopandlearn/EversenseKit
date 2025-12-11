@@ -505,6 +505,8 @@ extension Eversense365 {
 
     static func calibrateSensors(cgmManager: EversenseCGMManager, glucoseInMgDl: UInt16) async {
         do {
+            logger.info("Sending SetBloodGlucosePointPacket...")
+
             let _: SetBloodGlucosePointResponse = try await cgmManager.bluetoothManager
                 .write(SetBloodGlucosePointPacket(glucoseInMgDl: glucoseInMgDl, timestamp: Date.now))
 

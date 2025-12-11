@@ -64,43 +64,8 @@ struct EversenseSettingsView: View {
                 }
                 .padding(.bottom, 5)
 
-                if let activeAlarm = viewModel.activeAlarm {
-                    VStack(alignment: .leading) {
-                        HStack(spacing: 5) {
-                            switch activeAlarm.code.type {
-                            case .Info:
-                                Image(systemName: "info.circle.fill")
-                                    .font(.headline)
-                                    .foregroundStyle(.blue)
-                            case .Warning:
-                                Image(systemName: "exclamationmark.octagon.fill")
-                                    .font(.headline)
-                                    .foregroundStyle(.orange)
-                            case .Critical:
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .font(.headline)
-                                    .foregroundStyle(.red)
-                            }
-
-                            HStack(spacing: 5) {
-                                Text(activeAlarm.code.title)
-                                    .font(.headline)
-                                    .foregroundStyle(.primary)
-
-                                if activeAlarm.code == .unknown {
-                                    Text("\(activeAlarm.codeRaw)")
-                                        .font(.headline)
-                                        .foregroundStyle(.primary)
-                                }
-                            }
-                        }
-                        .padding(.bottom, 5)
-
-                        if let description = activeAlarm.code.description {
-                            Text(description)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
+                ForEach(viewModel.activeAlarm) { item in
+                    TransmitterAlarm(activeAlarm: item)
                 }
             }
 
@@ -276,7 +241,7 @@ struct EversenseSettingsView: View {
                         .font(.system(size: 28))
                         .fontWeight(.heavy)
                         .foregroundColor(.primary)
-                    Text(LocalizedString("h", comment: "hour"))
+                    Text(LocalizedString("d", comment: "day"))
                         .foregroundColor(.secondary)
                 }
             }
@@ -299,6 +264,45 @@ struct EversenseSettingsView: View {
                     Text(LocalizedString("min", comment: "minute"))
                         .foregroundColor(.secondary)
                 }
+            }
+        }
+    }
+
+    @ViewBuilder private func TransmitterAlarm(activeAlarm: ActiveAlarmItem) -> some View {
+        VStack(alignment: .leading) {
+            HStack(spacing: 5) {
+                switch activeAlarm.code.type {
+                case .Info:
+                    Image(systemName: "info.circle.fill")
+                        .font(.headline)
+                        .foregroundStyle(.blue)
+                case .Warning:
+                    Image(systemName: "exclamationmark.octagon.fill")
+                        .font(.headline)
+                        .foregroundStyle(.orange)
+                case .Critical:
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.headline)
+                        .foregroundStyle(.red)
+                }
+
+                HStack(spacing: 5) {
+                    Text(activeAlarm.code.title)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+
+                    if activeAlarm.code == .unknown {
+                        Text("\(activeAlarm.codeRaw)")
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                    }
+                }
+            }
+            .padding(.bottom, 5)
+
+            if let description = activeAlarm.code.description {
+                Text(description)
+                    .foregroundStyle(.secondary)
             }
         }
     }

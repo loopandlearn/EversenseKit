@@ -77,23 +77,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
     private func viewControllerForScreen(_ screen: EversenseUIScreen) -> UIViewController {
         switch screen {
         case .onboardingStart:
-            let view = EversenseOnboardingStart(
-                nextAction: { type in
-                    switch type {
-                    case 0:
-                        // Eversense E3
-                        self.navigateTo(.onboardingScan)
-                        return
-
-                    case 1:
-                        // Eversense 365
-                        self.navigateTo(.onboardingAuth)
-                        return
-                    default:
-                        self.logger.error("Invalid transmitter type received: \(type)")
-                    }
-                }
-            )
+            let view = EversenseOnboardingStart(nextAction: onboardingNextStep)
             return hostingController(rootView: view)
 
         case .onboardingAuth:
@@ -168,5 +152,53 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
         viewController.isModalInPresentation = false
         pushViewController(viewController, animated: true)
         viewController.view.layoutSubviews()
+    }
+
+    private func onboardingNextStep(_ cgmType: Int) {
+        #if targetEnvironment(simulator)
+            if let cgmManager = self.cgmManager {
+                cgmManager.state.isOnboarded = true
+                cgmManager.state.bleNameString = "Eversense 365 DEMO"
+                cgmManager.state.security = .v2 // Eversense 365
+                cgmManager.state.recentGlucoseInMgDl = 140
+                cgmManager.state.recentGlucoseDateTime = Date.now
+                cgmManager.state.recentGlucoseTrend = .flat
+                cgmManager.state.signalStrength = .Good
+                cgmManager.state.signalStrengthRaw = 1350
+                cgmManager.state.batteryPercentage = 75
+                cgmManager.state.calibrationMode = .WeeklySingle
+                cgmManager.state.calibrationPhase = .DAILY_CALIBRATION
+                cgmManager.state.calibrationReadiness = .Ready
+                cgmManager.state.lastCalibration = Date.now
+                cgmManager.state.nextCalibration = Date.now.addingTimeInterval(TimeInterval(days: 7))
+                cgmManager.state.activeAlarms = [
+                    ActiveAlarm(code: .CalibrationNowAlarm, codeRaw: Alarm.CalibrationNowAlarm.rawValue, flag: 0, priority: 0),
+                    ActiveAlarm(code: .BatteryOptimization, codeRaw: Alarm.BatteryOptimization.rawValue, flag: 0, priority: 1),
+                    ActiveAlarm(code: .PredictiveHighAlarm, codeRaw: Alarm.CalibrationNowAlarm.rawValue, flag: 0, priority: 2)
+                ]
+
+                if let cgmManagerOnboardingDelegate = self.cgmManagerOnboardingDelegate {
+                    DispatchQueue.main.async {
+                        cgmManagerOnboardingDelegate.cgmManagerOnboarding(didOnboardCGMManager: cgmManager)
+                        cgmManagerOnboardingDelegate.cgmManagerOnboarding(didCreateCGMManager: cgmManager)
+                        self.completionDelegate?.completionNotifyingDidComplete(self)
+                    }
+                }
+            }
+        #else
+            switch cgmType {
+            case 0:
+                // Eversense E3
+                navigateTo(.onboardingScan)
+                return
+
+            case 1:
+                // Eversense 365
+                navigateTo(.onboardingAuth)
+                return
+            default:
+                logger.error("Invalid transmitter type received: \(cgmType)")
+            }
+        #endif
     }
 }

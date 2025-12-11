@@ -1,6 +1,13 @@
 import HealthKit
 import SwiftUI
 
+struct ActiveAlarmItem: Identifiable {
+    let id = UUID()
+    let code: Alarm
+    let codeRaw: UInt8
+    let priority: UInt8
+}
+
 class EversenseSettingsViewModel: ObservableObject {
     @Published var transmitterModel: String = ""
     @Published var transmitterName: String = ""
@@ -19,7 +26,7 @@ class EversenseSettingsViewModel: ObservableObject {
     @Published var signalStrength: String = ""
     @Published var connectionStatus: String = ""
     @Published var glucoseForCalibration: String = ""
-    @Published var activeAlarm: ActiveAlarm? = nil
+    @Published var activeAlarm: [ActiveAlarmItem] = []
     @Published var calibrationReadiness: CalibrationReadiness = .Unknown
     @Published var is365: Bool = false
     @Published var forceSyncing: Bool = false
@@ -112,6 +119,9 @@ extension EversenseSettingsViewModel: StateObserver {
 
         signalStrength = state.signalStrength.title
         batteryLevel = "\(state.batteryPercentage)%"
+        activeAlarm = state.activeAlarms
+            .filter { $0.code.type != .Info }
+            .map { item in ActiveAlarmItem(code: item.code, codeRaw: item.codeRaw, priority: item.priority) }
 
         if let value = state.recentGlucoseInMgDl {
             lastMeasurement = HKQuantity(unit: .milligramsPerDeciliter, doubleValue: Double(value))
@@ -135,10 +145,6 @@ extension EversenseSettingsViewModel: StateObserver {
             nextCalibrationDays = max(floor(nextCalibrationIn / .days(1)), 0)
             nextCalibrationHours = max(nextCalibrationIn.truncatingRemainder(dividingBy: .days(1)) / .hours(1), 0)
             nextCalibrationMinutes = max(nextCalibrationIn.truncatingRemainder(dividingBy: .hours(1)) / .minutes(1), 0)
-        }
-
-        if let alarm = state.activeAlarms.first(where: { $0.code.type != .Info }) {
-            activeAlarm = alarm
         }
     }
 }
