@@ -33,10 +33,8 @@ extension Eversense365 {
         /// Parse response:
         /// 43 0C -> CmdType & CmdId
         /// ?? -> Calibration ENUM
-        func parseResponse(data: Data) -> SetBloodGlucosePointResponse {
-            let value = data[2]
-
-            return SetBloodGlucosePointResponse()
+        func parseResponse(data _: Data) -> SetBloodGlucosePointResponse {
+            SetBloodGlucosePointResponse()
         }
     }
 }

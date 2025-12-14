@@ -19,6 +19,6 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>EVERSENSE_ALLOW_CALIBRATIONS</key>
-	<false/>
+	<true/>
 </dict>
 </plist>

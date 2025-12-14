@@ -25,13 +25,11 @@ class EversenseSettingsViewModel: ObservableObject {
     @Published var batteryLevel: String = "0%"
     @Published var signalStrength: String = ""
     @Published var connectionStatus: String = ""
-    @Published var glucoseForCalibration: String = ""
+    @Published var lastSync: String = ""
     @Published var activeAlarm: [ActiveAlarmItem] = []
     @Published var calibrationReadiness: CalibrationReadiness = .Unknown
     @Published var is365: Bool = false
     @Published var forceSyncing: Bool = false
-    @Published var allowCalibrations: Bool = false
-    @Published var isPromptingCalibration: Bool = false
 
     @Published var showingDeleteConfirmation: Bool = false
 
@@ -50,23 +48,26 @@ class EversenseSettingsViewModel: ObservableObject {
     private let logger = EversenseLogger(category: "SettingsViewModel")
 
     private let cgmManager: EversenseCGMManager?
+    public let allowCalibrations = FeatureFlags.ALLOW_CALIBRATION
     public let deleteCgm: () -> Void
     public let toTransmitterSettings: () -> Void
     public let toPlacementGuide: () -> Void
+    public let toCalibration: () -> Void
+    public let toCalibrationHistory: () -> Void
     init(
         cgmManager: EversenseCGMManager?,
         deleteCgm: @escaping () -> Void,
         toTransmitterSettings: @escaping () -> Void,
-        toPlacementGuide: @escaping () -> Void
+        toPlacementGuide: @escaping () -> Void,
+        toCalibration: @escaping () -> Void,
+        toCalibrationHistory: @escaping () -> Void
     ) {
         self.cgmManager = cgmManager
         self.deleteCgm = deleteCgm
         self.toTransmitterSettings = toTransmitterSettings
         self.toPlacementGuide = toPlacementGuide
-
-        if let allowCalibrations = Bundle.main.object(forInfoDictionaryKey: "EVERSENSE_ALLOW_CALIBRATIONS") as? Bool {
-            self.allowCalibrations = allowCalibrations
-        }
+        self.toCalibration = toCalibration
+        self.toCalibrationHistory = toCalibrationHistory
 
         guard let cgmManager = cgmManager else {
             return
@@ -88,21 +89,6 @@ class EversenseSettingsViewModel: ObservableObject {
         cgmManager?.heartbeathOperation {
             DispatchQueue.main.async {
                 self.forceSyncing = false
-            }
-        }
-    }
-
-    public func startCalibration() {
-        guard let cgmManager = cgmManager else {
-            return
-        }
-
-        isPromptingCalibration = false
-
-        Task {
-            if let glucose = UInt16(glucoseForCalibration) {
-                await Eversense365.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose)
-                cgmManager.heartbeathOperation {}
             }
         }
     }
@@ -129,6 +115,10 @@ extension EversenseSettingsViewModel: StateObserver {
 
         if let value = state.recentGlucoseDateTime {
             lastMeasurementDatetime = timeFormatter.string(from: value)
+        }
+
+        if let value = state.lastSynced {
+            lastSync = timeFormatter.string(from: value)
         }
 
         if let lastCalibration = state.lastCalibration, let nextCalibration = state.nextCalibration {

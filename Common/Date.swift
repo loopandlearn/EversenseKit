@@ -20,7 +20,7 @@ extension Date {
     }
 
     static func nowWithTimezone() -> Date {
-        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date())
+        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date.now)
         var full = DateComponents()
         full.timeZone = TimeZone.current
         full.year = components.year

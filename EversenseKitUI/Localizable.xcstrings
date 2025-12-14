@@ -127,9 +127,6 @@
         }
       }
     },
-    "Calibrate" : {
-
-    },
     "Calibrate Again" : {
       "comment" : "title for CalibrationFailedAlert",
       "extractionState" : "manual",
@@ -154,6 +151,18 @@
         }
       }
     },
+    "Calibrate transmitter" : {
+      "comment" : "calibration",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calibrate transmitter"
+          }
+        }
+      }
+    },
     "Calibration Expired" : {
       "comment" : "title for CalibrationExpiredAlarm",
       "extractionState" : "manual",
@@ -162,6 +171,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Calibration Expired"
+          }
+        }
+      }
+    },
+    "Calibration history" : {
+      "comment" : "Calibration history header",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calibration history"
           }
         }
       }
@@ -730,6 +751,18 @@
         }
       }
     },
+    "Last sync" : {
+      "comment" : "transmitter last sync",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last sync"
+          }
+        }
+      }
+    },
     "Last update: " : {
       "comment" : "label for last update",
       "extractionState" : "manual",
@@ -738,6 +771,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last update: "
+          }
+        }
+      }
+    },
+    "Loading data..." : {
+      "comment" : "loading calibration data",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading data..."
           }
         }
       }

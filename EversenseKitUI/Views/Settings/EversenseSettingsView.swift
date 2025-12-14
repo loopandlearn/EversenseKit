@@ -109,16 +109,33 @@ struct EversenseSettingsView: View {
                             .foregroundColor(.secondary)
                     }
                 }
-                Button(action: { viewModel.isPromptingCalibration = true }) {
-                    HStack {
-                        Text("Calibrate")
-                        Spacer()
-                        if viewModel.calibrationReadiness != .Ready {
-                            Text(viewModel.calibrationReadiness.description)
+                if viewModel.allowCalibrations {
+                    Button(action: { viewModel.toCalibration() }) {
+                        HStack {
+                            Text(LocalizedString("Calibrate transmitter", comment: "calibration"))
+                            Spacer()
+                            if viewModel.calibrationReadiness != .Ready {
+                                Text(viewModel.calibrationReadiness.description)
+                            } else {
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: UIFont.systemFontSize, weight: .medium))
+                                    .opacity(0.35)
+                            }
                         }
                     }
+                    .buttonStyle(PlainButtonStyle())
+                    .disabled(viewModel.calibrationReadiness != .Ready)
                 }
-                .disabled(viewModel.calibrationReadiness != .Ready)
+                Button(action: { viewModel.toCalibrationHistory() }) {
+                    HStack {
+                        Text(LocalizedString("Calibration history", comment: "calibration"))
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: UIFont.systemFontSize, weight: .medium))
+                            .opacity(0.35)
+                    }
+                }
+                .buttonStyle(PlainButtonStyle())
             }
 
             Section(header: SectionHeader(label: LocalizedString(
@@ -136,6 +153,10 @@ struct EversenseSettingsView: View {
                 SectionItem(
                     title: LocalizedString("Battery percentage", comment: "transmitter battery level"),
                     value: viewModel.batteryLevel
+                )
+                SectionItem(
+                    title: LocalizedString("Last sync", comment: "transmitter last sync"),
+                    value: viewModel.lastSync
                 )
                 Button(action: viewModel.toTransmitterSettings) {
                     HStack {
@@ -191,20 +212,6 @@ struct EversenseSettingsView: View {
                     removeCgmManagerActionSheet
                 }
             }
-        }
-        .alert(
-            LocalizedString("Calibrate Transmitter", comment: ""),
-            isPresented: $viewModel.isPromptingCalibration
-        ) {
-            Button(LocalizedString("Cancel", comment: "Cancel button title"), role: .cancel) {
-                viewModel.isPromptingCalibration = false
-            }
-            Button(LocalizedString("Ok", comment: "label Okay")) {
-                viewModel.startCalibration()
-            }
-
-            TextField(LocalizedString("Glucose in mg/dl", comment: ""), text: $viewModel.glucoseForCalibration)
-                .keyboardType(.numberPad)
         }
         .listStyle(InsetGroupedListStyle())
         .navigationBarItems(trailing: Button(LocalizedString("Done", comment: "done button title"), action: dismiss))

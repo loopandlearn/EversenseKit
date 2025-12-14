@@ -15,7 +15,7 @@ extension Eversense365 {
         func getRequestData() -> Data {
             var data = Data([PacketIds.WriteCommandId.rawValue, WriteIds.CurrentDateTime.rawValue])
 
-            data.append(Date().toUnix2000())
+            data.append(Date.now.toUnix2000())
             data.append(BinaryOperations.toTimeZoneArray())
             data.append(TimeZone.current.secondsFromGMT() >= 0 ? 0 : 255)
 

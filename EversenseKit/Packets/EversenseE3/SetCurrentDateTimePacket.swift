@@ -14,7 +14,7 @@ extension EversenseE3 {
 
         func getRequestData() -> Data {
             var data = Data([PacketIds.setCurrentTransmitterDateAndTimeCommandId.rawValue])
-            let now = Date().toGmt()
+            let now = Date.now.toGmt()
 
             data.append(BinaryOperations.toDateArray(date: now))
             data.append(BinaryOperations.toTimeArray(date: now))

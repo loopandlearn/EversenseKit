@@ -9,6 +9,8 @@ enum EversenseUIScreen {
     case settings
     case transmitterSettings
     case placementGuide
+    case calibration
+    case calibrationHistory
 }
 
 class EversenseUIController: UINavigationController, CGMManagerOnboarding, CompletionNotifying, UINavigationControllerDelegate {
@@ -125,12 +127,20 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
             let toPlacementGuide = {
                 self.navigateTo(.placementGuide)
             }
+            let toCalibration = {
+                self.navigateTo(.calibration)
+            }
+            let toCalibrationHistory = {
+                self.navigateTo(.calibrationHistory)
+            }
 
             let viewModel = EversenseSettingsViewModel(
                 cgmManager: cgmManager,
                 deleteCgm: deleteCgm,
                 toTransmitterSettings: toTransmitterSettings,
-                toPlacementGuide: toPlacementGuide
+                toPlacementGuide: toPlacementGuide,
+                toCalibration: toCalibration,
+                toCalibrationHistory: toCalibrationHistory,
             )
             return hostingController(rootView: EversenseSettingsView(viewModel: viewModel))
         case .transmitterSettings:
@@ -143,6 +153,12 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
             } else {
                 return hostingController(rootView: PlacementGuideEmpty())
             }
+        case .calibration:
+            let viewModel = CalibrationViewModel(cgmManager: cgmManager, displayGlucosePreference.unit, goBack)
+            return hostingController(rootView: CalibrationView(viewModel: viewModel))
+        case .calibrationHistory:
+            let viewModel = CalibrationHistoryViewModel(cgmManager: cgmManager)
+            return hostingController(rootView: CalibrationHistoryView(viewModel: viewModel))
         }
     }
 
@@ -152,6 +168,15 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
         viewController.isModalInPresentation = false
         pushViewController(viewController, animated: true)
         viewController.view.layoutSubviews()
+    }
+
+    private func goBack() {
+        guard screenStack.count > 1 else {
+            return
+        }
+
+        _ = screenStack.popLast()
+        popViewController(animated: true)
     }
 
     private func onboardingNextStep(_ cgmType: Int) {
@@ -171,6 +196,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                 cgmManager.state.calibrationReadiness = .Ready
                 cgmManager.state.lastCalibration = Date.now
                 cgmManager.state.nextCalibration = Date.now.addingTimeInterval(TimeInterval(days: 7))
+                cgmManager.state.lastSynced = Date.now
                 cgmManager.state.activeAlarms = [
                     ActiveAlarm(code: .CalibrationNowAlarm, codeRaw: Alarm.CalibrationNowAlarm.rawValue, flag: 0, priority: 0),
                     ActiveAlarm(code: .BatteryOptimization, codeRaw: Alarm.BatteryOptimization.rawValue, flag: 0, priority: 1),

@@ -7,7 +7,7 @@ extension Eversense365 {
         let trend: GlucoseTrend
     }
 
-    class GetLogValueResponse {
+    class GetGlucoseLogValuesResponse {
         let type: UInt8
         let count: Int
         let glucoseHistory: [GlucoseHistoryItem]
@@ -19,8 +19,8 @@ extension Eversense365 {
         }
     }
 
-    class GetLogValuePacket: BasePacket {
-        typealias T = GetLogValueResponse
+    class GetGlucoseLogValuesPacket: BasePacket {
+        typealias T = GetGlucoseLogValuesResponse
 
         var responseType: UInt8 {
             PacketIds.ReadLogsId.rawValue
@@ -44,14 +44,10 @@ extension Eversense365 {
             return CryptoUtil.shared.encrypt(data: data)
         }
 
-        func parseResponse(data: Data) -> Eversense365.GetLogValueResponse {
-            logger.info("Glucose data: \(data.hexString())")
-
+        func parseResponse(data: Data) -> GetGlucoseLogValuesResponse {
             let type = data[6]
             let actualData = Data(data.subdata(in: 7 ..< data.count))
             let length: UInt32 = 193
-
-            logger.info("Actual data: \(actualData.hexString())")
 
             // Offset glucose value = sensorId + datetime + recordLength
             let offsetGlucose = Eversense365.sensorIdLength + 8 + 4
@@ -86,7 +82,7 @@ extension Eversense365 {
                 logger.debug(message)
             }
 
-            return GetLogValueResponse(
+            return GetGlucoseLogValuesResponse(
                 type: type,
                 count: history.count,
                 glucoseHistory: history

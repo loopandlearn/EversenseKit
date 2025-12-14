@@ -52,13 +52,13 @@ class EversenseLogger {
             createFile(at: startOfDay)
         }
 
-        let logEntry = "[\(dateFormatter.string(from: Date())) \(getLevel(type))] \(msg)\n"
+        let logEntry = "[\(dateFormatter.string(from: Date.now)) \(getLevel(type))] \(msg)\n"
         let data = logEntry.data(using: .utf8)!
         try? data.append(fileURL: URL(fileURLWithPath: logFile))
     }
 
     private var startOfDay: Date {
-        Calendar.current.startOfDay(for: Date())
+        Calendar.current.startOfDay(for: Date.now)
     }
 
     private var logFile: String {

@@ -51,7 +51,9 @@ struct Eversense365ScanView: View {
                         Text($result.name.wrappedValue)
                         Spacer()
                         if viewModel.connectingTo.isEmpty {
-                            NavigationLink.empty
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: UIFont.systemFontSize, weight: .medium))
+                                .opacity(0.35)
                         } else if $result.name.wrappedValue == viewModel.connectingTo {
                             ActivityIndicator(isAnimating: .constant(true), style: .medium)
                         }
