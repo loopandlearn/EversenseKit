@@ -104,6 +104,29 @@ enum EversenseE3 {
         case writeTwoByteSerialFlashRegisterCommandId = 45
         case writeTwoByteSerialFlashRegisterResponseId = 173
     }
+
+    enum LogRangeType {
+        case bloodGlucose
+        case calibration
+
+        func getRequestId() -> UInt8 {
+            switch self {
+            case .bloodGlucose:
+                return PacketIds.readFirstAndLastSensorGlucoseRecordNumbersCommandId.rawValue
+            case .calibration:
+                return PacketIds.readFirstAndLastBloodGlucoseDataRecordNumbersCommandId.rawValue
+            }
+        }
+
+        func getResponseId() -> UInt8 {
+            switch self {
+            case .bloodGlucose:
+                return PacketIds.readFirstAndLastSensorGlucoseRecordNumbersResponseId.rawValue
+            case .calibration:
+                return PacketIds.readFirstAndLastBloodGlucoseDataRecordNumbersResponseId.rawValue
+            }
+        }
+    }
 }
 
 enum Eversense365 {

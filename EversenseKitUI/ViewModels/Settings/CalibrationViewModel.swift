@@ -44,7 +44,7 @@ class CalibrationViewModel: ObservableObject {
                 } else {
                     try await EversenseE3.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose, timestamp: time)
                 }
-                
+
                 cgmManager.heartbeathOperation {}
 
                 await MainActor.run {

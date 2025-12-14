@@ -214,7 +214,11 @@ extension PeripheralManager: CBPeripheralDelegate {
         logger.debug("Received data: \(data.hexString())")
         let isE3 = cgmManager.state.security == .none
 
-        buffer.append(data.subdata(in: (buffer.isEmpty ? 3 : 2) ..< data.count))
+        if isE3 {
+            buffer.append(data)
+        } else {
+            buffer.append(data.subdata(in: (buffer.isEmpty ? 3 : 2) ..< data.count))
+        }
         var actualData = Data(buffer)
 
         if !isE3 {

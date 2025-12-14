@@ -14,7 +14,5 @@ class CalibrationHistoryViewModel: ObservableObject {
             logger.error("No CGMManager...")
             return
         }
-        
-        
     }
 }

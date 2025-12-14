@@ -24,21 +24,17 @@ extension Eversense365 {
                 return []
             }
 
-            let timeDiff = (Date.now.timeIntervalSince(lastGlucoseTimestamp) / TimeInterval.minutes(5)).rounded(.up)
+            let range = RangeCalculator.calculateGlucoseRange(
+                rangeFrom: glucoseRange.rangeFrom,
+                rangeTo: glucoseRange.rangeTo,
+                lastGlucoseTimestamp: lastGlucoseTimestamp
+            )
 
-            // Maximum page fetch = 20
-            let pageCount = min(UInt32(timeDiff + 2), 20)
-            var from = glucoseRange.rangeTo - pageCount
-            if from < 0 || from < glucoseRange.rangeFrom {
-                from = glucoseRange.rangeFrom
-            }
-
-            logger
-                .debug(
-                    "GetLogValuePacket -  from: \(from), to: \(glucoseRange.rangeTo), lastGlucoseTimestamp: \(lastGlucoseTimestamp)"
-                )
+            let message =
+                "GetLogValuePacket -  from: \(range.from), to: \(range.to), lastGlucoseTimestamp: \(lastGlucoseTimestamp)"
+            logger.debug(message)
             let historyResponse: GetGlucoseLogValuesResponse = try await peripheralManager
-                .write(GetGlucoseLogValuesPacket(from: from, to: glucoseRange.rangeTo), timeout: .seconds(15))
+                .write(GetGlucoseLogValuesPacket(from: range.from, to: range.to), timeout: .seconds(15))
 
             if let mostRecentGlucose = mostRecentGlucose,
                mostRecentGlucose.glucoseDatetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)

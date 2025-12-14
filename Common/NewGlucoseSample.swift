@@ -2,7 +2,7 @@ import HealthKit
 import LoopKit
 
 extension NewGlucoseSample {
-    init(cgmManager: EversenseCGMManager, value: UInt16, trend: GlucoseTrend, dateTime: Date) {
+    init(cgmManager: EversenseCGMManager, value: UInt16, trend: GlucoseTrend?, dateTime: Date) {
         self.init(
             date: dateTime,
             quantity: HKQuantity(unit: .milligramsPerDeciliter, doubleValue: Double(value)),

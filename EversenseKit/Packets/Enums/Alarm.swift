@@ -73,6 +73,7 @@ public enum Alarm: UInt8, Codable {
     case PairingMetricsError = 66
     case SmfSyncFailed = 67
     case NoAlarmActive = 74
+    case TwoCal = 90
     case unknown = 255
 
     var type: AlarmType {
@@ -88,6 +89,7 @@ public enum Alarm: UInt8, Codable {
              .SensorRetiringSoon6Alarm,
              .SensorRetiringSoon7Alarm,
              .SensorSyncConfirmedAlarm,
+             .TwoCal,
              .WarmUpPhaseCompleteAlert:
             return .Info
 
@@ -183,6 +185,8 @@ public enum Alarm: UInt8, Codable {
             return LocalizedString("Battery Error", comment: "title for BatteryErrorAlarm")
         case .OneCal:
             return LocalizedString("1 Weekly Calibration Phase", comment: "title for OneCal")
+        case .TwoCal:
+            return LocalizedString("2 daily Calibration Phase", comment: "title for OneCal")
         case .BatteryStatusAlarm:
             return LocalizedString("Battery Status", comment: "title for BatteryStatusAlarm")
         case .SensorConnection:

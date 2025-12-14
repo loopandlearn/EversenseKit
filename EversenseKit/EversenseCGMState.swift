@@ -41,7 +41,6 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public typealias RawValue = CGMManager.RawStateValue
 
     public init?(rawValue: RawValue) {
-        alarms = []
         bleNameString = rawValue["bleNameString"] as? String ?? ""
         bleUUIDString = rawValue["bleUUIDString"] as? String
         isOnboarded = rawValue["isOnboarded"] as? Bool ?? false
@@ -213,8 +212,6 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
 
     public var signalStrength: SignalStrength
     public var signalStrengthRaw: UInt16
-
-    var alarms: [TransmitterAlert]
 
     public var dayStartTime: Date
     public var nightStartTime: Date

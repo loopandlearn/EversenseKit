@@ -10,6 +10,72 @@ extension EversenseE3 {
         lastGlucoseTimestamp: Date
     ) async -> [NewGlucoseSample] {
         do {
+            let mostRecentGlucose = await getRecentGlucose(peripheralManager: peripheralManager)
+
+            logger.debug("Sending GetLogRangePacket...")
+            let glucoseRange: GetLogRangeResponse = try await peripheralManager.write(GetLogRangePacket(type: .bloodGlucose))
+
+            let range = RangeCalculator.calculateGlucoseRange(
+                rangeFrom: glucoseRange.rangeFrom,
+                rangeTo: glucoseRange.rangeTo,
+                lastGlucoseTimestamp: lastGlucoseTimestamp
+            )
+
+            let message =
+                "GetLogValuePacket -  from: \(range.from), to: \(range.to), lastGlucoseTimestamp: \(lastGlucoseTimestamp)"
+            logger.debug(message)
+
+            var glucoseHistory: [GetGlucoseLogResponse] = []
+            for index in range.from ... range.to {
+                let pageResponse: GetGlucoseLogResponse = try await peripheralManager.write(GetGlucoseLogPacket(index: index))
+
+                logger.debug("Datetime: \(pageResponse.datetime), Glucose: \(pageResponse.glucoseInMgDl) mg/dl")
+                glucoseHistory.append(pageResponse)
+            }
+
+            if let mostRecentGlucose = mostRecentGlucose,
+               mostRecentGlucose.glucoseDatetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
+            {
+                cgmManager.state.recentGlucoseInMgDl = mostRecentGlucose.glucoseInMgDl
+                cgmManager.state.recentGlucoseDateTime = mostRecentGlucose.glucoseDatetime
+            } else if let recentGlucose = glucoseHistory.last,
+                      recentGlucose.datetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
+            {
+                cgmManager.state.recentGlucoseInMgDl = recentGlucose.glucoseInMgDl
+                cgmManager.state.recentGlucoseDateTime = recentGlucose.datetime
+            }
+
+            var samples = glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
+                NewGlucoseSample(
+                    cgmManager: cgmManager,
+                    value: $0.glucoseInMgDl,
+                    trend: nil,
+                    dateTime: $0.datetime
+                )
+            }
+
+            if let mostRecentGlucose = mostRecentGlucose {
+                samples.append(
+                    NewGlucoseSample(
+                        cgmManager: cgmManager,
+                        value: mostRecentGlucose.glucoseInMgDl,
+                        trend: mostRecentGlucose.trend,
+                        dateTime: mostRecentGlucose.glucoseDatetime
+                    )
+                )
+            }
+
+            logger.info("[E3] Glucose data read  - timestamp: \(Date.now), count: \(samples.count)")
+            return samples
+        } catch {
+            logger.error("[E3] Something went wrong during readGlucoseData: \(error)")
+            return []
+        }
+    }
+
+    private static func getRecentGlucose(peripheralManager: PeripheralManager) async -> Eversense365.GetGlucoseDataResponse? {
+        do {
+            logger.debug("Sending GetRecentGlucose...")
             let glucoseData: GetGlucoseDataResponse = try await peripheralManager.write(GetGlucoseDataPacket())
             let recentGlucoseValue: GetRecentGlucoseValueResponse = try await peripheralManager
                 .write(GetRecentGlucoseValuePacket())
@@ -25,34 +91,17 @@ extension EversenseE3 {
                 let message =
                     "Received invalid Glucose data - value: \(recentGlucoseValue.valueInMgDl) mg/dl, timestamp sample: \(dateTime)"
                 logger.error(message)
-                return []
+                return nil
             }
 
-            guard dateTime > lastGlucoseTimestamp else {
-                let message =
-                    "Received old glucose data - value: \(recentGlucoseValue.valueInMgDl) mg/dl, timestamp sample: \(dateTime)"
-                logger.warning(message)
-                return []
-            }
-
-            cgmManager.state.recentGlucoseInMgDl = recentGlucoseValue.valueInMgDl
-            cgmManager.state.recentGlucoseDateTime = dateTime
-
-            // TODO: Read history
-
-            logger.info("[E3] Glucose data read  - timestamp: \(Date.now)")
-
-            return [
-                NewGlucoseSample(
-                    cgmManager: cgmManager,
-                    value: recentGlucoseValue.valueInMgDl,
-                    trend: glucoseData.trend,
-                    dateTime: dateTime
-                )
-            ]
+            return Eversense365.GetGlucoseDataResponse(
+                trend: glucoseData.trend,
+                glucoseDatetime: dateTime,
+                glucoseInMgDl: recentGlucoseValue.valueInMgDl
+            )
         } catch {
-            logger.error("[E3] Something went wrong during readGlucoseData: \(error)")
-            return []
+            logger.error("[E3] Failed to get recent glucose: \(error.localizedDescription)")
+            return nil
         }
     }
 
@@ -122,9 +171,12 @@ extension EversenseE3 {
                 .write(GetCompletedCalibrationsCountPacket())
             let calibrationPhase: GetCurrentCalibrationPhaseResponse = try await peripheralManager
                 .write(GetCurrentCalibrationPhasePacket())
+            let calibrationReadiness: GetCalibrationReadinessResponse = try await peripheralManager
+                .write(GetCalibrationReadinessPacket())
             cgmManager.state.calibrationCount = calibrationCount.value
             cgmManager.state.calibrationPhase = calibrationPhase.phase
             cgmManager.state.nextCalibration = lastCalibrationDatetime.addingTimeInterval(calibrationMode.toPeriod())
+            cgmManager.state.calibrationReadiness = calibrationReadiness.calibrationReadiness
 
             // Get BLE disconnect alarm -> possible we get no reply, this feature might not be supported
             do {
@@ -150,7 +202,7 @@ extension EversenseE3 {
             // Get glucose alarms & status
             let glucoseAlarmsStatus: GetGlucoseAlertsAndStatusPacketResonse = try await peripheralManager
                 .write(GetGlucoseAlertsAndStatusPacket())
-            cgmManager.state.alarms = glucoseAlarmsStatus.alarms
+            cgmManager.state.activeAlarms = glucoseAlarmsStatus.alarms
 
             // Get glucose alarm enabled & thresholds
             let isGlucoseAlarmEnabled: GetHighGlucoseAlarmEnabledResponse = try await peripheralManager
@@ -196,8 +248,6 @@ extension EversenseE3 {
                 .write(GetSignalStrengthRawPacket())
             cgmManager.state.signalStrength = rawSignalStrength.value
             cgmManager.state.signalStrengthRaw = rawSignalStrength.rawValue
-
-            // TODO: Get active alarms
 
             logger.info("[E3] Sync completed - timestamp: \(Date.now)")
 

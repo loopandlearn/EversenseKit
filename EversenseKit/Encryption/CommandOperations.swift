@@ -16,6 +16,7 @@ enum FlashMemory: UInt32 {
     case isOneCalPhase = 0x0000_0496
     case calibrationsMadeInThisPhase = 0x0000_08A1
     case currentCalibrationPhase = 0x0000_089C
+    case calibrationReadiness = 0x0000_040A
     case minCalibrationThreshold = 0x0000_0912
     case maxCalibrationThreshold = 0x0000_0914
 
@@ -97,7 +98,7 @@ enum CommandOperations {
     static func readFourByteSerialFlashRegister(memoryAddress: FlashMemory) -> Data {
         var data =
             Data([
-                0x2E,
+                EversenseE3.PacketIds.readFourByteSerialFlashRegisterCommandId.rawValue,
                 UInt8(memoryAddress.rawValue & 0xFF),
                 UInt8((memoryAddress.rawValue & 0xFF00) >> 8),
                 UInt8((memoryAddress.rawValue & 0xFF0000) >> 16)
@@ -111,7 +112,7 @@ enum CommandOperations {
     static func readTwoByteSerialFlashRegister(memoryAddress: FlashMemory) -> Data {
         var data =
             Data([
-                0x2C,
+                EversenseE3.PacketIds.readTwoByteSerialFlashRegisterCommandId.rawValue,
                 UInt8(memoryAddress.rawValue & 0xFF),
                 UInt8((memoryAddress.rawValue & 0xFF00) >> 8),
                 UInt8((memoryAddress.rawValue & 0xFF0000) >> 16)
@@ -125,7 +126,7 @@ enum CommandOperations {
     static func readSingleByteSerialFlashRegister(memoryAddress: FlashMemory) -> Data {
         var data =
             Data([
-                0x2A,
+                EversenseE3.PacketIds.readSingleByteSerialFlashRegisterCommandId.rawValue,
                 UInt8(memoryAddress.rawValue & 0xFF),
                 UInt8((memoryAddress.rawValue & 0xFF00) >> 8),
                 UInt8((memoryAddress.rawValue & 0xFF0000) >> 16)
