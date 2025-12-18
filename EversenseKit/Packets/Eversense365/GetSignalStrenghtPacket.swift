@@ -34,6 +34,15 @@ extension Eversense365 {
         /// FF 07 -> Signal Strength
         /// 00 00 00 3F -> Signal Coupling
         /// 00 -> Placement
+        ///
+        /// 42 1b
+        /// 01
+        /// 0a
+        /// 00 00 00 00 00 00 00 00 00 00
+        /// 69 65 80 70 00 00 00 00
+        /// fb 07
+        /// 7c ee aa 3f
+        /// 00
         func parseResponse(data: Data) -> Eversense365.GetSignalStrenghtResponse {
             let sensorIdLength = Int(data[Offset.SENSOR_ID_LEN_START])
             let signalCoupling = UInt32(

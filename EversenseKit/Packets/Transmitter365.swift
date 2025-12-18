@@ -19,11 +19,6 @@ extension Eversense365 {
                 .write(GetLogRangePacket(communicationVersion: cgmManager.state.communicationProtocol, logType: LogTypes.Glucose))
             logger.info("Got Blood glucose range from: \(glucoseRange.rangeFrom) - \(glucoseRange.rangeTo)")
 
-            guard glucoseRange.rangeFrom > 0 else {
-                logger.warning("No glucose data available...")
-                return []
-            }
-
             let range = RangeCalculator.calculateGlucoseRange(
                 rangeFrom: glucoseRange.rangeFrom,
                 rangeTo: glucoseRange.rangeTo,

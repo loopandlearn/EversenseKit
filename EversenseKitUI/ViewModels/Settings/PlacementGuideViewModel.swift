@@ -56,7 +56,7 @@ extension PlacementGuideViewModel: StateObserver {
         strength = state.signalStrength
 
         if state.is365 {
-            strengthRaw = state.signalStrengthRaw
+            strengthRaw = min(state.signalStrengthRaw, 100)
         } else {
             strengthRaw = state.signalStrengthRaw / 20
         }

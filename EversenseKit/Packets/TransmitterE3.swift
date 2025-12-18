@@ -14,7 +14,6 @@ extension EversenseE3 {
 
             logger.debug("Sending GetLogRangePacket...")
             let glucoseRange: GetLogRangeResponse = try await peripheralManager.write(GetLogRangePacket(type: .bloodGlucose))
-
             let range = RangeCalculator.calculateGlucoseRange(
                 rangeFrom: glucoseRange.rangeFrom,
                 rangeTo: glucoseRange.rangeTo,

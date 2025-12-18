@@ -16,7 +16,7 @@ struct PackageTest {
     }
 
     @Test func signalStrength() async throws {
-        let data = Data(hex: "421b010a00000000000000000000c351ecf2030000007a077629833f00")
+        let data = Data(hex: "421B010A000000000000000000009C622EB80000000074083B73034003")
 
         Eversense365.sensorIdLength = 0x0A
         let signalStrength = Eversense365.GetSignalStrenghtPacket()
@@ -58,10 +58,10 @@ struct PackageTest {
             )
 
         Eversense365.sensorIdLength = 0x0A
-        let packet = Eversense365.GetLogValuePacket(from: 38166, to: 38217)
+        let packet = Eversense365.GetGlucoseLogValuesPacket(from: 38166, to: 38217)
         let result = packet.parseResponse(data: data)
 
-        #expect(!result.isEmpty)
+        #expect(!result.glucoseHistory.isEmpty)
     }
 
     @Test func activeAlarms() async throws {
