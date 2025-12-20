@@ -136,28 +136,36 @@ extension EversenseCGMManager {
 
         completion(.noData)
 
-        heartbeathOperation {
+        heartbeathOperation(force: false) {
             self.logger.info("fetchNewDataIfNeeded completed")
         }
     }
 
     /// Responsible for handling fetching Glucose data when ready
-    func heartbeathOperation(completion: (() -> Void)? = nil) {
+    func heartbeathOperation(force: Bool = true, completion: (() -> Void)? = nil) {
         guard let peripheralManager = bluetoothManager.peripheralManager else {
             logger.error("No peripheralManager")
             completion?()
             return
         }
 
+        var lastGlucoseTimestamp = state.recentGlucoseDateTime ?? Date.now
+            .addingTimeInterval(.hours(-4))
+
+        if !force, Date.now.timeIntervalSince(lastGlucoseTimestamp) < .minutes(4.5) {
+            logger.warning("Skipping sync, glucose is still fresh - \(Date.now.timeIntervalSince(lastGlucoseTimestamp))s")
+            return
+        }
+
+        if lastGlucoseTimestamp > Date.now.addingTimeInterval(.hours(-4)) {
+            logger.warning("Limiting lastGlucoseTimestamp to 4 hours ago - \(lastGlucoseTimestamp)")
+            lastGlucoseTimestamp = Date.now.addingTimeInterval(.hours(-4))
+        }
+
         isFetchingData = true
         delegateQueue.async {
-            var lastGlucoseTimestamp = self.cgmManagerDelegate?.startDateToFilterNewData(for: self) ?? Date.now
-                .addingTimeInterval(.hours(-4))
-
-            if lastGlucoseTimestamp > Date.now.addingTimeInterval(.hours(-4)) {
-                self.logger.warning("Limiting lastGlucoseTimestamp to 4 hours ago")
-                lastGlucoseTimestamp = Date.now.addingTimeInterval(.hours(-4))
-            }
+            let lastGlucoseTimestamp = lastGlucoseTimestamp
+            let this = self
 
             self.bluetoothManager.ensureConnected { error in
                 if let internalError = error {
@@ -187,7 +195,7 @@ extension EversenseCGMManager {
                 self.isFetchingData = false
                 if !samples.isEmpty {
                     self.delegate.notify { delegate in
-                        delegate?.cgmManager(self, hasNew: .newData(samples))
+                        delegate?.cgmManager(this, hasNew: .newData(samples))
                     }
                 }
 

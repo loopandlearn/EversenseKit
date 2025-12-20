@@ -8,12 +8,10 @@ extension Eversense365 {
     }
 
     class GetGlucoseLogValuesResponse {
-        let type: UInt8
         let count: Int
         let glucoseHistory: [GlucoseHistoryItem]
 
-        init(type: UInt8, count: Int, glucoseHistory: [GlucoseHistoryItem]) {
-            self.type = type
+        init(count: Int, glucoseHistory: [GlucoseHistoryItem]) {
             self.count = count
             self.glucoseHistory = glucoseHistory
         }
@@ -45,7 +43,11 @@ extension Eversense365 {
         }
 
         func parseResponse(data: Data) -> GetGlucoseLogValuesResponse {
-            let type = data[6]
+            guard data[6] == LogTypes.Glucose.rawValue else {
+                logger.error("Invalid packet type received - expected: \(LogTypes.Glucose.rawValue), actual: \(data[6])")
+                return GetGlucoseLogValuesResponse(count: 0, glucoseHistory: [])
+            }
+
             let actualData = Data(data.subdata(in: 7 ..< data.count))
             let length: UInt32 = 193
 
@@ -77,13 +79,9 @@ extension Eversense365 {
                     datetime: datetime,
                     trend: trend
                 ))
-
-                let message = "Datetime: \(datetime), Glucose: \(glucose) mg/dl, trend: \(trend.symbol)"
-                logger.debug(message)
             }
 
             return GetGlucoseLogValuesResponse(
-                type: type,
                 count: history.count,
                 glucoseHistory: history
             )

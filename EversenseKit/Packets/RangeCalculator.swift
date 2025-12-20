@@ -14,7 +14,12 @@ enum RangeCalculator {
 
     public static func calculateRange(rangeFrom: UInt32, rangeTo: UInt32) -> RangeCalculation {
         let count = min(rangeTo - rangeFrom, 20)
-        return RangeCalculation(from: rangeTo - count, to: rangeTo)
+        var from = rangeTo - count
+        if from < 0 || from < rangeFrom {
+            from = rangeFrom
+        }
+
+        return RangeCalculation(from: from, to: rangeTo)
     }
 }
 

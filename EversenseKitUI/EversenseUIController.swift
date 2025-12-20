@@ -157,7 +157,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
             let viewModel = CalibrationViewModel(cgmManager: cgmManager, displayGlucosePreference.unit, goBack)
             return hostingController(rootView: CalibrationView(viewModel: viewModel))
         case .calibrationHistory:
-            let viewModel = CalibrationHistoryViewModel(cgmManager: cgmManager)
+            let viewModel = CalibrationHistoryViewModel(cgmManager: cgmManager, glucosePreference: displayGlucosePreference)
             return hostingController(rootView: CalibrationHistoryView(viewModel: viewModel))
         }
     }

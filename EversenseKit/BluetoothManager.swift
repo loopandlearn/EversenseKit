@@ -89,12 +89,12 @@ class BluetoothManager: NSObject {
         }
     }
 
-    func write<T>(_ packet: any BasePacket) async throws -> T {
+    func write<T>(_ packet: any BasePacket, timeout: TimeInterval = .seconds(5)) async throws -> T {
         guard let peripheralManager = peripheralManager else {
             throw NSError(domain: "Not connected", code: -1)
         }
 
-        return try await peripheralManager.write(packet)
+        return try await peripheralManager.write(packet, timeout: timeout)
     }
 
     func scan(completion: @escaping (ScanItem?, ScanError?) -> Void) {

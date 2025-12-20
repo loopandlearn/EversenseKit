@@ -126,16 +126,16 @@ struct EversenseSettingsView: View {
                     .buttonStyle(PlainButtonStyle())
                     .disabled(viewModel.calibrationReadiness != .Ready)
                 }
-//                Button(action: { viewModel.toCalibrationHistory() }) {
-//                    HStack {
-//                        Text(LocalizedString("Calibration history", comment: "calibration"))
-//                        Spacer()
-//                        Image(systemName: "chevron.right")
-//                            .font(.system(size: UIFont.systemFontSize, weight: .medium))
-//                            .opacity(0.35)
-//                    }
-//                }
-//                .buttonStyle(PlainButtonStyle())
+                Button(action: { viewModel.toCalibrationHistory() }) {
+                    HStack {
+                        Text(LocalizedString("Calibration history", comment: "calibration"))
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: UIFont.systemFontSize, weight: .medium))
+                            .opacity(0.35)
+                    }
+                }
+                .buttonStyle(PlainButtonStyle())
             }
 
             Section(header: SectionHeader(label: LocalizedString(
