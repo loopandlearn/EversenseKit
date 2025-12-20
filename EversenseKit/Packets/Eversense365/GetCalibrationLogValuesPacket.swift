@@ -4,20 +4,20 @@ extension Eversense365 {
         public let glucoseInMgDl: UInt16
         public let flag: CalibrationFlag
     }
-    
+
     class GetCalibrationLogResponse {
         public let count: Int
         public let calibrationHistory: [CalibrationHistoryItem]
-        
+
         init(count: Int, calibrationHistory: [CalibrationHistoryItem]) {
             self.count = count
             self.calibrationHistory = calibrationHistory
         }
     }
-    
-    class GetCalibrationLogPacket : BasePacket {
+
+    class GetCalibrationLogPacket: BasePacket {
         typealias T = GetCalibrationLogResponse
-        
+
         var responseType: UInt8 {
             PacketIds.ReadLogsId.rawValue
         }
@@ -25,7 +25,7 @@ extension Eversense365 {
         var responseId: UInt8? {
             ReadIds.LogValue.rawValue
         }
-        
+
         let from: UInt32
         let to: UInt32
         init(from: UInt32, to: UInt32) {
@@ -39,7 +39,7 @@ extension Eversense365 {
             data.append(BinaryOperations.dataFrom32Bits(value: to))
             return CryptoUtil.shared.encrypt(data: data)
         }
-        
+
         func parseResponse(data: Data) -> GetCalibrationLogResponse {
             guard data[6] == LogTypes.Calibrations.rawValue else {
                 logger.error("Invalid packet type received - expected: \(LogTypes.Glucose.rawValue), actual: \(data[6])")
@@ -51,7 +51,7 @@ extension Eversense365 {
 
             // Offset glucose value = recordLength + datetime + FsStartEndFlag + ProcessingDateTime + SampleDateTime + MmaFSDateTime + DecisionDateTime
             let offsetGlucose = 4 + 8 + 2 + 8 + 8 + 8 + 8
-            
+
             // Offset CalibrationFlag = offsetGlucose + MeterIdentifier
             let offsetCalibrationFlag = offsetGlucose + 2
 

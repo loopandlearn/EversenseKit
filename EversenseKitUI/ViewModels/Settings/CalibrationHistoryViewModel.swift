@@ -54,10 +54,13 @@ class CalibrationHistoryViewModel: ObservableObject {
             do {
                 if cgmManager.state.is365 {
                     logger.info("[365] sending GetLogRangePacket...")
-                    
-                    let packet = Eversense365.GetLogRangePacket(communicationVersion: cgmManager.state.communicationProtocol, logType: .Calibrations)
+
+                    let packet = Eversense365.GetLogRangePacket(
+                        communicationVersion: cgmManager.state.communicationProtocol,
+                        logType: .Calibrations
+                    )
                     let rangeResponse: Eversense365.GetLogRangeResponse = try await cgmManager.bluetoothManager.write(packet)
-                    
+
                     logger.info("[365] Got range - from: \(rangeResponse.rangeFrom), to: \(rangeResponse.rangeTo)")
                     let range = RangeCalculator.calculateRange(rangeFrom: rangeResponse.rangeFrom, rangeTo: rangeResponse.rangeTo)
 
@@ -69,11 +72,14 @@ class CalibrationHistoryViewModel: ObservableObject {
                         }
                         return
                     }
-                    
+
                     logger.info("[365] Fetching range - from: \(range.from), to: \(range.to)")
                     let packet2 = Eversense365.GetCalibrationLogPacket(from: range.from, to: range.to)
-                    let historyResponse: Eversense365.GetCalibrationLogResponse = try await cgmManager.bluetoothManager.write(packet2, timeout: .seconds(15))
-                    
+                    let historyResponse: Eversense365.GetCalibrationLogResponse = try await cgmManager.bluetoothManager.write(
+                        packet2,
+                        timeout: .seconds(15)
+                    )
+
                     var tempHistory: [CalibrationGroup] = []
                     for item in historyResponse.calibrationHistory {
                         let quantity = HKQuantity(unit: .milligramsPerDeciliter, doubleValue: Double(item.glucoseInMgDl))
@@ -82,7 +88,7 @@ class CalibrationHistoryViewModel: ObservableObject {
                             glucose: glucosePreference.format(quantity),
                             flag: item.flag
                         )
-                        
+
                         let date = dateFormatter.string(from: item.datetime)
                         if let index = tempHistory.firstIndex(where: { $0.date == date }) {
                             tempHistory[index].items.append(historyItem)
@@ -93,7 +99,7 @@ class CalibrationHistoryViewModel: ObservableObject {
                             ))
                         }
                     }
-                    
+
                     await MainActor.run { [tempHistory] in
                         isLoading = false
                         history = tempHistory
