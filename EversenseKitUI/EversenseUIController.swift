@@ -194,6 +194,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                 cgmManager.state.calibrationMode = .WeeklySingle
                 cgmManager.state.calibrationPhase = .DAILY_CALIBRATION
                 cgmManager.state.calibrationReadiness = .Ready
+                cgmManager.state.activatedAt = Date.now
                 cgmManager.state.lastCalibration = Date.now
                 cgmManager.state.nextCalibration = Date.now.addingTimeInterval(TimeInterval(days: 7))
                 cgmManager.state.lastSynced = Date.now

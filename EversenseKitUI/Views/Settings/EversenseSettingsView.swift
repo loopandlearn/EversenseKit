@@ -154,6 +154,17 @@ struct EversenseSettingsView: View {
                     title: LocalizedString("Battery percentage", comment: "transmitter battery level"),
                     value: viewModel.batteryLevel
                 )
+                HStack {
+                    Text(LocalizedString("Insertion date", comment: "insertiondate"))
+                    Spacer()
+                    VStack(alignment: .trailing) {
+                        Text(viewModel.insertionDate)
+                            .foregroundColor(.secondary)
+
+                        Text(viewModel.insertionTime)
+                            .foregroundColor(.secondary)
+                    }
+                }
                 SectionItem(
                     title: LocalizedString("Last sync", comment: "transmitter last sync"),
                     value: viewModel.lastSync

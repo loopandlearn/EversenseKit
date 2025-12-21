@@ -110,6 +110,7 @@ extension Eversense365 {
             cgmManager.state.version = sensorInformation.version
             cgmManager.state.extVersion = sensorInformation.extVersion
             cgmManager.state.communicationProtocol = sensorInformation.communicationProtocolVersion
+            cgmManager.state.activatedAt = sensorInformation.insertionDate
             sensorIdLength = sensorInformation.sensorIdLength
 
             let timeDifference = sensorInformation.transmitterDatetime.timeIntervalSince1970 - Date.nowWithTimezone()

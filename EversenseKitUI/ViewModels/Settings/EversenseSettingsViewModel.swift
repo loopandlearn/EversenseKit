@@ -26,6 +26,8 @@ class EversenseSettingsViewModel: ObservableObject {
     @Published var signalStrength: String = ""
     @Published var connectionStatus: String = ""
     @Published var lastSync: String = ""
+    @Published var insertionDate: String = ""
+    @Published var insertionTime: String = ""
     @Published var activeAlarm: [ActiveAlarmItem] = []
     @Published var calibrationReadiness: CalibrationReadiness = .Unknown
     @Published var is365: Bool = false
@@ -102,6 +104,8 @@ extension EversenseSettingsViewModel: StateObserver {
         connectionStatus = state.connectionStatus.title
         currentPhase = state.calibrationPhase.getTitle(calibrationMode: state.calibrationMode)
         calibrationReadiness = state.calibrationReadiness
+        insertionDate = dateFormatter.string(from: state.activatedAt)
+        insertionTime = timeFormatter.string(from: state.activatedAt)
 
         signalStrength = state.signalStrength.title
         batteryLevel = "\(state.batteryPercentage)%"

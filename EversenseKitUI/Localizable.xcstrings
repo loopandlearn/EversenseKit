@@ -727,6 +727,18 @@
         }
       }
     },
+    "Insertion date" : {
+      "comment" : "insertiondate",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Insertion date"
+          }
+        }
+      }
+    },
     "Invalid Transmitter Time" : {
       "comment" : "title for InvalidClockAlarm",
       "extractionState" : "manual",

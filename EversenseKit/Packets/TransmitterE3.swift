@@ -177,6 +177,13 @@ extension EversenseE3 {
             cgmManager.state.nextCalibration = lastCalibrationDatetime.addingTimeInterval(calibrationMode.toPeriod())
             cgmManager.state.calibrationReadiness = calibrationReadiness.calibrationReadiness
 
+            let insertionDate: GetInsertionDateResponse = try await peripheralManager.write(GetInsertionDatePacket())
+            let insertionTime: GetInsertionTimeResponse = try await peripheralManager.write(GetInsertionTimePacket())
+            cgmManager.state.activatedAt = Date.fromComponents(
+                date: insertionDate.insertionDate,
+                time: insertionTime.insertionTime
+            )
+
             // Get BLE disconnect alarm -> possible we get no reply, this feature might not be supported
             do {
                 let bleDisconnectAlarm: GetDelayBLEDisconnectAlarmResponse = try await peripheralManager

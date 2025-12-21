@@ -3,6 +3,7 @@ extension Eversense365 {
         let serialNumber: String
         let transmitterName: String
         let transmitterDatetime: Date
+        let insertionDate: Date
         let mmaFeatures: UInt8
         let batteryLevel: Int
         let version: String
@@ -14,6 +15,7 @@ extension Eversense365 {
             serialNumber: String,
             transmitterName: String,
             transmitterDatetime: Date,
+            insertionDate: Date,
             mmaFeatures: UInt8,
             batteryLevel: Int,
             version: String,
@@ -24,6 +26,7 @@ extension Eversense365 {
             self.serialNumber = serialNumber
             self.transmitterName = transmitterName
             self.transmitterDatetime = transmitterDatetime
+            self.insertionDate = insertionDate
             self.mmaFeatures = mmaFeatures
             self.batteryLevel = batteryLevel
             self.version = version
@@ -77,7 +80,8 @@ extension Eversense365 {
         /// 00 00 00 00 00 00 00 00 -> Operation start datetime
         /// 30 31 2E 30 30 2E 30 31 2E 30 32 00 00 00 00 00 -> Other firmware version
         func parseResponse(data: Data) -> Eversense365.GetSensorInformationResponse {
-            let doubleSensorIdLen = Int(data[Offset.SENSOR_ID_LEN_START] * 2)
+            let sensorIdLen = Int(data[Offset.SENSOR_ID_LEN_START])
+            let doubleSensorIdLen = sensorIdLen * 2
 
             return GetSensorInformationResponse(
                 serialNumber: data
@@ -88,6 +92,11 @@ extension Eversense365 {
                     .toUtf8String(),
                 transmitterDatetime: Date
                     .fromUnix2000(data: data.subdata(in: Offset.CURRENT_DATETIME_START ..< Offset.CURRENT_DATETIME_END)),
+                insertionDate: Date
+                    .fromUnix2000(
+                        data: data
+                            .subdata(in: Offset.INSERTION_DATE_START + sensorIdLen ..< Offset.INSERTION_DATE_END + sensorIdLen)
+                    ),
                 mmaFeatures: data[Offset.MMA_FUNCTIONALITY_START],
                 batteryLevel: Int(data[Offset.BATTERY_PERCENTAGE_START + doubleSensorIdLen]),
                 version: data
