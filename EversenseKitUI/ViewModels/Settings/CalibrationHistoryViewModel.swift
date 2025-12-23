@@ -64,7 +64,7 @@ class CalibrationHistoryViewModel: ObservableObject {
                     logger.info("[365] Got range - from: \(rangeResponse.rangeFrom), to: \(rangeResponse.rangeTo)")
                     let range = RangeCalculator.calculateRange(rangeFrom: rangeResponse.rangeFrom, rangeTo: rangeResponse.rangeTo)
 
-                    if range.from <= range.to {
+                    guard range.from <= range.to else {
                         logger.warning("[365] No pages to fetch...")
                         await MainActor.run {
                             isLoading = false
@@ -112,7 +112,7 @@ class CalibrationHistoryViewModel: ObservableObject {
                     logger.info("[E3] Got range - from: \(rangeResponse.rangeFrom), to: \(rangeResponse.rangeTo)")
                     let range = RangeCalculator.calculateRange(rangeFrom: rangeResponse.rangeFrom, rangeTo: rangeResponse.rangeTo)
 
-                    if range.from <= range.to {
+                    guard range.from <= range.to else {
                         logger.warning("[E3] No pages to fetch...")
                         await MainActor.run {
                             isLoading = false

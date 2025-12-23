@@ -53,9 +53,8 @@ extension EversenseCGMManager: CGMManagerUI {
 
     public var cgmLifecycleProgress: (any LoopKit.DeviceLifecycleProgress)? {
         if state.activeAlarms.contains(where: { Alarm.retiringSoonAlarms.contains($0.code) }) {
-            let lifeTime = state.expiresAt.timeIntervalSinceNow
             return EversenseLifecycleProgress(
-                percentComplete: lifeTime / (state.is365 ? .days(365) : .days(180)),
+                percentComplete: 1 - (state.expiresAt.timeIntervalSinceNow / (state.is365 ? .days(365) : .days(180))),
                 progressState: .warning
             )
         }
