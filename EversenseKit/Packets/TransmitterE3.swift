@@ -183,6 +183,7 @@ extension EversenseE3 {
                 date: insertionDate.insertionDate,
                 time: insertionTime.insertionTime
             )
+            cgmManager.state.expiresAt = cgmManager.state.activatedAt.addingTimeInterval(.days(180))
 
             // Get BLE disconnect alarm -> possible we get no reply, this feature might not be supported
             do {

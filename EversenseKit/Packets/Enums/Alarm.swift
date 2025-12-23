@@ -75,6 +75,10 @@ public enum Alarm: UInt8, Codable {
     case NoAlarmActive = 74
     case TwoCal = 90
     case unknown = 255
+    
+    static let retiringSoonAlarms: [Alarm] = [.SensorRetiringSoon1Alarm, .SensorRetiringSoon3Alarm, .SensorRetiringSoon4Alarm, .SensorRetiringSoon5Alarm, .SensorRetiringSoon6Alarm, .SensorRetiringSoon7Alarm]
+    static let warningAlarms: [Alarm] = [.CalibrationNowAlarm, .CalibrationFailedAlert]
+    static let criticalAlarms: [Alarm] = [.CalibrationRequiredAlarm, .CalibrationExpiredAlarm, .BatteryErrorAlarm, .ReaderTemperatureAlarm, .SensorTemperatureAlarm, .SensorLowTemperatureAlarm]
 
     var type: AlarmType {
         switch self {

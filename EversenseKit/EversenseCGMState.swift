@@ -50,6 +50,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         extVersion = rawValue["extVersion"] as? String
         communicationProtocol = rawValue["communicationProtocol"] as? Double ?? 0
         activatedAt = rawValue["activatedAt"] as? Date ?? Date.distantPast
+        expiresAt = rawValue["expiresAt"] as? Date ?? Date.distantPast
         mmaFeatures = rawValue["mmaFeatures"] as? UInt8 ?? 0
         vibrateMode = rawValue["vibrateMode"] as? Bool
         dayStartTime = rawValue["dayStartTime"] as? Date ?? Date.defaultDayStartTime
@@ -147,6 +148,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["extVersion"] = extVersion
         value["communicationProtocol"] = communicationProtocol
         value["activatedAt"] = activatedAt
+        value["expiresAt"] = expiresAt
         value["mmaFeatures"] = mmaFeatures
         value["vibrateMode"] = vibrateMode
         value["batteryPercentage"] = batteryPercentage
@@ -208,6 +210,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var extVersion: String?
     public var communicationProtocol: Double
     public var activatedAt: Date
+    public var expiresAt: Date
 
     public var mmaFeatures: UInt8
     public var batteryPercentage: Int

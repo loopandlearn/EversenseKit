@@ -52,10 +52,36 @@ extension EversenseCGMManager: CGMManagerUI {
     }
 
     public var cgmLifecycleProgress: (any LoopKit.DeviceLifecycleProgress)? {
-        nil
+        if state.activeAlarms.contains(where: { Alarm.retiringSoonAlarms.contains($0.code) }) {
+            let lifeTime = state.expiresAt.timeIntervalSinceNow
+            return EversenseLifecycleProgress(
+                percentComplete: lifeTime / (state.is365 ? .days(365) : .days(180)),
+                progressState: .warning
+            )
+        }
+        
+        return nil
     }
 
     public var cgmStatusBadge: (any LoopKitUI.DeviceStatusBadge)? {
-        nil
+        if state.activeAlarms.contains(where: { Alarm.criticalAlarms.contains($0.code) }) {
+            return EversenseDeviceStatusBadge(image: UIImage(systemName: "exclamationmark.triangle"), state: .critical)
+        }
+        
+        if state.activeAlarms.contains(where: { Alarm.warningAlarms.contains($0.code) }) {
+            return EversenseDeviceStatusBadge(image: UIImage(systemName: "clock"), state: .warning)
+        }
+        
+        return nil
     }
+}
+
+struct EversenseDeviceStatusBadge: DeviceStatusBadge {
+    var image: UIImage?
+    var state: LoopKitUI.DeviceStatusBadgeState
+}
+
+struct EversenseLifecycleProgress: DeviceLifecycleProgress {
+    var percentComplete: Double
+    var progressState: LoopKit.DeviceLifecycleProgressState
 }
