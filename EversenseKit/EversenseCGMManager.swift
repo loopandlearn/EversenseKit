@@ -136,19 +136,13 @@ extension EversenseCGMManager {
 
         completion(.noData)
 
-        heartbeathOperation(force: false) {
-            self.logger.info("fetchNewDataIfNeeded completed")
+        if bluetoothManager.peripheral == nil || bluetoothManager.peripheral?.state != .connected {
+            bluetoothManager.ensureConnected { _ in }
         }
     }
 
     /// Responsible for handling fetching Glucose data when ready
     func heartbeathOperation(force: Bool = true, completion: (() -> Void)? = nil) {
-        guard let peripheralManager = bluetoothManager.peripheralManager else {
-            logger.error("No peripheralManager")
-            completion?()
-            return
-        }
-
         var lastGlucoseTimestamp = state.recentGlucoseDateTime ?? Date.now
             .addingTimeInterval(.hours(-4))
 
@@ -171,6 +165,12 @@ extension EversenseCGMManager {
                 if let internalError = error {
                     self.isFetchingData = false
                     self.logger.error("Failed to connect to CGM: \(internalError.describe)")
+                    completion?()
+                    return
+                }
+                
+                guard let peripheralManager = self.bluetoothManager.peripheralManager else {
+                    self.logger.error("No peripheralManager")
                     completion?()
                     return
                 }

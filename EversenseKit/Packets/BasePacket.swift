@@ -185,6 +185,10 @@ enum Eversense365 {
         case Calibrations = 6
         case Glucose = 13
     }
+    
+    enum PushIds: UInt8 {
+        case KeepAlive = 2
+    }
 }
 
 protocol BasePacket<T> {
