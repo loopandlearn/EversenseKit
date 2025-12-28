@@ -244,22 +244,26 @@ extension PeripheralManager: CBPeripheralDelegate {
         if actualData[0] == EversenseE3.PacketIds.keepAlivePush.rawValue {
             // TODO: Detect alarm notification
             logger.debug("[E3] Got keep alive message")
-            
-            if cgmManager.state.recentGlucoseDateTime == nil || cgmManager.state.recentGlucoseDateTime!.addingTimeInterval(.minutes(4.5)) > Date.now {
+
+            if cgmManager.state.recentGlucoseDateTime == nil || cgmManager.state.recentGlucoseDateTime!
+                .addingTimeInterval(.minutes(4.5)) > Date.now
+            {
                 cgmManager.heartbeathOperation()
             }
             return
         }
-        
-        if actualData[0] == Eversense365.PacketIds.NotificationId.rawValue, actualData[1] == Eversense365.PushIds.KeepAlive.rawValue {
+
+        if actualData[0] == Eversense365.PacketIds.NotificationId.rawValue,
+           actualData[1] == Eversense365.PushIds.KeepAlive.rawValue
+        {
             let packet = Eversense365.PushKeepAlivePacket()
             let response = packet.parseResponse(data: actualData)
-            
+
             logger.debug("[365] Got keep alive message - mostRecentGlucoseDatetime: \(response.mostRecenteGlucoseDatetime)")
             if response.mostRecenteGlucoseDatetime > (cgmManager.state.recentGlucoseDateTime ?? .distantPast) {
                 cgmManager.heartbeathOperation()
             }
-            
+
             return
         }
 

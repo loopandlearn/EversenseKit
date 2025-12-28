@@ -168,7 +168,7 @@ extension EversenseCGMManager {
                     completion?()
                     return
                 }
-                
+
                 guard let peripheralManager = self.bluetoothManager.peripheralManager else {
                     self.logger.error("No peripheralManager")
                     completion?()

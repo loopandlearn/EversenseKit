@@ -58,7 +58,7 @@ extension EversenseCGMManager: CGMManagerUI {
                 progressState: .warning
             )
         }
-        
+
         return nil
     }
 
@@ -66,11 +66,11 @@ extension EversenseCGMManager: CGMManagerUI {
         if state.activeAlarms.contains(where: { Alarm.criticalAlarms.contains($0.code) }) {
             return EversenseDeviceStatusBadge(image: UIImage(systemName: "exclamationmark.triangle"), state: .critical)
         }
-        
+
         if state.activeAlarms.contains(where: { Alarm.warningAlarms.contains($0.code) }) {
             return EversenseDeviceStatusBadge(image: UIImage(systemName: "clock"), state: .warning)
         }
-        
+
         return nil
     }
 }
