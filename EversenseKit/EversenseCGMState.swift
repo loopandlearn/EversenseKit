@@ -53,10 +53,6 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         expiresAt = rawValue["expiresAt"] as? Date ?? Date.distantPast
         mmaFeatures = rawValue["mmaFeatures"] as? UInt8 ?? 0
         vibrateMode = rawValue["vibrateMode"] as? Bool
-        dayStartTime = rawValue["dayStartTime"] as? Date ?? Date.defaultDayStartTime
-        nightStartTime = rawValue["nightStartTime"] as? Date ?? Date.defaultNightStartTime
-        delayBLEDisconnectionAlarm = rawValue["delayBLEDisconnectionAlarm"] as? TimeInterval ?? .seconds(180)
-        isDelayBLEDisconnectionAlarmSupported = rawValue["isDelayBLEDisconnectionAlarmSupported"] as? Bool ?? false
         lastCalibration = rawValue["lastCalibration"] as? Date
         nextCalibration = rawValue["nextCalibration"] as? Date
         calibrationCount = rawValue["calibrationCount"] as? UInt16 ?? 0
@@ -65,15 +61,15 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         highGlucoseAlarmInMgDl = rawValue["highGlucoseAlarmInMgDl"] as? UInt16 ?? 200
         isPredictionLowEnabled = rawValue["isPredictionLowEnabled"] as? Bool ?? false
         isPredictionHighEnabled = rawValue["isPredictionHighEnabled"] as? Bool ?? false
-        predictionRisingInterval = rawValue["predictionRisingInterval"] as? TimeInterval
-        predictionFallingInterval = rawValue["predictionFallingInterval"] as? TimeInterval
+        predictionRisingInterval = rawValue["predictionRisingInterval"] as? TimeInterval ?? .minutes(5)
+        predictionFallingInterval = rawValue["predictionFallingInterval"] as? TimeInterval ?? .minutes(5)
+        predictionRisingThreshold = rawValue["predictionRisingThreshold"] as? UInt16 ?? 180
+        predictionFallingThreshold = rawValue["predictionFallingThreshold"] as? UInt16 ?? 70
         isFallingRateEnabled = rawValue["isRateEnabled"] as? Bool ?? false
         isRisingRateEnabled = rawValue["isRisingRateEnabled"] as? Bool ?? false
-        rateFallingThreshold = rawValue["rateFallingThreshold"] as? Double
-        rateRisingThreshold = rawValue["rateRisingThreshold"] as? Double
+        rateFallingThreshold = rawValue["rateFallingThreshold"] as? Double ?? 0
+        rateRisingThreshold = rawValue["rateRisingThreshold"] as? Double ?? 0
         signalStrengthRaw = rawValue["signalStrengthRaw"] as? UInt16 ?? 0
-        tempThresholdWarning = rawValue["tempThresholdWarning"] as? UInt8 ?? 68
-        tempThresholdModeChange = rawValue["tempThresholdModeChange"] as? UInt8 ?? 52
         recentGlucoseInMgDl = rawValue["recentGlucoseInMgDl"] as? UInt16
         recentGlucoseDateTime = rawValue["recentGlucoseDateTime"] as? Date
         batteryPercentage = rawValue["batteryPercentage"] as? Int ?? -1
@@ -154,10 +150,6 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["batteryPercentage"] = batteryPercentage
         value["signalStrength"] = signalStrength.rawValue
         value["signalStrengthRaw"] = signalStrengthRaw
-        value["dayStartTime"] = dayStartTime
-        value["nightStartTime"] = nightStartTime
-        value["delayBLEDisconnectionAlarm"] = delayBLEDisconnectionAlarm
-        value["isDelayBLEDisconnectionAlarmSupported"] = isDelayBLEDisconnectionAlarmSupported
         value["lastCalibration"] = lastCalibration
         value["nextCalibration"] = nextCalibration
         value["calibrationMode"] = calibrationMode.rawValue
@@ -171,12 +163,12 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["isPredictionHighEnabled"] = isPredictionHighEnabled
         value["predictionRisingInterval"] = predictionRisingInterval
         value["predictionFallingInterval"] = predictionFallingInterval
+        value["predictionFallingThreshold"] = predictionFallingThreshold
+        value["predictionRisingThreshold"] = predictionRisingThreshold
         value["isFallingRateEnabled"] = isFallingRateEnabled
         value["isRisingRateEnabled"] = isRisingRateEnabled
         value["rateFallingThreshold"] = rateFallingThreshold
         value["rateRisingThreshold"] = rateRisingThreshold
-        value["tempThresholdWarning"] = tempThresholdWarning
-        value["tempThresholdModeChange"] = tempThresholdModeChange
         value["recentGlucoseInMgDl"] = recentGlucoseInMgDl
         value["recentGlucoseDateTime"] = recentGlucoseDateTime
         value["recentGlucoseTrend"] = recentGlucoseTrend.rawValue
@@ -219,11 +211,6 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var signalStrength: SignalStrength
     public var signalStrengthRaw: UInt16
 
-    public var dayStartTime: Date
-    public var nightStartTime: Date
-    public var delayBLEDisconnectionAlarm: TimeInterval
-    public var isDelayBLEDisconnectionAlarmSupported: Bool
-
     public var lastCalibration: Date?
     public var nextCalibration: Date?
 
@@ -238,16 +225,15 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
 
     public var isPredictionLowEnabled: Bool
     public var isPredictionHighEnabled: Bool
-    public var predictionFallingInterval: TimeInterval?
-    public var predictionRisingInterval: TimeInterval?
+    public var predictionFallingInterval: TimeInterval
+    public var predictionRisingInterval: TimeInterval
+    public var predictionFallingThreshold: UInt16
+    public var predictionRisingThreshold: UInt16
 
     public var isFallingRateEnabled: Bool
     public var isRisingRateEnabled: Bool
-    public var rateFallingThreshold: Double?
-    public var rateRisingThreshold: Double?
-
-    public var tempThresholdWarning: UInt8
-    public var tempThresholdModeChange: UInt8
+    public var rateFallingThreshold: Double
+    public var rateRisingThreshold: Double
 
     public var recentGlucoseInMgDl: UInt16?
     public var recentGlucoseDateTime: Date?
@@ -267,10 +253,6 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var clientIdV2: Data?
     public var certificateV2: String?
     public var fleetKeyPublicKeyV2: Data?
-
-    public var isUSXLorOUSXL2: Bool {
-        !(mmaFeatures == 0 || mmaFeatures == 255 || mmaFeatures < 1)
-    }
 
     public var is365: Bool {
         !(security == .none)

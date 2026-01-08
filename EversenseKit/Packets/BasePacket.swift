@@ -164,10 +164,16 @@ enum Eversense365 {
         case Calibration = 12
         case AppVersion = 14
         case VibrateMode = 16
+        case PredictionLowThreshold = 18
+        case PredictionHighThreshold = 19
         case RateFallingEnabled = 20
         case RateFallingThreshold = 21
         case RateRisingEnabled = 22
         case RateRisingThreshold = 23
+        case PredictionLowEnabled = 24
+        case PredictionLowTime = 25
+        case PredictionHighEnabled = 26
+        case PredictionHighTime = 27
         case HighGlucoseAlarmEnable = 28
         case HighGlucoseAlarm = 29
         case HighGlucoseAlarmRepeat = 30
@@ -182,6 +188,7 @@ enum Eversense365 {
     }
 
     enum LogTypes: UInt8 {
+        case Alerts = 0
         case Calibrations = 6
         case Glucose = 13
     }

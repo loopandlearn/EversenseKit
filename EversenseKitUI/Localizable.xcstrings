@@ -55,6 +55,18 @@
         }
       }
     },
+    "Alert history" : {
+      "comment" : "Alert history header",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alert history"
+          }
+        }
+      }
+    },
     "Are you sure you want to stop using Eversense CGM?" : {
       "comment" : "Message for CgmManager deletion action sheet",
       "extractionState" : "manual",
@@ -439,14 +451,14 @@
         }
       }
     },
-    "Enable transmitter alerts" : {
+    "Enable transmitter vibration" : {
       "comment" : "label vibration mode",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable transmitter alerts"
+            "value" : "Enable transmitter vibration"
           }
         }
       }
@@ -1135,6 +1147,54 @@
         }
       }
     },
+    "Prediction high alarming enabled" : {
+      "comment" : "label prediction high alarming enabled",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prediction high alarming enabled"
+          }
+        }
+      }
+    },
+    "Prediction Low alarming enabled" : {
+      "comment" : "label prediction high alarming enabled",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prediction Low alarming enabled"
+          }
+        }
+      }
+    },
+    "Prediction period" : {
+      "comment" : "label prediction period",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prediction period"
+          }
+        }
+      }
+    },
+    "Prediction target" : {
+      "comment" : "label prediction target",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prediction target"
+          }
+        }
+      }
+    },
     "Rate change" : {
       "comment" : "label alarming rate change",
       "extractionState" : "manual",
@@ -1443,6 +1503,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The system requires calibration once a week."
+          }
+        }
+      }
+    },
+    "The transmitter can alarm you if it predictions you are falling below the threshold" : {
+      "comment" : "hint falling prediction",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The transmitter can alarm you if it predictions you are falling below the threshold"
+          }
+        }
+      }
+    },
+    "The transmitter can alarm you if it predictions you are rising above the threshold" : {
+      "comment" : "hint rising prediction",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The transmitter can alarm you if it predictions you are rising above the threshold"
           }
         }
       }

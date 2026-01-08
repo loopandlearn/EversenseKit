@@ -180,6 +180,17 @@ struct EversenseSettingsView: View {
                 }
                 .buttonStyle(PlainButtonStyle())
 
+                Button(action: { viewModel.toAlertHistory() }) {
+                    HStack {
+                        Text(LocalizedString("Alert history", comment: "alerts"))
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: UIFont.systemFontSize, weight: .medium))
+                            .opacity(0.35)
+                    }
+                }
+                .buttonStyle(PlainButtonStyle())
+
                 if #available(iOS 16.0, *) {
                     Button(action: viewModel.toPlacementGuide) {
                         HStack {

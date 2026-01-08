@@ -1,5 +1,5 @@
 extension EversenseE3 {
-    class GetRecentGlucoseDateResponse {
+    class GetNextCalibrationDateResponse {
         let date: DateComponents
 
         init(date: DateComponents) {
@@ -7,8 +7,8 @@ extension EversenseE3 {
         }
     }
 
-    class GetRecentGlucoseDatePacket: BasePacket {
-        typealias T = GetRecentGlucoseDateResponse
+    class GetNextCalibrationDatePacket: BasePacket {
+        typealias T = GetNextCalibrationDateResponse
 
         var responseType: UInt8 {
             PacketIds.readTwoByteSerialFlashRegisterResponseId.rawValue
@@ -19,11 +19,11 @@ extension EversenseE3 {
         }
 
         func getRequestData() -> Data {
-            CommandOperations.readTwoByteSerialFlashRegister(memoryAddress: FlashMemory.mostRecentGlucoseDate)
+            CommandOperations.readTwoByteSerialFlashRegister(memoryAddress: FlashMemory.nextCalibrationDate)
         }
 
-        func parseResponse(data: Data) -> GetRecentGlucoseDateResponse {
-            GetRecentGlucoseDateResponse(
+        func parseResponse(data: Data) -> GetNextCalibrationDateResponse {
+            GetNextCalibrationDateResponse(
                 date: BinaryOperations.toDateComponents(data: data, start: start)
             )
         }

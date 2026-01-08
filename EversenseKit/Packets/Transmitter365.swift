@@ -116,7 +116,7 @@ extension Eversense365 {
 
             let timeDifference = sensorInformation.transmitterDatetime.timeIntervalSince1970 - Date.nowWithTimezone()
                 .timeIntervalSince1970
-            if abs(timeDifference) >= TimeInterval.minutes(2) {
+            if abs(timeDifference) >= TimeInterval.seconds(10) {
                 logger.info("Updating transmitter datetime -> current date \(sensorInformation.transmitterDatetime)")
                 let _: Eversense365.SetCurrentDateTimeResponse = try await peripheralManager
                     .write(Eversense365.SetCurrentDateTimePacket())
@@ -143,15 +143,17 @@ extension Eversense365 {
             logger.debug("Sending GetPatientSettingsPacket")
             let patientSettings: GetPatientSettingsResponse = try await peripheralManager.write(GetPatientSettingsPacket())
             cgmManager.state.vibrateMode = patientSettings.vibrateMode
-            cgmManager.state.isGlucoseHighAlarmEnabled = patientSettings.isGlucoseHighAlarmEnabled
             cgmManager.state.lowGlucoseAlarmInMgDl = patientSettings.lowGlucoseAlarmInMgDl
+            cgmManager.state.isGlucoseHighAlarmEnabled = patientSettings.highGlucoseEnabled
             cgmManager.state.highGlucoseAlarmInMgDl = patientSettings.highGlucoseAlarmInMgDl
-            cgmManager.state.isPredictionLowEnabled = patientSettings.isPredictionLowEnabled
-            cgmManager.state.isPredictionHighEnabled = patientSettings.isPredictionHighEnabled
+            cgmManager.state.isPredictionLowEnabled = patientSettings.predictionLowEnabled
+            cgmManager.state.isPredictionHighEnabled = patientSettings.predictionHighEnabled
             cgmManager.state.predictionFallingInterval = patientSettings.predictionFallingInterval
             cgmManager.state.predictionRisingInterval = patientSettings.predictionRisingInterval
-            cgmManager.state.isFallingRateEnabled = patientSettings.isFallingRateEnabled
-            cgmManager.state.isRisingRateEnabled = patientSettings.isRisingRateEnabled
+            cgmManager.state.predictionFallingThreshold = patientSettings.predictionFallingThreshold
+            cgmManager.state.predictionRisingThreshold = patientSettings.predictionRisingThreshold
+            cgmManager.state.isFallingRateEnabled = patientSettings.rateFallingEnabled
+            cgmManager.state.isRisingRateEnabled = patientSettings.rateRisingEnabled
             cgmManager.state.rateFallingThreshold = patientSettings.rateFallingThreshold
             cgmManager.state.rateRisingThreshold = patientSettings.rateRisingThreshold
 
@@ -171,41 +173,44 @@ extension Eversense365 {
     }
 
     static func writeTransmitterSettings(
-        cgmManager: EversenseCGMManager,
+        peripheralManager: PeripheralManager,
         data: TransmitterSettings
     ) async {
         do {
-            logger.debug("sending SetVibrateModePacket...")
-            let _: SetVibrateModeResponse = try await cgmManager.bluetoothManager
-                .write(SetVibrateModePacket(enabled: data.vibrationMode))
+            logger.debug("Write vibration")
+            let _: SetVibrateModeResponse = try await peripheralManager.write(SetVibrateModePacket(enabled: data.vibrationMode))
 
-            logger.debug("sending SetHighGlucoseAlarmEnabledPacket...")
-            let _: SetHighGlucoseAlarmEnabledResponse = try await cgmManager.bluetoothManager
-                .write(SetHighGlucoseAlarmEnabledPacket(enabled: data.enableGlucoseHighAlerts))
-
-            logger.debug("sending SetHighGlucoseAlarmPacket...")
-            let _: SetHighGlucoseAlarmResponse = try await cgmManager.bluetoothManager
+            logger.debug("Write glucose alerts")
+            let _: SetHighGlucoseAlarmEnabledResponse = try await peripheralManager
+                .write(SetHighGlucoseAlarmEnabledPacket(enabled: data.glucoseHighEnabled))
+            let _: SetHighGlucoseAlarmResponse = try await peripheralManager
                 .write(SetHighGlucoseAlarmPacket(value: data.glucoseHighInMgDl))
-
-            logger.debug("sending SetLowGlucoseAlarmPacket...")
-            let _: SetLowGlucoseAlarmResponse = try await cgmManager.bluetoothManager
+            let _: SetLowGlucoseAlarmResponse = try await peripheralManager
                 .write(SetLowGlucoseAlarmPacket(value: data.glucoseLowInMgDl))
 
-            logger.debug("sending SetRateRisingEnabledPacket...")
-            let _: SetRateRisingEnabledResponse = try await cgmManager.bluetoothManager
-                .write(SetRateRisingEnabledPacket(enabled: data.isRisingRateEnabled))
-
-            logger.debug("sending SetRateRisingThresholdPacket...")
-            let _: SetRateRisingThresholdResponse = try await cgmManager.bluetoothManager
+            logger.debug("Write rate alerts")
+            let _: SetRateRisingEnabledResponse = try await peripheralManager
+                .write(SetRateRisingEnabledPacket(enabled: data.rateRisingEnabled))
+            let _: SetRateRisingThresholdResponse = try await peripheralManager
                 .write(SetRateRisingThresholdPacket(value: data.rateRisingThreshold))
-
-            logger.debug("sending SetRateFallingEnabledPacket...")
-            let _: SetRateFallingEnabledResponse = try await cgmManager.bluetoothManager
-                .write(SetRateFallingEnabledPacket(enabled: data.isFallingRateEnabled))
-
-            logger.debug("sending SetRateFallingThresholdPacket...")
-            let _: SetRateFallingThresholdResponse = try await cgmManager.bluetoothManager
+            let _: SetRateFallingEnabledResponse = try await peripheralManager
+                .write(SetRateFallingEnabledPacket(enabled: data.rateFallingEnabled))
+            let _: SetRateFallingThresholdResponse = try await peripheralManager
                 .write(SetRateFallingThresholdPacket(value: data.rateFallingThreshold))
+
+            logger.debug("Write prediction alerts")
+            let _: SetPredictionLowEnabledResponse = try await peripheralManager
+                .write(SetPredictionLowEnabledPacket(enabled: data.predictiveLowEnabled))
+            let _: SetPredictionLowIntervalResponse = try await peripheralManager
+                .write(SetPredictionLowIntervalPacket(time: data.predictiveLowTime))
+            let _: SetPredictionLowThresholdResponse = try await peripheralManager
+                .write(SetPredictionLowThresholdPacket(value: data.predictiveLowThreshold))
+            let _: SetPredictionHighEnabledResponse = try await peripheralManager
+                .write(SetPredictionHighEnabledPacket(enabled: data.predictiveHighEnabled))
+            let _: SetPredictionHighIntervalResponse = try await peripheralManager
+                .write(SetPredictionHighIntervalPacket(time: data.predictiveHighTime))
+            let _: SetPredictionHighThresholdResponse = try await peripheralManager
+                .write(SetPredictionHighThresholdPacket(value: data.predictiveHighThreshold))
 
             logger.info("[365] Transmitter settings have been written - timestamp: \(Date.now)")
         } catch {

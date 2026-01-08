@@ -1,16 +1,20 @@
 import LoopKit
 
 extension EversenseE3 {
-    class GetGlucoseDataResponse {
+    class GetCurrentGlucoseResponse {
+        let datetime: Date
+        let glucoseInMgDl: UInt16
         let trend: GlucoseTrend
 
-        init(trend: GlucoseTrend) {
+        init(datetime: Date, glucoseInMgDl: UInt16, trend: GlucoseTrend) {
+            self.datetime = datetime
+            self.glucoseInMgDl = glucoseInMgDl
             self.trend = trend
         }
     }
 
-    class GetGlucoseDataPacket: BasePacket {
-        typealias T = GetGlucoseDataResponse
+    class GetCurrentGlucosePacket: BasePacket {
+        typealias T = GetCurrentGlucoseResponse
 
         var responseType: UInt8 {
             PacketIds.readSensorGlucoseResponseId.rawValue
@@ -28,9 +32,13 @@ extension EversenseE3 {
             return data
         }
 
-        func parseResponse(data: Data) -> GetGlucoseDataResponse {
-            // TODO: Need to extra more data???
-            GetGlucoseDataResponse(
+        func parseResponse(data: Data) -> GetCurrentGlucoseResponse {
+            GetCurrentGlucoseResponse(
+                datetime: Date.fromComponents(
+                    date: BinaryOperations.toDateComponents(data: data, start: start + 4),
+                    time: BinaryOperations.toDateComponents(data: data, start: start + 6)
+                ),
+                glucoseInMgDl: UInt16(data[start + 9]) | (UInt16(data[start + 10]) << 8),
                 trend: getTrend(value: data[start + 13])
             )
         }

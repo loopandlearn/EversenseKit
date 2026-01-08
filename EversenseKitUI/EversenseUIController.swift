@@ -11,6 +11,7 @@ enum EversenseUIScreen {
     case placementGuide
     case calibration
     case calibrationHistory
+    case alertHistory
 }
 
 class EversenseUIController: UINavigationController, CGMManagerOnboarding, CompletionNotifying, UINavigationControllerDelegate {
@@ -133,6 +134,9 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
             let toCalibrationHistory = {
                 self.navigateTo(.calibrationHistory)
             }
+            let toAlertHistory = {
+                self.navigateTo(.alertHistory)
+            }
 
             let viewModel = EversenseSettingsViewModel(
                 cgmManager: cgmManager,
@@ -141,6 +145,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                 toPlacementGuide: toPlacementGuide,
                 toCalibration: toCalibration,
                 toCalibrationHistory: toCalibrationHistory,
+                toAlertHistory: toAlertHistory
             )
             return hostingController(rootView: EversenseSettingsView(viewModel: viewModel))
         case .transmitterSettings:
@@ -159,6 +164,9 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
         case .calibrationHistory:
             let viewModel = CalibrationHistoryViewModel(cgmManager: cgmManager, glucosePreference: displayGlucosePreference)
             return hostingController(rootView: CalibrationHistoryView(viewModel: viewModel))
+        case .alertHistory:
+            let viewModel = AlertHistoryViewModel(cgmManager: cgmManager)
+            return hostingController(rootView: AlertHistoryView(viewModel: viewModel))
         }
     }
 

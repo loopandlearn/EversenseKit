@@ -1,12 +1,19 @@
 struct TransmitterSettings {
     let vibrationMode: Bool
 
-    let enableGlucoseHighAlerts: Bool
+    let glucoseHighEnabled: Bool
     let glucoseHighInMgDl: UInt16
     let glucoseLowInMgDl: UInt16
 
-    let isFallingRateEnabled: Bool
-    let isRisingRateEnabled: Bool
+    let rateFallingEnabled: Bool
+    let rateRisingEnabled: Bool
     let rateFallingThreshold: UInt8
     let rateRisingThreshold: UInt8
+
+    let predictiveHighEnabled: Bool
+    let predictiveHighThreshold: UInt16
+    let predictiveHighTime: TimeInterval
+    let predictiveLowEnabled: Bool
+    let predictiveLowThreshold: UInt16
+    let predictiveLowTime: TimeInterval
 }

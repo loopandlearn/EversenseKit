@@ -47,7 +47,7 @@ extension Eversense365 {
             }
 
             let actualData = Data(data.subdata(in: 7 ..< data.count))
-            let length: UInt32 = 193
+            let length: UInt32 = 56
 
             // Offset glucose value = recordLength + datetime + FsStartEndFlag + ProcessingDateTime + SampleDateTime + MmaFSDateTime + DecisionDateTime
             let offsetGlucose = 4 + 8 + 2 + 8 + 8 + 8 + 8

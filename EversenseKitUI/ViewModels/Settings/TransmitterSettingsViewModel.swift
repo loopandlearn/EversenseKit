@@ -11,14 +11,22 @@ class TransmitterSettingsViewModel: ObservableObject {
     @Published var glucoseHighInMgDl: Double = 180
     @Published var glucoseLowInMgDl: Double = 70
 
-    @Published var isFallingRateEnabled = false
-    @Published var isRisingRateEnabled = false
+    @Published var rateFallingEnabled = false
+    @Published var rateRisingEnabled = false
     @Published var rateFallingThreshold: Double = 0
     @Published var rateRisingThreshold: Double = 0
+
+    @Published var predictionLowEnabled: Bool = false
+    @Published var predictionHighEnabled: Bool = false
+    @Published var predictionLowTime: Double = .minutes(5)
+    @Published var predictionHighTime: Double = .minutes(5)
+    @Published var predictionLowThreshold: Double = 70
+    @Published var predictionHighThreshold: Double = 180
 
     public let rateAllowedOptions: [Double] = (0 ..< 8).map { 1.5 + Double($0) * 0.5 }
     public let glucoseHighAllowedOptions: [Double] = (0 ... 110).map { Double($0 * 2 + 180) }
     public let glucoseLowAllowedOptions: [Double] = (0 ... 15).map { Double($0 * 2 + 40) }
+    public let timeAllowedOptions: [Double] = (5 ... 30).map { Double($0) }
 
     private let cgmManager: EversenseCGMManager?
     private let unit: HKUnit
@@ -33,19 +41,22 @@ class TransmitterSettingsViewModel: ObservableObject {
         }
 
         vibrationMode = cgmManager.state.vibrateMode ?? false
-        isFallingRateEnabled = cgmManager.state.isFallingRateEnabled
-        isRisingRateEnabled = cgmManager.state.isRisingRateEnabled
+
         enableGlucoseHighAlerts = cgmManager.state.isGlucoseHighAlarmEnabled
         glucoseHighInMgDl = Double(cgmManager.state.highGlucoseAlarmInMgDl)
         glucoseLowInMgDl = Double(cgmManager.state.lowGlucoseAlarmInMgDl)
 
-        if let value = cgmManager.state.rateFallingThreshold {
-            rateFallingThreshold = value
-        }
+        rateFallingEnabled = cgmManager.state.isFallingRateEnabled
+        rateRisingEnabled = cgmManager.state.isRisingRateEnabled
+        rateFallingThreshold = cgmManager.state.rateFallingThreshold
+        rateRisingThreshold = cgmManager.state.rateRisingThreshold
 
-        if let value = cgmManager.state.rateRisingThreshold {
-            rateRisingThreshold = value
-        }
+        predictionLowEnabled = cgmManager.state.isPredictionLowEnabled
+        predictionHighEnabled = cgmManager.state.isPredictionHighEnabled
+        predictionLowTime = cgmManager.state.predictionFallingInterval
+        predictionHighTime = cgmManager.state.predictionRisingInterval
+        predictionLowThreshold = Double(cgmManager.state.predictionFallingThreshold)
+        predictionHighThreshold = Double(cgmManager.state.predictionRisingThreshold)
     }
 
     func toHkQuantity(_ value: Double) -> HKQuantity {
@@ -74,21 +85,34 @@ class TransmitterSettingsViewModel: ObservableObject {
                 return
             }
 
+            guard let peripheralManager = cgmManager.bluetoothManager.peripheralManager else {
+                return
+            }
+
             let transmitterSettings = TransmitterSettings(
                 vibrationMode: self.vibrationMode,
-                enableGlucoseHighAlerts: self.enableGlucoseHighAlerts,
+
+                glucoseHighEnabled: self.enableGlucoseHighAlerts,
                 glucoseHighInMgDl: UInt16(self.glucoseHighInMgDl),
                 glucoseLowInMgDl: UInt16(self.glucoseLowInMgDl),
-                isFallingRateEnabled: self.isFallingRateEnabled,
-                isRisingRateEnabled: self.isRisingRateEnabled,
+
+                rateFallingEnabled: self.rateFallingEnabled,
+                rateRisingEnabled: self.rateRisingEnabled,
                 rateFallingThreshold: UInt8(self.rateFallingThreshold),
-                rateRisingThreshold: UInt8(self.rateRisingThreshold)
+                rateRisingThreshold: UInt8(self.rateRisingThreshold),
+
+                predictiveHighEnabled: self.predictionHighEnabled,
+                predictiveHighThreshold: UInt16(self.predictionHighThreshold),
+                predictiveHighTime: self.predictionHighTime,
+                predictiveLowEnabled: self.predictionLowEnabled,
+                predictiveLowThreshold: UInt16(self.predictionLowThreshold),
+                predictiveLowTime: self.predictionLowTime
             )
 
             if !cgmManager.state.is365 {
-                await EversenseE3.writeTransmitterSettings(cgmManager: cgmManager, data: transmitterSettings)
+                await EversenseE3.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
             } else {
-                await Eversense365.writeTransmitterSettings(cgmManager: cgmManager, data: transmitterSettings)
+                await Eversense365.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
             }
 
             await MainActor.run {

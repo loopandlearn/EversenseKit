@@ -56,13 +56,15 @@ class EversenseSettingsViewModel: ObservableObject {
     public let toPlacementGuide: () -> Void
     public let toCalibration: () -> Void
     public let toCalibrationHistory: () -> Void
+    public let toAlertHistory: () -> Void
     init(
         cgmManager: EversenseCGMManager?,
         deleteCgm: @escaping () -> Void,
         toTransmitterSettings: @escaping () -> Void,
         toPlacementGuide: @escaping () -> Void,
         toCalibration: @escaping () -> Void,
-        toCalibrationHistory: @escaping () -> Void
+        toCalibrationHistory: @escaping () -> Void,
+        toAlertHistory: @escaping () -> Void,
     ) {
         self.cgmManager = cgmManager
         self.deleteCgm = deleteCgm
@@ -70,6 +72,7 @@ class EversenseSettingsViewModel: ObservableObject {
         self.toPlacementGuide = toPlacementGuide
         self.toCalibration = toCalibration
         self.toCalibrationHistory = toCalibrationHistory
+        self.toAlertHistory = toAlertHistory
 
         guard let cgmManager = cgmManager else {
             return

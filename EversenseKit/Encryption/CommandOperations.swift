@@ -1,13 +1,6 @@
 enum FlashMemory: UInt32 {
-    case sensorFieldCurrent = 0x0000_0408
     case sensorFieldCurrentRaw = 0x0000_049D
-    case batteryVoltage = 0x0000_0404
     case batteryPercentage = 0x0000_0406
-
-    case hysteresisPercentage = 0x0000_0093
-    case hysteresisValue = 0x0000_0094
-    case hysteresisPredictivePercentage = 0x0000_0095
-    case hysteresisPredictiveValue = 0x0000_0096
 
     case transmitterModelNumber = 0x0000_0006
     case transmitterSoftwareVersion = 0x0000_000A
@@ -20,6 +13,7 @@ enum FlashMemory: UInt32 {
     case minCalibrationThreshold = 0x0000_0912
     case maxCalibrationThreshold = 0x0000_0914
 
+    case vibrateMode = 0x0000_0902
     case lowGlucoseTarget = 0x0000_1102
     case highGlucoseTarget = 0x0000_1104
     case highGlucoseAlarmEnabled = 0x0000_1029
@@ -40,16 +34,16 @@ enum FlashMemory: UInt32 {
     case clinicalMode = 0x0000_0B49
     case clinicalModeDuration = 0x0000_0098
     case appVersion = 0x0000_0B4B
-    case vibrateMode = 0x0_0000_0902
     case sensorGlucoseSamplingInterval = 0x0000_0012
     case atccalCrcAddress = 0x0000_048C
 
     case algorithmParameterFormatVersion = 0x0000_0480
     case communicationProtocolVersion = 0x0000_000E
-    case delayBLEDisconnectAlarm = 0x0000_08B2
 
     case mostRecentCalibrationDate = 0x0000_08A3
     case mostRecentCalibrationTime = 0x0000_08A5
+    case nextCalibrationDate = 0x0000_0470
+    case nextCalibrationTime = 0x0000_0472
     case startDateOfCalibrationPhase = 0x000089D
     case startTimeOfCalibrationPhase = 0x0000_089F
     case transmitterOperationStartDate = 0x0000_0490

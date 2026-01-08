@@ -1,42 +1,48 @@
 extension Eversense365 {
     class GetPatientSettingsResponse {
         let vibrateMode: Bool
-        let isGlucoseHighAlarmEnabled: Bool
+        let highGlucoseEnabled: Bool
         let lowGlucoseAlarmInMgDl: UInt16
         let highGlucoseAlarmInMgDl: UInt16
-        let isPredictionLowEnabled: Bool
-        let isPredictionHighEnabled: Bool
+        let predictionLowEnabled: Bool
+        let predictionHighEnabled: Bool
         let predictionFallingInterval: TimeInterval
         let predictionRisingInterval: TimeInterval
-        let isFallingRateEnabled: Bool
-        let isRisingRateEnabled: Bool
+        let predictionFallingThreshold: UInt16
+        let predictionRisingThreshold: UInt16
+        let rateFallingEnabled: Bool
+        let rateRisingEnabled: Bool
         let rateFallingThreshold: Double
         let rateRisingThreshold: Double
 
         init(
             vibrateMode: Bool,
-            isGlucoseHighAlarmEnabled: Bool,
-            lowGlucoseAlarmInMgDl: UInt16,
+            highGlucoseEnabled: Bool,
             highGlucoseAlarmInMgDl: UInt16,
-            isPredictionLowEnabled: Bool,
-            isPredictionHighEnabled: Bool,
+            lowGlucoseAlarmInMgDl: UInt16,
+            predictionLowEnabled: Bool,
+            predictionHighEnabled: Bool,
             predictionFallingInterval: TimeInterval,
             predictionRisingInterval: TimeInterval,
-            isFallingRateEnabled: Bool,
-            isRisingRateEnabled: Bool,
+            predictionFallingThreshold: UInt16,
+            predictionRisingThreshold: UInt16,
+            rateFallingEnabled: Bool,
+            rateRisingEnabled: Bool,
             rateFallingThreshold: Double,
             rateRisingThreshold: Double
         ) {
             self.vibrateMode = vibrateMode
-            self.isGlucoseHighAlarmEnabled = isGlucoseHighAlarmEnabled
-            self.lowGlucoseAlarmInMgDl = lowGlucoseAlarmInMgDl
+            self.highGlucoseEnabled = highGlucoseEnabled
             self.highGlucoseAlarmInMgDl = highGlucoseAlarmInMgDl
-            self.isPredictionLowEnabled = isPredictionLowEnabled
-            self.isPredictionHighEnabled = isPredictionHighEnabled
+            self.lowGlucoseAlarmInMgDl = lowGlucoseAlarmInMgDl
+            self.predictionLowEnabled = predictionLowEnabled
+            self.predictionHighEnabled = predictionHighEnabled
             self.predictionFallingInterval = predictionFallingInterval
             self.predictionRisingInterval = predictionRisingInterval
-            self.isFallingRateEnabled = isFallingRateEnabled
-            self.isRisingRateEnabled = isRisingRateEnabled
+            self.predictionFallingThreshold = predictionFallingThreshold
+            self.predictionRisingThreshold = predictionRisingThreshold
+            self.rateFallingEnabled = rateFallingEnabled
+            self.rateRisingEnabled = rateRisingEnabled
             self.rateFallingThreshold = rateFallingThreshold
             self.rateRisingThreshold = rateRisingThreshold
         }
@@ -85,17 +91,21 @@ extension Eversense365 {
         func parseResponse(data: Data) -> GetPatientSettingsResponse {
             GetPatientSettingsResponse(
                 vibrateMode: data[Offset.IS_DO_NOT_DISTURB_ENABLED] != 0x00,
-                isGlucoseHighAlarmEnabled: data[Offset.ALARM_HIGH_GLUCOSE_ENABLED] != 0x00,
-                lowGlucoseAlarmInMgDl: UInt16(data[Offset.ALARM_LOW_GLUCOSE_THRESHOLD]) |
-                    (UInt16(data[Offset.ALARM_LOW_GLUCOSE_THRESHOLD + 1]) << 8),
+                highGlucoseEnabled: data[Offset.ALARM_HIGH_GLUCOSE_ENABLED] != 0x00,
                 highGlucoseAlarmInMgDl: UInt16(data[Offset.ALARM_HIGH_GLUCOSE_THRESHOLD]) |
                     (UInt16(data[Offset.ALARM_HIGH_GLUCOSE_THRESHOLD + 1]) << 8),
-                isPredictionLowEnabled: data[Offset.ALARM_PREDICTIVE_LOW_ENABLED] != 0x00,
-                isPredictionHighEnabled: data[Offset.ALARM_PREDICTIVE_HIGH_ENABLED] != 0x00,
+                lowGlucoseAlarmInMgDl: UInt16(data[Offset.ALARM_LOW_GLUCOSE_THRESHOLD]) |
+                    (UInt16(data[Offset.ALARM_LOW_GLUCOSE_THRESHOLD + 1]) << 8),
+                predictionLowEnabled: data[Offset.ALARM_PREDICTIVE_LOW_ENABLED] != 0x00,
+                predictionHighEnabled: data[Offset.ALARM_PREDICTIVE_HIGH_ENABLED] != 0x00,
                 predictionFallingInterval: .minutes(Double(data[Offset.ALARM_PREDICTIVE_LOW_TIME])),
                 predictionRisingInterval: .minutes(Double(data[Offset.ALARM_PREDICTIVE_HIGH_TIME])),
-                isFallingRateEnabled: data[Offset.ALARM_RATE_FALLING_ENABLED] != 0x00,
-                isRisingRateEnabled: data[Offset.ALARM_RATE_RISING_ENABLED] != 0x00,
+                predictionFallingThreshold: UInt16(data[Offset.LOW_SUGAR_TARGET]) |
+                    (UInt16(data[Offset.LOW_SUGAR_TARGET + 1]) << 8),
+                predictionRisingThreshold: UInt16(data[Offset.HIGH_SUGAR_TARGET]) |
+                    (UInt16(data[Offset.HIGH_SUGAR_TARGET + 1]) << 8),
+                rateFallingEnabled: data[Offset.ALARM_RATE_FALLING_ENABLED] != 0x00,
+                rateRisingEnabled: data[Offset.ALARM_RATE_RISING_ENABLED] != 0x00,
                 rateFallingThreshold: Double(data[Offset.ALARM_RATE_FALLING_THRESHOLD]) / 10,
                 rateRisingThreshold: Double(data[Offset.ALARM_RATE_RISING_THRESHOLD]) / 10
             )
@@ -114,12 +124,8 @@ extension Eversense365 {
             static let BLE_CONNECT_TIME_START = 45
             static let BLE_CONNECT_TIME_END = 47
 
-            static let LOW_SUGAR_TARGET_START = 47
-            static let LOW_SUGAR_TARGET_END = 49
-
-            static let HIGH_SUGAR_TARGET_START = 49
-            static let HIGH_SUGAR_TARGET_END = 51
-
+            static let LOW_SUGAR_TARGET = 47
+            static let HIGH_SUGAR_TARGET = 49
             static let ALARM_RATE_FALLING_ENABLED = 51
             static let ALARM_RATE_FALLING_THRESHOLD = 52
             static let ALARM_RATE_RISING_ENABLED = 53

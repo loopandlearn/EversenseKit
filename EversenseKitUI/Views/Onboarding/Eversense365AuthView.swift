@@ -21,8 +21,13 @@ struct Eversense365Auth: View {
                     ))
                 }
 
-                Button(LocalizedString("Forgot password", comment: "Label for forgot password")) {
-                    viewModel.openForgotPasswordUrl()
+                Section {
+                    Button(LocalizedString("Create account", comment: "label to create account")) {
+                        viewModel.openRegistrationUrl()
+                    }
+                    Button(LocalizedString("Forgot password", comment: "Label for forgot password")) {
+                        viewModel.openForgotPasswordUrl()
+                    }
                 }
             }
 
@@ -32,13 +37,6 @@ struct Eversense365Auth: View {
                 Text(viewModel.error)
                     .foregroundStyle(.red)
             }
-
-            Button(action: viewModel.openRegistrationUrl) {
-                Text(LocalizedString("Create account", comment: "label to create account"))
-            }
-            .buttonStyle(ActionButtonStyle(.secondary))
-            .disabled(viewModel.isLoading)
-            .padding(.horizontal)
 
             Button(action: viewModel.login) {
                 Text(LocalizedString("Login", comment: "label for Login"))
