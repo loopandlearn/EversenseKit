@@ -100,6 +100,7 @@ public enum Alarm: UInt8, Codable {
         case .BatteryOptimization,
              .BatteryStatusAlarm,
              .OneCal,
+             .OtaUpgradeComplete,
              .ResetLogReport,
              .SensorRetiringSoon1Alarm,
              .SensorRetiringSoon3Alarm,
@@ -109,7 +110,6 @@ public enum Alarm: UInt8, Codable {
              .SensorRetiringSoon7Alarm,
              .SensorSyncConfirmedAlarm,
              .TwoCal,
-             .OtaUpgradeComplete,
              .WarmUpPhaseCompleteAlert:
             return .Info
 

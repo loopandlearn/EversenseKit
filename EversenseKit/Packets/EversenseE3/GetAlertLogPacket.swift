@@ -10,18 +10,18 @@ extension EversenseE3 {
             self.alarm = alarm
         }
     }
-    
-    class GetAlertLogPacket : BasePacket {
+
+    class GetAlertLogPacket: BasePacket {
         typealias T = GetAlertLogResponse
-        
+
         var responseType: UInt8 {
             PacketIds.readAllSensorGlucoseAlertsInSpecifiedRangeResponseId.rawValue
         }
-        
+
         var responseId: UInt8? {
             nil
         }
-        
+
         private let index: UInt16
         init(index: UInt16) {
             self.index = index
@@ -37,7 +37,7 @@ extension EversenseE3 {
 
             return data
         }
-        
+
         func parseResponse(data: Data) -> EversenseE3.GetAlertLogResponse {
             let index = UInt32(data[start]) | UInt32(data[start + 1]) << 8
             let datetime = Date.fromComponents(
