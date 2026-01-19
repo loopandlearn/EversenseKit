@@ -37,6 +37,16 @@ class PeripheralManager: NSObject {
 
         self.peripheral.delegate = self
     }
+    
+    deinit {
+        if let writeAction = writeQueue {
+            writeAction.finish()
+        }
+        
+        if let timeout = writeTimeoutTask {
+            timeout.cancel()
+        }
+    }
 
     func write<T>(_ packet: any BasePacket, timeout: TimeInterval = .seconds(5)) async throws -> T {
         guard writeQueue == nil, let characteristic = requestCharacteristic else {
@@ -211,9 +221,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             return
         }
 
-        logger.debug("Received data: \(data.hexString())")
         let isE3 = cgmManager.state.security == .none
-
         if isE3 {
             buffer.append(data)
         } else {
@@ -235,10 +243,10 @@ extension PeripheralManager: CBPeripheralDelegate {
                     buffer = Data()
                     return
                 }
-
-                logger.debug("Decrypted payload: \(actualData.hexString())")
             }
         }
+        
+        logger.debug("Decrypted payload: \(actualData.hexString())")
         buffer = Data()
 
         if actualData[0] == EversenseE3.PacketIds.keepAlivePush.rawValue {

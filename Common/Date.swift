@@ -49,14 +49,4 @@ extension Date {
     static func fromUnix2000(data: Data) -> Date {
         Date(timeIntervalSince1970: UNIX_2000 + .seconds(Double(data.toInt64() / 1024)))
     }
-
-    static var defaultDayStartTime: Date {
-        let components = DateComponents(timeZone: TimeZone.current, hour: 8, minute: 0)
-        return Calendar.current.date(from: components)!
-    }
-
-    static var defaultNightStartTime: Date {
-        let components = DateComponents(timeZone: TimeZone.current, hour: 20, minute: 0)
-        return Calendar.current.date(from: components)!
-    }
 }

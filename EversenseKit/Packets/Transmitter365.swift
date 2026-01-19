@@ -17,7 +17,6 @@ extension Eversense365 {
             logger.debug("sending GetGlucoseLogRangePacket...")
             let glucoseRange: GetLogRangeResponse = try await peripheralManager
                 .write(GetLogRangePacket(communicationVersion: cgmManager.state.communicationProtocol, logType: LogTypes.Glucose))
-            logger.info("Got Blood glucose range from: \(glucoseRange.rangeFrom) - \(glucoseRange.rangeTo)")
 
             let range = RangeCalculator.calculateGlucoseRange(
                 rangeFrom: glucoseRange.rangeFrom,
