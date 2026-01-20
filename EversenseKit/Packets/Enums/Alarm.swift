@@ -99,6 +99,7 @@ public enum Alarm: UInt8, Codable {
         switch self {
         case .BatteryOptimization,
              .BatteryStatusAlarm,
+             .InValidTx,
              .OneCal,
              .OtaUpgradeComplete,
              .ResetLogReport,

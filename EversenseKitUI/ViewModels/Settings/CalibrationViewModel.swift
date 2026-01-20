@@ -40,9 +40,9 @@ class CalibrationViewModel: ObservableObject {
         Task {
             do {
                 if cgmManager.state.is365 {
-                    try await Eversense365.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose, timestamp: time)
+                    try Eversense365.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose, timestamp: time)
                 } else {
-                    try await EversenseE3.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose, timestamp: time)
+                    try EversenseE3.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose, timestamp: time)
                 }
 
                 cgmManager.heartbeathOperation {}

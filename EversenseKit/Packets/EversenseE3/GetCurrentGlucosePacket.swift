@@ -35,11 +35,11 @@ extension EversenseE3 {
         func parseResponse(data: Data) -> GetCurrentGlucoseResponse {
             GetCurrentGlucoseResponse(
                 datetime: Date.fromComponents(
-                    date: BinaryOperations.toDateComponents(data: data, start: start + 4),
-                    time: BinaryOperations.toDateComponents(data: data, start: start + 6)
+                    date: BinaryOperations.toDateComponents(data: data, start: start + 3),
+                    time: BinaryOperations.toTimeComponents(data: data, start: start + 5)
                 ),
-                glucoseInMgDl: UInt16(data[start + 9]) | (UInt16(data[start + 10]) << 8),
-                trend: getTrend(value: data[start + 13])
+                glucoseInMgDl: UInt16(data[start + 8]) | (UInt16(data[start + 9]) << 8),
+                trend: getTrend(value: data[start + 12])
             )
         }
 

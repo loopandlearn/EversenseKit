@@ -20,8 +20,9 @@ class PeripheralManager: NSObject {
 
     private var buffer = Data([])
     private var packet: (any BasePacket)?
-    private var writeTimeoutTask: Task<Void, Never>?
-    private var writeQueue: (AsyncThrowingStream<AnyObject, Error>.Continuation)?
+    private var writeTimeout: BlockOperation?
+    private var writeQueue: NSCondition?
+    private var writeResponse: AnyObject?
 
     private let maxPacketSize: Int
 
@@ -37,26 +38,23 @@ class PeripheralManager: NSObject {
 
         self.peripheral.delegate = self
     }
-    
+
     deinit {
+        writeTimeout?.cancel()
+
         if let writeAction = writeQueue {
-            writeAction.finish()
-        }
-        
-        if let timeout = writeTimeoutTask {
-            timeout.cancel()
+            writeAction.signal()
         }
     }
 
-    func write<T>(_ packet: any BasePacket, timeout: TimeInterval = .seconds(5)) async throws -> T {
+    func write<T>(_ packet: any BasePacket, timeout: TimeInterval = .seconds(5)) throws -> T {
         guard writeQueue == nil, let characteristic = requestCharacteristic else {
             throw NSError(domain: "Command already running", code: 0)
         }
 
         self.packet = packet
-        let stream = AsyncThrowingStream<AnyObject, Error> { continuation in
-            writeQueue = continuation
-        }
+        let writeQ = NSCondition()
+        writeQueue = writeQ
 
         let data = packet.getRequestData()
         if case cgmManager.state.security = .none {
@@ -69,43 +67,51 @@ class PeripheralManager: NSObject {
                 logger.debug("[ENCODED] Writing data -> \(message.hexString())")
 
                 peripheral.writeValue(message, for: characteristic, type: .withoutResponse)
-                try await Task.sleep(nanoseconds: 100_000_000) // 100ms
+                Thread.sleep(forTimeInterval: .milliseconds(100))
             }
         }
 
-        startTimeoutTimer(packet: packet, timeout)
-        return try await firstValue(from: stream)
-    }
+        startTimeoutTimer(timeout)
 
-    private func firstValue<T>(from stream: AsyncThrowingStream<AnyObject, Error>) async throws -> T {
-        for try await value in stream {
-            if let value = value as? T {
-                return value
-            }
+        writeQ.lock()
+        defer { writeQ.unlock() }
 
-            throw NSError(domain: "Got invalid data type", code: 0)
+        // Wait for response or timeout timer...
+        writeQ.wait()
+
+        writeTimeout?.cancel()
+        writeTimeout = nil
+        writeQueue = nil
+
+        guard let response = writeResponse as? T else {
+            writeResponse = nil
+            throw NSError(domain: "Timeout has been hit...", code: 0, userInfo: nil)
         }
-        throw NSError(domain: "Got no response", code: 0)
+
+        writeResponse = nil
+        return response
     }
 
-    private func startTimeoutTimer(packet _: any BasePacket, _ timeout: TimeInterval) {
-        writeTimeoutTask = Task {
-            do {
-                try await Task.sleep(nanoseconds: UInt64(timeout) * 1_000_000_000)
-                guard let stream = self.writeQueue else {
-                    // We did what we must, so exist and be happy :)
-                    return
-                }
+    private func startTimeoutTimer(_ timeout: TimeInterval) {
+        writeTimeout = BlockOperation { [weak self] in
+            guard let self else { return }
 
-                logger.error("Timeout has been triggered...")
-
-                stream.finish()
-
-                self.writeQueue = nil
-                self.writeTimeoutTask = nil
-            } catch {
-                // Task was cancelled because message has been received
+            Thread.sleep(forTimeInterval: timeout)
+            if self.writeTimeout == nil || self.writeTimeout!.isCancelled {
+                // We did what we must, so exist and be happy :)
+                return
             }
+            guard let stream = self.writeQueue else {
+                // We did what we must, so exist and be happy :)
+                return
+            }
+
+            self.logger.error("Timeout has been triggered...")
+
+            stream.signal()
+
+            self.writeQueue = nil
+            self.writeTimeout = nil
         }
     }
 }
@@ -198,7 +204,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             Task {
                 switch cgmManager.state.security {
                 case .none:
-                    await writeNoneSecurity()
+                    writeNoneSecurity()
                 case .v1:
 //                    await getFleetKey()
                     return
@@ -245,7 +251,7 @@ extension PeripheralManager: CBPeripheralDelegate {
                 }
             }
         }
-        
+
         logger.debug("Decrypted payload: \(actualData.hexString())")
         buffer = Data()
 
@@ -283,7 +289,7 @@ extension PeripheralManager: CBPeripheralDelegate {
                 return
             }
 
-            stream.finish()
+            stream.signal()
             return
         }
 
@@ -295,7 +301,7 @@ extension PeripheralManager: CBPeripheralDelegate {
                 return
             }
 
-            stream.finish()
+            stream.signal()
             return
         }
 
@@ -315,29 +321,28 @@ extension PeripheralManager: CBPeripheralDelegate {
             actualData = actualData.subdata(in: 1 ..< actualData.count - 2)
         }
 
-        let response = packet.parseResponse(data: actualData) as AnyObject
+        writeResponse = packet.parseResponse(data: actualData) as AnyObject
 
         guard let stream = writeQueue else {
             logger.warning("No pending writeQueue - data: \(actualData.hexString())")
             return
         }
 
-        writeTimeoutTask?.cancel()
-        writeTimeoutTask = nil
-        writeQueue = nil
+        writeTimeout?.cancel()
+        writeTimeout = nil
 
-        stream.yield(response)
-        stream.finish()
+        stream.signal()
+        writeQueue = nil
     }
 }
 
 // Eversense E3 specific auth flow
 extension PeripheralManager {
-    private func writeNoneSecurity() async {
+    private func writeNoneSecurity() {
         do {
-            let _: EversenseE3.SaveBleBondingInformationResponse = try await write(EversenseE3.SaveBleBondingInformationPacket())
+            let _: EversenseE3.SaveBleBondingInformationResponse = try write(EversenseE3.SaveBleBondingInformationPacket())
 
-            await EversenseE3.fullSync(peripheralManager: self, cgmManager: cgmManager)
+            EversenseE3.fullSync(peripheralManager: self, cgmManager: cgmManager)
             connectCompletion?(nil)
             connectCompletion = nil
         } catch {
@@ -383,7 +388,7 @@ extension PeripheralManager {
                 logger.info("Sending WhoAmI - clientID: \(clientId.hexString())")
 
                 let whoAmIResponse: Eversense365.AuthWhoAmIResponse =
-                    try await write(Eversense365.AuthWhoAmIPacket(secret: clientId))
+                    try write(Eversense365.AuthWhoAmIPacket(secret: clientId))
 
                 let accessResponse = try await AuthenticationApi.login(username: username, password: password)
 
@@ -415,7 +420,7 @@ extension PeripheralManager {
 
                 logger.debug("Sending IDENTITY...")
                 let _: Eversense365
-                    .AuthIdentityResponse = try await write(Eversense365.AuthIdentityPacket(secret: certificateData))
+                    .AuthIdentityResponse = try write(Eversense365.AuthIdentityPacket(secret: certificateData))
             } else {
                 logger.info("Skipping online keyVault call, certificate already set")
             }
@@ -429,7 +434,7 @@ extension PeripheralManager {
             }
 
             logger.debug("Sending START...")
-            let startResponse: Eversense365.AuthStartResponse = try await write(Eversense365.AuthStartPacket(
+            let startResponse: Eversense365.AuthStartResponse = try write(Eversense365.AuthStartPacket(
                 clientId: clientId,
                 ephemPublicKey: ephemPublicKey,
                 salt: salt,
@@ -448,7 +453,7 @@ extension PeripheralManager {
                 salt: salt
             )
 
-            await Eversense365.fullSync(peripheralManager: self, cgmManager: cgmManager)
+            Eversense365.fullSync(peripheralManager: self, cgmManager: cgmManager)
             connectCompletion?(nil)
             connectCompletion = nil
 

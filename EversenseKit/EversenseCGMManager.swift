@@ -183,14 +183,14 @@ extension EversenseCGMManager {
                         cgmManager: self,
                         lastGlucoseTimestamp: lastGlucoseTimestamp
                     )
-                    await EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                    EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
                 } else {
-                    samples = await Eversense365.readGlucoseData(
+                    samples = Eversense365.readGlucoseData(
                         peripheralManager: peripheralManager,
                         cgmManager: self,
                         lastGlucoseTimestamp: lastGlucoseTimestamp
                     )
-                    await Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                    Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
                 }
 
                 self.isFetchingData = false
