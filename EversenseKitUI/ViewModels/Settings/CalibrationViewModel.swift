@@ -49,6 +49,7 @@ class CalibrationViewModel: ObservableObject {
 
                 await MainActor.run {
                     self.isLoading = false
+                    self.done()
                 }
             } catch {
                 logger.error("Error during calibration: \(error)")

@@ -53,7 +53,7 @@ enum BinaryOperations {
     static func toTimeZoneArray() -> Data {
         let offset = TimeInterval(Double(TimeZone.current.secondsFromGMT()))
         let hour = UInt8(offset.hours)
-        let minute = UInt8(offset.minutes) % 60
+        let minute = UInt8(offset.minutes.truncatingRemainder(dividingBy: 60))
 
         let byte1 = ((minute & 7) << 5)
         let byte2 = (hour << 3) | ((minute & 56) >> 3)

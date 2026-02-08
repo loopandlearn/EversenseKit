@@ -1,9 +1,6 @@
-import _CryptoExtras
-import Crypto
+import CryptoKit
 import CryptoSwift
 import Foundation
-import Security
-import SwiftASN1
 
 class CryptoUtil {
     public static let shared = CryptoUtil()
@@ -15,7 +12,7 @@ class CryptoUtil {
         "kRDJg5gpOVobGb5e2fazOZ2DDhCqpgMfgUm1P/2HuZhWRJvwSrV402p4gA==\n" +
         "-----END PUBLIC KEY-----"
     private static let aesKey = SymmetricKey(data: Array("XdHC2ni9oKcd1D5f".utf8))
-    private static let aesIV = Array("9u4CzyxzQ4884yZL".utf8)
+    private static let aesIV = Data(Array("9u4CzyxzQ4884yZL".utf8))
 
     private var messageCount: Int = 1
     private var salt: Data?
@@ -57,13 +54,7 @@ class CryptoUtil {
         data.append(salt)
 
         let digitalSignature = try privateKey.signature(for: data).derRepresentation
-
-        var actualSignature = Data()
-        let nodeCollection = try DER.parse([UInt8](digitalSignature))
-        try DER.sequence(nodeCollection, identifier: .sequence) { nodes in
-            actualSignature.append(contentsOf: try ArraySlice(derEncoded: &nodes))
-            actualSignature.append(contentsOf: try ArraySlice(derEncoded: &nodes))
-        }
+        let actualSignature = try parseECDSASignature(digitalSignature)
 
         return (ephemPrivateKey.derRepresentation, ephemPublicKey, salt, actualSignature)
     }
@@ -187,11 +178,10 @@ class CryptoUtil {
 
         var decryptedData = Data()
         do {
-            let iv = try AES._CBC.IV(ivBytes: aesIV)
-            decryptedData = try AES._CBC.decrypt(
-                encryptedBytes,
-                using: aesKey,
-                iv: iv
+            decryptedData = try AES.CBC.decrypt(
+                key: aesKey,
+                data: encryptedBytes,
+                iv: aesIV
             )
         } catch {
             logger.error("Failed to decrypt public key: \(error.localizedDescription)")
@@ -214,12 +204,10 @@ class CryptoUtil {
         }
 
         do {
-            let iv = try AES._CBC.IV(ivBytes: aesIV)
-
-            let decryptedData = try AES._CBC.decrypt(
-                encryptedBytes,
-                using: aesKey,
-                iv: iv
+            let decryptedData = try AES.CBC.decrypt(
+                key: aesKey,
+                data: encryptedBytes,
+                iv: aesIV
             )
 
             guard let privateKeyStr = String(data: decryptedData, encoding: .utf8) else {

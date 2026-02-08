@@ -11,10 +11,7 @@
 		3E02C8BD2DC8DF7700108B7A /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8BA2DC8DF7700108B7A /* LoopKitUI.framework */; };
 		3E6696ED2E927ED600AAE4F1 /* EversenseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8AA2DC8DEA600108B7A /* EversenseKit.framework */; };
 		3E6696EE2E927ED600AAE4F1 /* EversenseKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8AA2DC8DEA600108B7A /* EversenseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3E9218922E51F667004B6D0B /* SwiftASN1 in Frameworks */ = {isa = PBXBuildFile; productRef = 3E9218912E51F667004B6D0B /* SwiftASN1 */; };
 		3E9218952E5208D3004B6D0B /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3E9218942E5208D3004B6D0B /* CryptoSwift */; };
-		3EFE707C2E0840D000CF6B9E /* Crypto in Frameworks */ = {isa = PBXBuildFile; productRef = 3EFE707B2E0840D000CF6B9E /* Crypto */; };
-		3EFE707E2E0840D000CF6B9E /* _CryptoExtras in Frameworks */ = {isa = PBXBuildFile; productRef = 3EFE707D2E0840D000CF6B9E /* _CryptoExtras */; };
 		3EFE70872E08434B00CF6B9E /* EversenseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8AA2DC8DEA600108B7A /* EversenseKit.framework */; platformFilter = ios; };
 /* End PBXBuildFile section */
 
@@ -116,11 +113,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3EFE707E2E0840D000CF6B9E /* _CryptoExtras in Frameworks */,
-				3EFE707C2E0840D000CF6B9E /* Crypto in Frameworks */,
 				3E02C8BB2DC8DF7700108B7A /* LoopKit.framework in Frameworks */,
 				3E02C8BD2DC8DF7700108B7A /* LoopKitUI.framework in Frameworks */,
-				3E9218922E51F667004B6D0B /* SwiftASN1 in Frameworks */,
 				3E9218952E5208D3004B6D0B /* CryptoSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,9 +210,6 @@
 			);
 			name = EversenseKit;
 			packageProductDependencies = (
-				3EFE707B2E0840D000CF6B9E /* Crypto */,
-				3EFE707D2E0840D000CF6B9E /* _CryptoExtras */,
-				3E9218912E51F667004B6D0B /* SwiftASN1 */,
 				3E9218942E5208D3004B6D0B /* CryptoSwift */,
 			);
 			productName = EversenseKit;
@@ -326,8 +317,6 @@
 			mainGroup = 3E02C8A02DC8DEA600108B7A;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				3EFE707A2E0840D000CF6B9E /* XCRemoteSwiftPackageReference "swift-crypto" */,
-				3E9218902E51F667004B6D0B /* XCRemoteSwiftPackageReference "swift-asn1" */,
 				3E9218932E5208D3004B6D0B /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -792,14 +781,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3E9218902E51F667004B6D0B /* XCRemoteSwiftPackageReference "swift-asn1" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-asn1.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.4.0;
-			};
-		};
 		3E9218932E5208D3004B6D0B /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift";
@@ -808,36 +789,13 @@
 				minimumVersion = 1.4.1;
 			};
 		};
-		3EFE707A2E0840D000CF6B9E /* XCRemoteSwiftPackageReference "swift-crypto" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-crypto.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.12.3;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3E9218912E51F667004B6D0B /* SwiftASN1 */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3E9218902E51F667004B6D0B /* XCRemoteSwiftPackageReference "swift-asn1" */;
-			productName = SwiftASN1;
-		};
 		3E9218942E5208D3004B6D0B /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3E9218932E5208D3004B6D0B /* XCRemoteSwiftPackageReference "CryptoSwift" */;
 			productName = CryptoSwift;
-		};
-		3EFE707B2E0840D000CF6B9E /* Crypto */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3EFE707A2E0840D000CF6B9E /* XCRemoteSwiftPackageReference "swift-crypto" */;
-			productName = Crypto;
-		};
-		3EFE707D2E0840D000CF6B9E /* _CryptoExtras */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3EFE707A2E0840D000CF6B9E /* XCRemoteSwiftPackageReference "swift-crypto" */;
-			productName = _CryptoExtras;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
