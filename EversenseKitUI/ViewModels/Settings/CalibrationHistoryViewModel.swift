@@ -59,7 +59,7 @@ class CalibrationHistoryViewModel: ObservableObject {
                         communicationVersion: cgmManager.state.communicationProtocol,
                         logType: .Calibrations
                     )
-                    let rangeResponse: Eversense365.GetLogRangeResponse = try await cgmManager.bluetoothManager.write(packet)
+                    let rangeResponse: Eversense365.GetLogRangeResponse = try cgmManager.bluetoothManager.write(packet)
 
                     logger.info("[365] Got range - from: \(rangeResponse.rangeFrom), to: \(rangeResponse.rangeTo)")
                     let range = RangeCalculator.calculateRange(rangeFrom: rangeResponse.rangeFrom, rangeTo: rangeResponse.rangeTo)
@@ -75,7 +75,7 @@ class CalibrationHistoryViewModel: ObservableObject {
 
                     logger.info("[365] Fetching range - from: \(range.from), to: \(range.to)")
                     let packet2 = Eversense365.GetCalibrationLogPacket(from: range.from, to: range.to)
-                    let historyResponse: Eversense365.GetCalibrationLogResponse = try await cgmManager.bluetoothManager.write(
+                    let historyResponse: Eversense365.GetCalibrationLogResponse = try cgmManager.bluetoothManager.write(
                         packet2,
                         timeout: .seconds(15)
                     )
@@ -106,7 +106,7 @@ class CalibrationHistoryViewModel: ObservableObject {
                     }
                 } else {
                     logger.info("[E3] sending GetLogRangePacket...")
-                    let rangeResponse: EversenseE3.GetLogRangeResponse = try await cgmManager.bluetoothManager
+                    let rangeResponse: EversenseE3.GetLogRangeResponse = try cgmManager.bluetoothManager
                         .write(EversenseE3.GetLogRangePacket(type: .calibration))
 
                     logger.info("[E3] Got range - from: \(rangeResponse.rangeFrom), to: \(rangeResponse.rangeTo)")
@@ -124,7 +124,7 @@ class CalibrationHistoryViewModel: ObservableObject {
                     logger.info("[E3] Fetching range - from: \(range.from), to: \(range.to)")
                     var tempHistory: [CalibrationGroup] = []
                     for index in range.from ... range.to {
-                        let item: EversenseE3.GetCalibrationLogResponse = try await cgmManager.bluetoothManager
+                        let item: EversenseE3.GetCalibrationLogResponse = try cgmManager.bluetoothManager
                             .write(EversenseE3.GetCalibrationLogPacket(index: UInt16(index)))
 
                         let quantity = HKQuantity(unit: .milligramsPerDeciliter, doubleValue: Double(item.glucoseInMgDl))

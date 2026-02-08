@@ -72,6 +72,7 @@ public enum Alarm: UInt8, Codable {
     case TransmitterOrSensorConnectionLostDuringLinking = 65
     case PairingMetricsError = 66
     case SmfSyncFailed = 67
+    case OtaUpgradeComplete = 69
     case NoAlarmActive = 74
     case TwoCal = 90
     case unknown = 255
@@ -98,7 +99,9 @@ public enum Alarm: UInt8, Codable {
         switch self {
         case .BatteryOptimization,
              .BatteryStatusAlarm,
+             .InValidTx,
              .OneCal,
+             .OtaUpgradeComplete,
              .ResetLogReport,
              .SensorRetiringSoon1Alarm,
              .SensorRetiringSoon3Alarm,
@@ -249,6 +252,8 @@ public enum Alarm: UInt8, Codable {
         case .SmfSyncFailed:
             return LocalizedString("SMF Sync Failed", comment: "title for SmfSyncFailed")
         case .NoAlarmActive:
+            return LocalizedString("", comment: "title for NoAlarmActive")
+        case .OtaUpgradeComplete:
             return LocalizedString("", comment: "title for NoAlarmActive")
         case .unknown:
             return LocalizedString("Unknown error", comment: "title for unknown")

@@ -13,7 +13,7 @@ extension EversenseE3 {
             let mostRecentGlucose = await getRecentGlucose(peripheralManager: peripheralManager)
 
             logger.debug("Sending GetLogRangePacket...")
-            let glucoseRange: GetLogRangeResponse = try await peripheralManager.write(GetLogRangePacket(type: .bloodGlucose))
+            let glucoseRange: GetLogRangeResponse = try peripheralManager.write(GetLogRangePacket(type: .bloodGlucose))
             let range = RangeCalculator.calculateGlucoseRange(
                 rangeFrom: glucoseRange.rangeFrom,
                 rangeTo: glucoseRange.rangeTo,
@@ -26,22 +26,10 @@ extension EversenseE3 {
 
             var glucoseHistory: [GetGlucoseLogResponse] = []
             for index in range.from ... range.to {
-                let pageResponse: GetGlucoseLogResponse = try await peripheralManager.write(GetGlucoseLogPacket(index: index))
+                let pageResponse: GetGlucoseLogResponse = try peripheralManager.write(GetGlucoseLogPacket(index: index))
 
                 logger.debug("Datetime: \(pageResponse.datetime), Glucose: \(pageResponse.glucoseInMgDl) mg/dl")
                 glucoseHistory.append(pageResponse)
-            }
-
-            if let mostRecentGlucose = mostRecentGlucose,
-               mostRecentGlucose.glucoseDatetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
-            {
-                cgmManager.state.recentGlucoseInMgDl = mostRecentGlucose.glucoseInMgDl
-                cgmManager.state.recentGlucoseDateTime = mostRecentGlucose.glucoseDatetime
-            } else if let recentGlucose = glucoseHistory.last,
-                      recentGlucose.datetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
-            {
-                cgmManager.state.recentGlucoseInMgDl = recentGlucose.glucoseInMgDl
-                cgmManager.state.recentGlucoseDateTime = recentGlucose.datetime
             }
 
             var samples = glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
@@ -53,15 +41,25 @@ extension EversenseE3 {
                 )
             }
 
-            if let mostRecentGlucose = mostRecentGlucose {
+            if let mostRecentGlucose = mostRecentGlucose,
+               mostRecentGlucose.datetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
+            {
+                cgmManager.state.recentGlucoseInMgDl = mostRecentGlucose.glucoseInMgDl
+                cgmManager.state.recentGlucoseDateTime = mostRecentGlucose.datetime
+
                 samples.append(
                     NewGlucoseSample(
                         cgmManager: cgmManager,
                         value: mostRecentGlucose.glucoseInMgDl,
                         trend: mostRecentGlucose.trend,
-                        dateTime: mostRecentGlucose.glucoseDatetime
+                        dateTime: mostRecentGlucose.datetime
                     )
                 )
+            } else if let recentGlucose = glucoseHistory.last,
+                      recentGlucose.datetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
+            {
+                cgmManager.state.recentGlucoseInMgDl = recentGlucose.glucoseInMgDl
+                cgmManager.state.recentGlucoseDateTime = recentGlucose.datetime
             }
 
             logger.info("[E3] Glucose data read  - timestamp: \(Date.now), count: \(samples.count)")
@@ -72,10 +70,10 @@ extension EversenseE3 {
         }
     }
 
-    private static func getRecentGlucose(peripheralManager: PeripheralManager) async -> Eversense365.GetGlucoseDataResponse? {
+    private static func getRecentGlucose(peripheralManager: PeripheralManager) async -> GetCurrentGlucoseResponse? {
         do {
             logger.debug("Sending GetCurrentGlucosePacket...")
-            let glucoseData: GetCurrentGlucoseResponse = try await peripheralManager.write(GetCurrentGlucosePacket())
+            let glucoseData: GetCurrentGlucoseResponse = try peripheralManager.write(GetCurrentGlucosePacket())
 
             guard glucoseData.glucoseInMgDl < 0x03E8 else { // 1000 mg/dl
                 let message =
@@ -84,11 +82,7 @@ extension EversenseE3 {
                 return nil
             }
 
-            return Eversense365.GetGlucoseDataResponse(
-                trend: glucoseData.trend,
-                glucoseDatetime: glucoseData.datetime,
-                glucoseInMgDl: glucoseData.glucoseInMgDl
-            )
+            return glucoseData
         } catch {
             logger.error("[E3] Failed to get recent glucose: \(error.localizedDescription)")
             return nil
@@ -98,45 +92,45 @@ extension EversenseE3 {
     static func fullSync(
         peripheralManager: PeripheralManager,
         cgmManager: EversenseCGMManager
-    ) async {
+    ) {
         do {
             cgmManager.state.isSyncing = true
             cgmManager.notifyStateDidChange()
 
-            let currentDateTime: GetCurrentDateTimeResponse = try await peripheralManager
+            let currentDateTime: GetCurrentDateTimeResponse = try peripheralManager
                 .write(GetCurrentDateTimePacket())
             let timeDifference = currentDateTime.datetime.timeIntervalSince1970 - Date.nowWithTimezone().timeIntervalSince1970
             if abs(timeDifference) >= TimeInterval.minutes(2) {
                 logger.info("Updating transmitter datetime -> current date \(currentDateTime.datetime)")
-                let _: SetCurrentDateTimeResponse = try await peripheralManager
+                let _: SetCurrentDateTimeResponse = try peripheralManager
                     .write(SetCurrentDateTimePacket())
             }
 
             // Get MMA Features
-            let mmaResponse: GetMmaFeaturesResponse = try await peripheralManager
+            let mmaResponse: GetMmaFeaturesResponse = try peripheralManager
                 .write(GetMmaFeaturesPacket())
             cgmManager.state.mmaFeatures = mmaResponse.value
 
             // Get battery percentage
-            let batteryPercentage: GetBatteryPercentageResponse = try await peripheralManager
+            let batteryPercentage: GetBatteryPercentageResponse = try peripheralManager
                 .write(GetBatteryPercentagePacket())
             cgmManager.state.batteryPercentage = batteryPercentage.value.percentage()
 
             // Do Ping
-            let _: PingResponse = try await peripheralManager.write(PingPacket())
+            let _: PingResponse = try peripheralManager.write(PingPacket())
 
             // Get Transmitter version & extended Version
-            let versionResponse: GetVersionResponse = try await peripheralManager
+            let versionResponse: GetVersionResponse = try peripheralManager
                 .write(GetVersionPacket())
-            let versionExtendedResponse: GetVersionExtendedResponse = try await peripheralManager
+            let versionExtendedResponse: GetVersionExtendedResponse = try peripheralManager
                 .write(GetVersionExtendedPacket())
             cgmManager.state.version = versionResponse.version
             cgmManager.state.extVersion = versionExtendedResponse.extVersion
 
             // Get last calibration datetime
-            let lastCalibrationDate: GetLastCalibrationDateResponse = try await peripheralManager
+            let lastCalibrationDate: GetLastCalibrationDateResponse = try peripheralManager
                 .write(GetLastCalibrationDatePacket())
-            let lastCalibrationTime: GetLastCalibrationTimeResponse = try await peripheralManager
+            let lastCalibrationTime: GetLastCalibrationTimeResponse = try peripheralManager
                 .write(GetLastCalibrationTimePacket())
             cgmManager.state.lastCalibration = Date.fromComponents(
                 date: lastCalibrationDate.date,
@@ -144,9 +138,9 @@ extension EversenseE3 {
             )
 
             // Get next calibration datetime
-            let nextCalibrationDate: GetNextCalibrationDateResponse = try await peripheralManager
+            let nextCalibrationDate: GetNextCalibrationDateResponse = try peripheralManager
                 .write(GetNextCalibrationDatePacket())
-            let nextCalibrationTime: GetNextCalibrationTimeResponse = try await peripheralManager
+            let nextCalibrationTime: GetNextCalibrationTimeResponse = try peripheralManager
                 .write(GetNextCalibrationTimePacket())
             cgmManager.state.nextCalibration = Date.fromComponents(
                 date: nextCalibrationDate.date,
@@ -156,7 +150,7 @@ extension EversenseE3 {
             // Get current calibration phase
             let calibrationMode: CalibrationMode
             do {
-                let isOneCalPhase: GetIsOneCalPhaseResponse = try await peripheralManager
+                let isOneCalPhase: GetIsOneCalPhaseResponse = try peripheralManager
                     .write(GetIsOneCalPhasePacket())
 
                 calibrationMode = isOneCalPhase.value ? .DailySingle : .DailyDual
@@ -166,18 +160,18 @@ extension EversenseE3 {
                 cgmManager.state.calibrationMode = .Default
             }
 
-            let calibrationCount: GetCompletedCalibrationsCountResponse = try await peripheralManager
+            let calibrationCount: GetCompletedCalibrationsCountResponse = try peripheralManager
                 .write(GetCompletedCalibrationsCountPacket())
-            let calibrationPhase: GetCurrentCalibrationPhaseResponse = try await peripheralManager
+            let calibrationPhase: GetCurrentCalibrationPhaseResponse = try peripheralManager
                 .write(GetCurrentCalibrationPhasePacket())
-            let calibrationReadiness: GetCalibrationReadinessResponse = try await peripheralManager
+            let calibrationReadiness: GetCalibrationReadinessResponse = try peripheralManager
                 .write(GetCalibrationReadinessPacket())
             cgmManager.state.calibrationCount = calibrationCount.value
             cgmManager.state.calibrationPhase = calibrationPhase.phase
             cgmManager.state.calibrationReadiness = calibrationReadiness.calibrationReadiness
 
-            let insertionDate: GetInsertionDateResponse = try await peripheralManager.write(GetInsertionDatePacket())
-            let insertionTime: GetInsertionTimeResponse = try await peripheralManager.write(GetInsertionTimePacket())
+            let insertionDate: GetInsertionDateResponse = try peripheralManager.write(GetInsertionDatePacket())
+            let insertionTime: GetInsertionTimeResponse = try peripheralManager.write(GetInsertionTimePacket())
             cgmManager.state.activatedAt = Date.fromComponents(
                 date: insertionDate.insertionDate,
                 time: insertionTime.insertionTime
@@ -186,42 +180,42 @@ extension EversenseE3 {
 
             // Write the fake app version
             if let appVersion = SetAppVersionPacket.parseAppVersion(version: fakeAppVersion) {
-                let _: SetAppVersionResponse = try await peripheralManager
+                let _: SetAppVersionResponse = try peripheralManager
                     .write(SetAppVersionPacket(appVersion: appVersion))
             }
 
             // Get glucose alarms & status
-            let glucoseAlarmsStatus: GetGlucoseAlertsAndStatusPacketResonse = try await peripheralManager
+            let glucoseAlarmsStatus: GetGlucoseAlertsAndStatusPacketResonse = try peripheralManager
                 .write(GetGlucoseAlertsAndStatusPacket())
             cgmManager.state.activeAlarms = glucoseAlarmsStatus.alarms
 
-            let vibrateMode: GetVibrateModeResponse = try await peripheralManager
+            let vibrateMode: GetVibrateModeResponse = try peripheralManager
                 .write(GetVibrateModePacket())
             cgmManager.state.vibrateMode = vibrateMode.value
 
             // Get glucose alarm enabled & thresholds
-            let isGlucoseAlarmEnabled: GetHighGlucoseAlarmEnabledResponse = try await peripheralManager
+            let isGlucoseAlarmEnabled: GetHighGlucoseAlarmEnabledResponse = try peripheralManager
                 .write(GetHighGlucoseAlarmEnabledPacket())
-            let lowGlucoseAlarm: GetLowGlucoseAlarmResponse = try await peripheralManager
+            let lowGlucoseAlarm: GetLowGlucoseAlarmResponse = try peripheralManager
                 .write(GetLowGlucoseAlarmPacket())
-            let highGlucoseAlarm: GetHighGlucoseAlarmResponse = try await peripheralManager
+            let highGlucoseAlarm: GetHighGlucoseAlarmResponse = try peripheralManager
                 .write(GetHighGlucoseAlarmPacket())
             cgmManager.state.isGlucoseHighAlarmEnabled = isGlucoseAlarmEnabled.value
             cgmManager.state.lowGlucoseAlarmInMgDl = lowGlucoseAlarm.valueInMgDl
             cgmManager.state.highGlucoseAlarmInMgDl = highGlucoseAlarm.valueInMgDl
 
             // Get predictive values
-            let isPredictionLowEnabled: GetPredictiveLowAlertsResponse = try await peripheralManager
+            let isPredictionLowEnabled: GetPredictiveLowAlertsResponse = try peripheralManager
                 .write(GetPredictiveLowAlertsPacket())
-            let isPredictionHighEnabled: GetPredictiveHighAlertsResponse = try await peripheralManager
+            let isPredictionHighEnabled: GetPredictiveHighAlertsResponse = try peripheralManager
                 .write(GetPredictiveHighAlertsPacket())
-            let predictionFallingInterval: GetPredictiveFallingTimeIntervalResponse = try await peripheralManager
+            let predictionFallingInterval: GetPredictiveFallingTimeIntervalResponse = try peripheralManager
                 .write(GetPredictiveFallingTimeIntervalPacket())
-            let predictionRisingInterval: GetPredictiveRisingTimeIntervalResponse = try await peripheralManager
+            let predictionRisingInterval: GetPredictiveRisingTimeIntervalResponse = try peripheralManager
                 .write(GetPredictiveRisingTimeIntervalPacket())
-            let predictionFallingThreshold: GetPredictiveFallingThresholdResponse = try await peripheralManager
+            let predictionFallingThreshold: GetPredictiveFallingThresholdResponse = try peripheralManager
                 .write(GetPredictiveFallingThresholdPacket())
-            let predictionRisingThreshold: GetPredictiveRisingThresholdResponse = try await peripheralManager
+            let predictionRisingThreshold: GetPredictiveRisingThresholdResponse = try peripheralManager
                 .write(GetPredictiveRisingThresholdPacket())
             cgmManager.state.isPredictionLowEnabled = isPredictionLowEnabled.value
             cgmManager.state.isPredictionHighEnabled = isPredictionHighEnabled.value
@@ -231,13 +225,13 @@ extension EversenseE3 {
             cgmManager.state.predictionRisingThreshold = predictionRisingThreshold.value
 
             // Get rate values
-            let isFallingRateEnabled: GetRateFallingAlertResponse = try await peripheralManager
+            let isFallingRateEnabled: GetRateFallingAlertResponse = try peripheralManager
                 .write(GetRateFallingAlertPacket())
-            let isRisingRateEnabled: GetRateRisingAlertResponse = try await peripheralManager
+            let isRisingRateEnabled: GetRateRisingAlertResponse = try peripheralManager
                 .write(GetRateRisingAlertPacket())
-            let rateFallingThreshold: GetRateFallingThresholdResponse = try await peripheralManager
+            let rateFallingThreshold: GetRateFallingThresholdResponse = try peripheralManager
                 .write(GetRateFallingThresholdPacket())
-            let rateRisingThreshold: GetRateRisingThresholdResponse = try await peripheralManager
+            let rateRisingThreshold: GetRateRisingThresholdResponse = try peripheralManager
                 .write(GetRateRisingThresholdPacket())
             cgmManager.state.isFallingRateEnabled = isFallingRateEnabled.value
             cgmManager.state.isRisingRateEnabled = isRisingRateEnabled.value
@@ -245,7 +239,7 @@ extension EversenseE3 {
             cgmManager.state.rateRisingThreshold = rateRisingThreshold.value
 
             // Get signal strength
-            let rawSignalStrength: GetSignalStrengthRawResponse = try await peripheralManager
+            let rawSignalStrength: GetSignalStrengthRawResponse = try peripheralManager
                 .write(GetSignalStrengthRawPacket())
             cgmManager.state.signalStrength = rawSignalStrength.value
             cgmManager.state.signalStrengthRaw = rawSignalStrength.rawValue
@@ -261,9 +255,9 @@ extension EversenseE3 {
         cgmManager.notifyStateDidChange()
     }
 
-    static func updateSignalStrength(cgmManager: EversenseCGMManager) async {
+    static func updateSignalStrength(cgmManager: EversenseCGMManager) {
         do {
-            let rawSignalStrength: GetSignalStrengthRawResponse = try await cgmManager.bluetoothManager
+            let rawSignalStrength: GetSignalStrengthRawResponse = try cgmManager.bluetoothManager
                 .write(GetSignalStrengthRawPacket())
             cgmManager.state.signalStrength = rawSignalStrength.value
             cgmManager.state.signalStrengthRaw = rawSignalStrength.rawValue
@@ -277,37 +271,37 @@ extension EversenseE3 {
     static func writeTransmitterSettings(
         peripheralManager: PeripheralManager,
         data: TransmitterSettings
-    ) async {
+    ) {
         do {
-            let _: SetVibrateModeResponse = try await peripheralManager.write(SetVibrateModePacket(enabled: data.vibrationMode))
+            let _: SetVibrateModeResponse = try peripheralManager.write(SetVibrateModePacket(enabled: data.vibrationMode))
 
-            let _: SetHighGlucoseAlarmEnabledResponse = try await peripheralManager
+            let _: SetHighGlucoseAlarmEnabledResponse = try peripheralManager
                 .write(SetHighGlucoseAlarmEnabledPacket(enabled: data.glucoseHighEnabled))
-            let _: SetHighGlucoseAlarmResponse = try await peripheralManager
+            let _: SetHighGlucoseAlarmResponse = try peripheralManager
                 .write(SetHighGlucoseAlarmPacket(value: data.glucoseHighInMgDl))
-            let _: SetLowGlucoseAlarmResponse = try await peripheralManager
+            let _: SetLowGlucoseAlarmResponse = try peripheralManager
                 .write(SetLowGlucoseAlarmPacket(value: data.glucoseLowInMgDl))
 
-            let _: SetRateRisingEnabledResponse = try await peripheralManager
+            let _: SetRateRisingEnabledResponse = try peripheralManager
                 .write(SetRateRisingEnabledPacket(enabled: data.rateRisingEnabled))
-            let _: SetRateRisingThresholdResponse = try await peripheralManager
+            let _: SetRateRisingThresholdResponse = try peripheralManager
                 .write(SetRateRisingThresholdPacket(value: data.rateRisingThreshold))
-            let _: SetRateFallingEnabledResponse = try await peripheralManager
+            let _: SetRateFallingEnabledResponse = try peripheralManager
                 .write(SetRateFallingEnabledPacket(enabled: data.rateFallingEnabled))
-            let _: SetRateFallingThresholdResponse = try await peripheralManager
+            let _: SetRateFallingThresholdResponse = try peripheralManager
                 .write(SetRateFallingThresholdPacket(value: data.rateFallingThreshold))
 
-            let _: SetPredictionHighEnabledResponse = try await peripheralManager
+            let _: SetPredictionHighEnabledResponse = try peripheralManager
                 .write(SetPredictionHighEnabledPacket(enabled: data.predictiveHighEnabled))
-            let _: SetPredictionHighTimeResponse = try await peripheralManager
+            let _: SetPredictionHighTimeResponse = try peripheralManager
                 .write(SetPredictionHighTimePacket(time: data.predictiveHighTime))
-            let _: SetPredictionHighThresholdResponse = try await peripheralManager
+            let _: SetPredictionHighThresholdResponse = try peripheralManager
                 .write(SetPredictionHighThresholdPacket(value: data.predictiveHighThreshold))
-            let _: SetPredictionLowEnabledResponse = try await peripheralManager
+            let _: SetPredictionLowEnabledResponse = try peripheralManager
                 .write(SetPredictionLowEnabledPacket(enabled: data.predictiveLowEnabled))
-            let _: SetPredictionLowTimeResponse = try await peripheralManager
+            let _: SetPredictionLowTimeResponse = try peripheralManager
                 .write(SetPredictionLowTimePacket(time: data.predictiveLowTime))
-            let _: SetPredictionLowThresholdResponse = try await peripheralManager
+            let _: SetPredictionLowThresholdResponse = try peripheralManager
                 .write(SetPredictionLowThresholdPacket(value: data.predictiveLowThreshold))
 
             logger.info("[E3] Transmitter settings have been written - timestamp: \(Date.now)")
@@ -332,11 +326,11 @@ extension EversenseE3 {
         logger.warning("Received error from transmitter - error: \(error), data: \(data.hexString())")
     }
 
-    static func calibrateSensors(cgmManager: EversenseCGMManager, glucoseInMgDl: UInt16, timestamp: Date) async throws {
+    static func calibrateSensors(cgmManager: EversenseCGMManager, glucoseInMgDl: UInt16, timestamp: Date) throws {
         do {
             logger.info("Sending SetBloodGlucosePointPacket - glucose: \(glucoseInMgDl)mg/dl, timestamp: \(timestamp)")
 
-            let _: SetBloodGlucosePointResponse = try await cgmManager.bluetoothManager
+            let _: SetBloodGlucosePointResponse = try cgmManager.bluetoothManager
                 .write(SetBloodGlucosePointPacket(glucoseInMgDl: glucoseInMgDl, timestamp: timestamp))
 
             logger.info("[E3] Calibation has been send - timestamp: \(Date.now)")

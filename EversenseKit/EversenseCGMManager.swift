@@ -126,7 +126,7 @@ public class EversenseCGMManager: CGMManager {
 
 extension EversenseCGMManager {
     public func fetchNewDataIfNeeded(_ completion: @escaping (CGMReadingResult) -> Void) {
-        logger.info("Starting fetchNewDataIfNeeded...")
+        logger.debug("Starting fetchNewDataIfNeeded...")
 
         guard !isFetchingData else {
             logger.error("Is already running...")
@@ -171,6 +171,7 @@ extension EversenseCGMManager {
 
                 guard let peripheralManager = self.bluetoothManager.peripheralManager else {
                     self.logger.error("No peripheralManager")
+                    self.isFetchingData = false
                     completion?()
                     return
                 }
@@ -182,14 +183,14 @@ extension EversenseCGMManager {
                         cgmManager: self,
                         lastGlucoseTimestamp: lastGlucoseTimestamp
                     )
-                    await EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                    EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
                 } else {
-                    samples = await Eversense365.readGlucoseData(
+                    samples = Eversense365.readGlucoseData(
                         peripheralManager: peripheralManager,
                         cgmManager: self,
                         lastGlucoseTimestamp: lastGlucoseTimestamp
                     )
-                    await Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                    Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
                 }
 
                 self.isFetchingData = false

@@ -39,9 +39,9 @@ class PlacementGuideViewModel: ObservableObject {
 
         Task {
             if cgmManager.state.is365 {
-                await Eversense365.updateSignalStrength(cgmManager: cgmManager)
+                Eversense365.updateSignalStrength(cgmManager: cgmManager)
             } else {
-                await EversenseE3.updateSignalStrength(cgmManager: cgmManager)
+                EversenseE3.updateSignalStrength(cgmManager: cgmManager)
             }
 
             try await Task.sleep(nanoseconds: 500_000_000) // .5s waiting

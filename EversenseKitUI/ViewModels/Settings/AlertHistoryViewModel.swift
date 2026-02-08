@@ -56,7 +56,7 @@ class AlertHistoryViewModel: ObservableObject {
                         communicationVersion: cgmManager.state.communicationProtocol,
                         logType: .Alerts
                     )
-                    let rangeResponse: Eversense365.GetLogRangeResponse = try await cgmManager.bluetoothManager.write(packet)
+                    let rangeResponse: Eversense365.GetLogRangeResponse = try cgmManager.bluetoothManager.write(packet)
 
                     logger.info("[365] Got range - from: \(rangeResponse.rangeFrom), to: \(rangeResponse.rangeTo)")
                     let range = RangeCalculator.calculateRange(rangeFrom: rangeResponse.rangeFrom, rangeTo: rangeResponse.rangeTo)
@@ -72,7 +72,7 @@ class AlertHistoryViewModel: ObservableObject {
 
                     logger.info("[365] Fetching range - from: \(range.from), to: \(range.to)")
                     let packet2 = Eversense365.GetAlertLogPacket(from: range.from, to: range.to)
-                    let historyResponse: Eversense365.GetAlertLogResponse = try await cgmManager.bluetoothManager.write(
+                    let historyResponse: Eversense365.GetAlertLogResponse = try cgmManager.bluetoothManager.write(
                         packet2,
                         timeout: .seconds(15)
                     )

@@ -110,9 +110,9 @@ class TransmitterSettingsViewModel: ObservableObject {
             )
 
             if !cgmManager.state.is365 {
-                await EversenseE3.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
+                EversenseE3.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
             } else {
-                await Eversense365.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
+                Eversense365.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
             }
 
             await MainActor.run {

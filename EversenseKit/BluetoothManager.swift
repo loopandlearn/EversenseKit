@@ -89,12 +89,12 @@ class BluetoothManager: NSObject {
         }
     }
 
-    func write<T>(_ packet: any BasePacket, timeout: TimeInterval = .seconds(5)) async throws -> T {
+    func write<T>(_ packet: any BasePacket, timeout: TimeInterval = .seconds(5)) throws -> T {
         guard let peripheralManager = peripheralManager else {
             throw NSError(domain: "Not connected", code: -1)
         }
 
-        return try await peripheralManager.write(packet, timeout: timeout)
+        return try peripheralManager.write(packet, timeout: timeout)
     }
 
     func scan(completion: @escaping (ScanItem?, ScanError?) -> Void) {
@@ -218,6 +218,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
         ensureConnected { error in
             if let error = error {
                 self.logger.error("Failed to reconnect: \(error.describe)")
+                return
             }
 
             self.logger.info("Reconnect succesfull!")
@@ -236,6 +237,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
         ensureConnected { error in
             if let error = error {
                 self.logger.error("Failed to reconnect: \(error.describe)")
+                return
             }
 
             self.logger.info("Reconnect succesfull!")
