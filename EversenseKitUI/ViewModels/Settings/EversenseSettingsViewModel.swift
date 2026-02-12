@@ -103,7 +103,7 @@ extension EversenseSettingsViewModel: StateObserver {
     func stateDidUpdate(_ state: EversenseCGMState) {
         transmitterModel = state.modelStr ?? "UNKNOWN"
         is365 = state.is365
-        transmitterName = state.bleNameString
+        transmitterName = state.bleNameString ?? ""
         connectionStatus = state.connectionStatus.title
         currentPhase = state.calibrationPhase.getTitle(calibrationMode: state.calibrationMode)
         calibrationReadiness = state.calibrationReadiness

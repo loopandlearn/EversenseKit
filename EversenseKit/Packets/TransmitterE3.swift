@@ -8,9 +8,9 @@ extension EversenseE3 {
         peripheralManager: PeripheralManager,
         cgmManager: EversenseCGMManager,
         lastGlucoseTimestamp: Date
-    ) async -> [NewGlucoseSample] {
+    ) -> [NewGlucoseSample] {
         do {
-            let mostRecentGlucose = await getRecentGlucose(peripheralManager: peripheralManager)
+            let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager)
 
             logger.debug("Sending GetLogRangePacket...")
             let glucoseRange: GetLogRangeResponse = try peripheralManager.write(GetLogRangePacket(type: .bloodGlucose))
@@ -70,7 +70,7 @@ extension EversenseE3 {
         }
     }
 
-    private static func getRecentGlucose(peripheralManager: PeripheralManager) async -> GetCurrentGlucoseResponse? {
+    private static func getRecentGlucose(peripheralManager: PeripheralManager) -> GetCurrentGlucoseResponse? {
         do {
             logger.debug("Sending GetCurrentGlucosePacket...")
             let glucoseData: GetCurrentGlucoseResponse = try peripheralManager.write(GetCurrentGlucosePacket())

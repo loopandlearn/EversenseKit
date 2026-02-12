@@ -78,7 +78,7 @@ class TransmitterSettingsViewModel: ObservableObject {
 
         cgmManager.bluetoothManager.ensureConnected { error in
             if let error = error {
-                await MainActor.run {
+                DispatchQueue.main.async {
                     self.loading = false
                     self.error = error.describe
                 }
@@ -115,7 +115,7 @@ class TransmitterSettingsViewModel: ObservableObject {
                 Eversense365.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
             }
 
-            await MainActor.run {
+            DispatchQueue.main.async {
                 self.loading = false
                 self.error = ""
             }

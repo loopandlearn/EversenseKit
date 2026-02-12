@@ -20,19 +20,17 @@ class BluetoothManager: NSObject {
         }
     }
 
-    func ensureConnected(completionAsync: @escaping (ConnectFailure?) async -> Void) {
+    func ensureConnected(completionAsync: @escaping (ConnectFailure?) -> Void) {
         let completion = { (_ result: ConnectFailure?) -> Void in
-            Task {
-                if let cgmManager = self.cgmManager {
-                    cgmManager.state.connectionStatus = result == nil ? .connected : .idle
-                    cgmManager.notifyStateDidChange()
-                }
-
-                self.stopScan()
-                self.scanCompletion = nil
-                self.connectCompletion = nil
-                await completionAsync(result)
+            if let cgmManager = self.cgmManager {
+                cgmManager.state.connectionStatus = result == nil ? .connected : .idle
+                cgmManager.notifyStateDidChange()
             }
+
+            self.stopScan()
+            self.scanCompletion = nil
+            self.connectCompletion = nil
+            completionAsync(result)
         }
 
         guard let cgmManager = cgmManager else {
@@ -66,14 +64,14 @@ class BluetoothManager: NSObject {
             return
         }
 
-        guard let bleUUIDString = cgmManager.state.bleUUIDString else {
+        guard let bleName = cgmManager.state.bleNameString else {
             completion(.preconditionFailed(reason: "No ble uuid available"))
             return
         }
 
         logger.debug("Scanning for device...")
         scan { result, error in
-            guard error == nil, let result = result, result.peripheral.identifier.uuidString == bleUUIDString else {
+            guard error == nil, let result = result, result.peripheral.name == bleName else {
                 return
             }
 
@@ -140,6 +138,14 @@ class BluetoothManager: NSObject {
             manager.stopScan()
         }
     }
+
+    func disconnect() {
+        guard let peripheral = peripheral else {
+            return
+        }
+
+        manager?.cancelPeripheralConnection(peripheral)
+    }
 }
 
 extension BluetoothManager: CBCentralManagerDelegate {
@@ -187,8 +193,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
             return
         }
 
-        cgmManager.state.bleNameString = peripheral.name ?? ""
-        cgmManager.state.bleUUIDString = peripheral.identifier.uuidString
+        cgmManager.state.bleNameString = peripheral.name
         cgmManager.notifyStateDidChange()
 
         self.peripheral = peripheral

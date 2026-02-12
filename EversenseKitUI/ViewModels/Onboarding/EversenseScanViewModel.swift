@@ -78,10 +78,9 @@ class EversenseScanViewModel: ObservableObject {
 
         cgmManager.bluetoothManager.ensureConnected { error in
             if let error = error {
-                await MainActor.run {
+                DispatchQueue.main.async {
                     self.error = error.describe
                     self.connectingTo = ""
-                    return
                 }
                 return
             }

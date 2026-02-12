@@ -41,8 +41,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public typealias RawValue = CGMManager.RawStateValue
 
     public init?(rawValue: RawValue) {
-        bleNameString = rawValue["bleNameString"] as? String ?? ""
-        bleUUIDString = rawValue["bleUUIDString"] as? String
+        bleNameString = rawValue["bleNameString"] as? String
         isOnboarded = rawValue["isOnboarded"] as? Bool ?? false
         isSyncing = rawValue["isSyncing"] as? Bool ?? false
         lastSynced = rawValue["lastSynced"] as? Date
@@ -136,7 +135,6 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         var value: [String: Any] = [:]
 
         value["bleNameString"] = bleNameString
-        value["bleUUIDString"] = bleUUIDString
         value["isOnboarded"] = isOnboarded
         value["isSyncing"] = isSyncing
         value["lastSynced"] = lastSynced
@@ -193,8 +191,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     }
 
     public var connectionStatus: ConnectionStatus = .idle
-    public var bleUUIDString: String?
-    public var bleNameString: String
+    public var bleNameString: String?
     public var isOnboarded: Bool
     public var isSyncing: Bool
     public var lastSynced: Date?
@@ -268,7 +265,68 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
 
     public var debugDescription: String {
         [
-            "Current timezone: \(TimeZone.current.identifier)"
+            "## EverSense CGM:",
+            "Current timezone: \(TimeZone.current.identifier)",
+            "",
+            "— Connection —",
+            "connectionStatus: \(connectionStatus)",
+            "bleNameString: \(bleNameString ?? "nil")",
+            "isOnboarded: \(isOnboarded)",
+            "isSyncing: \(isSyncing)",
+            "lastSynced: \(lastSynced?.description ?? "nil")",
+            "",
+            "— Versions —",
+            "version: \(version ?? "nil")",
+            "extVersion: \(extVersion ?? "nil")",
+            "communicationProtocol: \(communicationProtocol)",
+            "",
+            "— Lifecycle —",
+            "activatedAt: \(activatedAt)",
+            "expiresAt: \(expiresAt)",
+            "",
+            "— Device —",
+            "mmaFeatures: \(mmaFeatures)",
+            "batteryPercentage: \(batteryPercentage)",
+            "vibrateMode: \(vibrateMode.map(String.init) ?? "nil")",
+            "",
+            "— Signal —",
+            "signalStrength: \(signalStrength)",
+            "signalStrengthRaw: \(signalStrengthRaw)",
+            "",
+            "— Calibration —",
+            "lastCalibration: \(lastCalibration?.description ?? "nil")",
+            "nextCalibration: \(nextCalibration?.description ?? "nil")",
+            "calibrationMode: \(calibrationMode)",
+            "calibrationPhase: \(calibrationPhase)",
+            "calibrationCount: \(calibrationCount)",
+            "calibrationReadiness: \(calibrationReadiness)",
+            "",
+            "— Alarms —",
+            "isGlucoseHighAlarmEnabled: \(isGlucoseHighAlarmEnabled)",
+            "lowGlucoseAlarmInMgDl: \(lowGlucoseAlarmInMgDl)",
+            "highGlucoseAlarmInMgDl: \(highGlucoseAlarmInMgDl)",
+            "",
+            "— Prediction —",
+            "isPredictionLowEnabled: \(isPredictionLowEnabled)",
+            "isPredictionHighEnabled: \(isPredictionHighEnabled)",
+            "predictionFallingInterval: \(predictionFallingInterval)",
+            "predictionRisingInterval: \(predictionRisingInterval)",
+            "predictionFallingThreshold: \(predictionFallingThreshold)",
+            "predictionRisingThreshold: \(predictionRisingThreshold)",
+            "",
+            "— Rate —",
+            "isFallingRateEnabled: \(isFallingRateEnabled)",
+            "isRisingRateEnabled: \(isRisingRateEnabled)",
+            "rateFallingThreshold: \(rateFallingThreshold)",
+            "rateRisingThreshold: \(rateRisingThreshold)",
+            "",
+            "— Glucose —",
+            "recentGlucoseInMgDl: \(recentGlucoseInMgDl.map(String.init) ?? "nil")",
+            "recentGlucoseDateTime: \(recentGlucoseDateTime?.description ?? "nil")",
+            "recentGlucoseTrend: \(recentGlucoseTrend)",
+            "",
+            "— Active Alarms —",
+            "activeAlarms: \(activeAlarms)"
         ].joined(separator: "\n")
     }
 }

@@ -385,8 +385,6 @@ extension PeripheralManager {
                     return
                 }
 
-                logger.info("Sending WhoAmI - clientID: \(clientId.hexString())")
-
                 let whoAmIResponse: Eversense365.AuthWhoAmIResponse =
                     try write(Eversense365.AuthWhoAmIPacket(secret: clientId))
 

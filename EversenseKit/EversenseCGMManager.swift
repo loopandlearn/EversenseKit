@@ -9,7 +9,6 @@ public class EversenseCGMManager: CGMManager {
     public static var pluginIdentifier: String = "EversenseKit"
 
     private let logger = EversenseLogger(category: "CGMManager")
-    private var isFetchingData = false
     internal let bluetoothManager: BluetoothManager
 
     public var state: EversenseCGMState
@@ -95,16 +94,19 @@ public class EversenseCGMManager: CGMManager {
         bluetoothManager.cgmManager = self
     }
 
+    deinit {
+        state.bleNameString = nil
+
+        bluetoothManager.stopScan()
+        bluetoothManager.disconnect()
+    }
+
     public var isOnboarded: Bool {
         state.isOnboarded
     }
 
     public var debugDescription: String {
-        let lines = [
-            "## EverSense CGM:",
-            state.debugDescription
-        ]
-        return lines.joined(separator: "\n")
+        state.debugDescription
     }
 
     func addStateObserver(state: StateObserver, queue: DispatchQueue) {
@@ -126,82 +128,60 @@ public class EversenseCGMManager: CGMManager {
 
 extension EversenseCGMManager {
     public func fetchNewDataIfNeeded(_ completion: @escaping (CGMReadingResult) -> Void) {
-        logger.debug("Starting fetchNewDataIfNeeded...")
-
-        guard !isFetchingData else {
-            logger.error("Is already running...")
-            completion(.noData)
-            return
-        }
-
+        logger.debug("Skipping fetchNewDataIfNeeded...")
         completion(.noData)
-
-        if bluetoothManager.peripheral == nil || bluetoothManager.peripheral?.state != .connected {
-            bluetoothManager.ensureConnected { _ in }
-        }
     }
 
     /// Responsible for handling fetching Glucose data when ready
     func heartbeathOperation(force: Bool = true, completion: (() -> Void)? = nil) {
-        var lastGlucoseTimestamp = state.recentGlucoseDateTime ?? Date.now
-            .addingTimeInterval(.hours(-4))
+        var lastGlucoseTimestamp = max(
+            state.recentGlucoseDateTime ?? Date.distantPast,
+            Date.now
+                .addingTimeInterval(.hours(-4))
+        )
 
         if !force, Date.now.timeIntervalSince(lastGlucoseTimestamp) < .minutes(4.5) {
             logger.warning("Skipping sync, glucose is still fresh - \(Date.now.timeIntervalSince(lastGlucoseTimestamp))s")
             return
         }
 
-        if lastGlucoseTimestamp > Date.now.addingTimeInterval(.hours(-4)) {
-            logger.warning("Limiting lastGlucoseTimestamp to 4 hours ago - \(lastGlucoseTimestamp)")
-            lastGlucoseTimestamp = Date.now.addingTimeInterval(.hours(-4))
-        }
-
-        isFetchingData = true
-        delegateQueue.async {
-            let lastGlucoseTimestamp = lastGlucoseTimestamp
-            let this = self
-
-            self.bluetoothManager.ensureConnected { error in
-                if let internalError = error {
-                    self.isFetchingData = false
-                    self.logger.error("Failed to connect to CGM: \(internalError.describe)")
-                    completion?()
-                    return
-                }
-
-                guard let peripheralManager = self.bluetoothManager.peripheralManager else {
-                    self.logger.error("No peripheralManager")
-                    self.isFetchingData = false
-                    completion?()
-                    return
-                }
-
-                var samples: [NewGlucoseSample] = []
-                if !self.state.is365 {
-                    samples = await EversenseE3.readGlucoseData(
-                        peripheralManager: peripheralManager,
-                        cgmManager: self,
-                        lastGlucoseTimestamp: lastGlucoseTimestamp
-                    )
-                    EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
-                } else {
-                    samples = Eversense365.readGlucoseData(
-                        peripheralManager: peripheralManager,
-                        cgmManager: self,
-                        lastGlucoseTimestamp: lastGlucoseTimestamp
-                    )
-                    Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
-                }
-
-                self.isFetchingData = false
-                if !samples.isEmpty {
-                    self.delegate.notify { delegate in
-                        delegate?.cgmManager(this, hasNew: .newData(samples))
-                    }
-                }
-
+        bluetoothManager.ensureConnected { error in
+            if let internalError = error {
+                self.logger.error("Failed to connect to CGM: \(internalError.describe)")
                 completion?()
+                return
             }
+
+            guard let peripheralManager = self.bluetoothManager.peripheralManager else {
+                self.logger.error("No peripheralManager")
+                completion?()
+                return
+            }
+
+            var samples: [NewGlucoseSample] = []
+            if !self.state.is365 {
+                samples = EversenseE3.readGlucoseData(
+                    peripheralManager: peripheralManager,
+                    cgmManager: self,
+                    lastGlucoseTimestamp: lastGlucoseTimestamp
+                )
+                EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+            } else {
+                samples = Eversense365.readGlucoseData(
+                    peripheralManager: peripheralManager,
+                    cgmManager: self,
+                    lastGlucoseTimestamp: lastGlucoseTimestamp
+                )
+                Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+            }
+
+            if !samples.isEmpty {
+                self.delegate.notify { delegate in
+                    delegate?.cgmManager(self, hasNew: .newData(samples))
+                }
+            }
+
+            completion?()
         }
     }
 
