@@ -140,8 +140,8 @@ extension EversenseSettingsViewModel: StateObserver {
             nextCalibrationProcess = min(calibrationAge / calibrationPeriod, 1)
 
             nextCalibrationDays = max(floor(nextCalibrationIn / .days(1)), 0)
-            nextCalibrationHours = max(nextCalibrationIn.truncatingRemainder(dividingBy: .days(1)) / .hours(1), 0)
-            nextCalibrationMinutes = max(nextCalibrationIn.truncatingRemainder(dividingBy: .hours(1)) / .minutes(1), 0)
+            nextCalibrationHours = max(floor(nextCalibrationIn.truncatingRemainder(dividingBy: .days(1)) / .hours(1)), 0)
+            nextCalibrationMinutes = max(floor(nextCalibrationIn.truncatingRemainder(dividingBy: .hours(1)) / .minutes(1)), 0)
         }
     }
 }

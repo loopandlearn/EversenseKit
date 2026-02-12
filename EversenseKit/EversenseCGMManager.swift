@@ -94,7 +94,8 @@ public class EversenseCGMManager: CGMManager {
         bluetoothManager.cgmManager = self
     }
 
-    deinit {
+    func cleanup() {
+        logger.info("Cleaning up CGMManager")
         state.bleNameString = nil
 
         bluetoothManager.stopScan()
@@ -124,6 +125,11 @@ public class EversenseCGMManager: CGMManager {
     public func getSounds() -> [LoopKit.Alert.Sound] {
         []
     }
+    
+    public func delete(completion: @escaping () -> Void) {
+        cleanup()
+        notifyDelegateOfDeletion(completion: completion)
+    }
 }
 
 extension EversenseCGMManager {
@@ -134,10 +140,9 @@ extension EversenseCGMManager {
 
     /// Responsible for handling fetching Glucose data when ready
     func heartbeathOperation(force: Bool = true, completion: (() -> Void)? = nil) {
-        var lastGlucoseTimestamp = max(
+        let lastGlucoseTimestamp = max(
             state.recentGlucoseDateTime ?? Date.distantPast,
-            Date.now
-                .addingTimeInterval(.hours(-4))
+            Date.now.addingTimeInterval(.hours(-4))
         )
 
         if !force, Date.now.timeIntervalSince(lastGlucoseTimestamp) < .minutes(4.5) {

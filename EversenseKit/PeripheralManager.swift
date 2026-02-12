@@ -20,8 +20,7 @@ class PeripheralManager: NSObject {
 
     private var buffer = Data([])
     private var packet: (any BasePacket)?
-    private var writeTimeout: BlockOperation?
-    private var writeQueue: NSCondition?
+    private var writeQueue: DispatchGroup?
     private var writeResponse: AnyObject?
 
     private let maxPacketSize: Int
@@ -39,11 +38,9 @@ class PeripheralManager: NSObject {
         self.peripheral.delegate = self
     }
 
-    deinit {
-        writeTimeout?.cancel()
-
+    func cleanup() {
         if let writeAction = writeQueue {
-            writeAction.signal()
+            writeAction.leave()
         }
     }
 
@@ -53,7 +50,9 @@ class PeripheralManager: NSObject {
         }
 
         self.packet = packet
-        let writeQ = NSCondition()
+        let writeQ = DispatchGroup()
+        writeQ.enter()
+        
         writeQueue = writeQ
 
         let data = packet.getRequestData()
@@ -70,17 +69,9 @@ class PeripheralManager: NSObject {
                 Thread.sleep(forTimeInterval: .milliseconds(100))
             }
         }
-
-        startTimeoutTimer(timeout)
-
-        writeQ.lock()
-        defer { writeQ.unlock() }
-
+        
         // Wait for response or timeout timer...
-        writeQ.wait()
-
-        writeTimeout?.cancel()
-        writeTimeout = nil
+        let _ = writeQ.wait(timeout: .now().advanced(by: .seconds(Int(timeout))))
         writeQueue = nil
 
         guard let response = writeResponse as? T else {
@@ -90,29 +81,6 @@ class PeripheralManager: NSObject {
 
         writeResponse = nil
         return response
-    }
-
-    private func startTimeoutTimer(_ timeout: TimeInterval) {
-        writeTimeout = BlockOperation { [weak self] in
-            guard let self else { return }
-
-            Thread.sleep(forTimeInterval: timeout)
-            if self.writeTimeout == nil || self.writeTimeout!.isCancelled {
-                // We did what we must, so exist and be happy :)
-                return
-            }
-            guard let stream = self.writeQueue else {
-                // We did what we must, so exist and be happy :)
-                return
-            }
-
-            self.logger.error("Timeout has been triggered...")
-
-            stream.signal()
-
-            self.writeQueue = nil
-            self.writeTimeout = nil
-        }
     }
 }
 
@@ -142,51 +110,49 @@ extension PeripheralManager: CBPeripheralDelegate {
             return
         }
 
-        Task {
-            if let requestCharacteristic = service.characteristics?.first(where: { $0.uuid == self.requestCharacteristicUUID }),
-               let responseCharacteristic = service.characteristics?
-               .first(where: { $0.uuid == self.responseCharacteristicUUID })
-            {
-                cgmManager.state.security = .none
-                self.requestCharacteristic = requestCharacteristic
-                self.responseCharacteristic = responseCharacteristic
+        if let requestCharacteristic = service.characteristics?.first(where: { $0.uuid == self.requestCharacteristicUUID }),
+           let responseCharacteristic = service.characteristics?
+           .first(where: { $0.uuid == self.responseCharacteristicUUID })
+        {
+            cgmManager.state.security = .none
+            self.requestCharacteristic = requestCharacteristic
+            self.responseCharacteristic = responseCharacteristic
 
-                self.logger.debug("[NONE security] Discovering completed -> Enabling notifing & send bleBondingInformation...")
-                peripheral.setNotifyValue(true, for: responseCharacteristic)
-                return
-            }
-
-            if let requestCharacteristic = service.characteristics?
-                .first(where: { $0.uuid == self.requestCharacteristicSecureV2UUID }),
-                let responseCharacteristic = service.characteristics?
-                .first(where: { $0.uuid == self.responseCharacteristicSecureV2UUID })
-            {
-                cgmManager.state.security = .v2
-                self.requestCharacteristic = requestCharacteristic
-                self.responseCharacteristic = responseCharacteristic
-
-                self.logger.debug("[V2 security] Discovering completed -> Enabling notifing...")
-                peripheral.setNotifyValue(true, for: responseCharacteristic)
-                return
-            }
-
-            if let requestCharacteristic = service.characteristics?
-                .first(where: { $0.uuid == self.requestCharacteristicSecureUUID }),
-                let responseCharacteristic = service.characteristics?
-                .first(where: { $0.uuid == self.responseCharacteristicSecureUUID })
-            {
-                cgmManager.state.security = .v1
-                self.requestCharacteristic = requestCharacteristic
-                self.responseCharacteristic = responseCharacteristic
-
-                self.logger.debug("[V1 security] Discovering completed -> Enabling notifing...")
-                peripheral.setNotifyValue(true, for: responseCharacteristic)
-                return
-            }
-
-            self.logger.error("Characteristics could not found: \(service.characteristics ?? [])")
-            self.connectCompletion?(ConnectFailure.failedToDiscoverCharacteristics)
+            self.logger.debug("[NONE security] Discovering completed -> Enabling notifing & send bleBondingInformation...")
+            peripheral.setNotifyValue(true, for: responseCharacteristic)
+            return
         }
+
+        if let requestCharacteristic = service.characteristics?
+            .first(where: { $0.uuid == self.requestCharacteristicSecureV2UUID }),
+            let responseCharacteristic = service.characteristics?
+            .first(where: { $0.uuid == self.responseCharacteristicSecureV2UUID })
+        {
+            cgmManager.state.security = .v2
+            self.requestCharacteristic = requestCharacteristic
+            self.responseCharacteristic = responseCharacteristic
+
+            self.logger.debug("[V2 security] Discovering completed -> Enabling notifing...")
+            peripheral.setNotifyValue(true, for: responseCharacteristic)
+            return
+        }
+
+        if let requestCharacteristic = service.characteristics?
+            .first(where: { $0.uuid == self.requestCharacteristicSecureUUID }),
+            let responseCharacteristic = service.characteristics?
+            .first(where: { $0.uuid == self.responseCharacteristicSecureUUID })
+        {
+            cgmManager.state.security = .v1
+            self.requestCharacteristic = requestCharacteristic
+            self.responseCharacteristic = responseCharacteristic
+
+            self.logger.debug("[V1 security] Discovering completed -> Enabling notifing...")
+            peripheral.setNotifyValue(true, for: responseCharacteristic)
+            return
+        }
+
+        self.logger.error("Characteristics could not found: \(service.characteristics ?? [])")
+        self.connectCompletion?(ConnectFailure.failedToDiscoverCharacteristics)
     }
 
     func peripheral(_: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: (any Error)?) {
@@ -262,7 +228,10 @@ extension PeripheralManager: CBPeripheralDelegate {
             if cgmManager.state.recentGlucoseDateTime == nil || cgmManager.state.recentGlucoseDateTime!
                 .addingTimeInterval(.minutes(4.5)) > Date.now
             {
-                cgmManager.heartbeathOperation()
+                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                    guard let self = self else { return }
+                    cgmManager.heartbeathOperation()
+                }
             }
             return
         }
@@ -275,7 +244,10 @@ extension PeripheralManager: CBPeripheralDelegate {
 
             logger.debug("[365] Got keep alive message - mostRecentGlucoseDatetime: \(response.mostRecenteGlucoseDatetime)")
             if response.mostRecenteGlucoseDatetime > (cgmManager.state.recentGlucoseDateTime ?? .distantPast) {
-                cgmManager.heartbeathOperation()
+                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                    guard let self = self else { return }
+                    cgmManager.heartbeathOperation()
+                }
             }
 
             return
@@ -289,7 +261,7 @@ extension PeripheralManager: CBPeripheralDelegate {
                 return
             }
 
-            stream.signal()
+            stream.leave()
             return
         }
 
@@ -301,7 +273,7 @@ extension PeripheralManager: CBPeripheralDelegate {
                 return
             }
 
-            stream.signal()
+            stream.leave()
             return
         }
 
@@ -328,10 +300,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             return
         }
 
-        writeTimeout?.cancel()
-        writeTimeout = nil
-
-        stream.signal()
+        stream.leave()
         writeQueue = nil
     }
 }
