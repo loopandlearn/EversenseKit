@@ -125,7 +125,7 @@ public class EversenseCGMManager: CGMManager {
     public func getSounds() -> [LoopKit.Alert.Sound] {
         []
     }
-    
+
     public func delete(completion: @escaping () -> Void) {
         cleanup()
         notifyDelegateOfDeletion(completion: completion)

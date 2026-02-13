@@ -212,10 +212,10 @@ extension BluetoothManager: CBCentralManagerDelegate {
         if let error = error {
             logger.error("Failure during disconnect: \(error.localizedDescription)")
         }
-        
+
         peripheralManager?.cleanup()
         peripheralManager = nil
-        
+
         guard let cgmManager = cgmManager else {
             return
         }
@@ -226,7 +226,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
         if !cgmManager.isOnboarded {
             return
         }
-        
+
         // Reconnect
         ensureConnected { error in
             if let error = error {
@@ -244,7 +244,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
         if error != nil {
             logger.debug("Clearing old reference to Transmitter...")
         }
-        
+
         self.peripheral = nil
         peripheralManager?.cleanup()
         peripheralManager = nil

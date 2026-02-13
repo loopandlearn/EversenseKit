@@ -20,7 +20,7 @@ class PeripheralManager: NSObject {
 
     private var buffer = Data([])
     private var packet: (any BasePacket)?
-    private var writeQueue: DispatchGroup?
+    private var writeQueue: EversenseKitDispatchGroup?
     private var writeResponse: AnyObject?
 
     private let maxPacketSize: Int
@@ -50,9 +50,9 @@ class PeripheralManager: NSObject {
         }
 
         self.packet = packet
-        let writeQ = DispatchGroup()
+        let writeQ = EversenseKitDispatchGroup()
         writeQ.enter()
-        
+
         writeQueue = writeQ
 
         let data = packet.getRequestData()
@@ -69,9 +69,9 @@ class PeripheralManager: NSObject {
                 Thread.sleep(forTimeInterval: .milliseconds(100))
             }
         }
-        
+
         // Wait for response or timeout timer...
-        let _ = writeQ.wait(timeout: .now().advanced(by: .seconds(Int(timeout))))
+        _ = writeQ.wait(timeout: .now().advanced(by: .seconds(Int(timeout))))
         writeQueue = nil
 
         guard let response = writeResponse as? T else {
@@ -118,7 +118,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             self.requestCharacteristic = requestCharacteristic
             self.responseCharacteristic = responseCharacteristic
 
-            self.logger.debug("[NONE security] Discovering completed -> Enabling notifing & send bleBondingInformation...")
+            logger.debug("[NONE security] Discovering completed -> Enabling notifing & send bleBondingInformation...")
             peripheral.setNotifyValue(true, for: responseCharacteristic)
             return
         }
@@ -132,7 +132,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             self.requestCharacteristic = requestCharacteristic
             self.responseCharacteristic = responseCharacteristic
 
-            self.logger.debug("[V2 security] Discovering completed -> Enabling notifing...")
+            logger.debug("[V2 security] Discovering completed -> Enabling notifing...")
             peripheral.setNotifyValue(true, for: responseCharacteristic)
             return
         }
@@ -146,13 +146,13 @@ extension PeripheralManager: CBPeripheralDelegate {
             self.requestCharacteristic = requestCharacteristic
             self.responseCharacteristic = responseCharacteristic
 
-            self.logger.debug("[V1 security] Discovering completed -> Enabling notifing...")
+            logger.debug("[V1 security] Discovering completed -> Enabling notifing...")
             peripheral.setNotifyValue(true, for: responseCharacteristic)
             return
         }
 
-        self.logger.error("Characteristics could not found: \(service.characteristics ?? [])")
-        self.connectCompletion?(ConnectFailure.failedToDiscoverCharacteristics)
+        logger.error("Characteristics could not found: \(service.characteristics ?? [])")
+        connectCompletion?(ConnectFailure.failedToDiscoverCharacteristics)
     }
 
     func peripheral(_: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: (any Error)?) {
