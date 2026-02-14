@@ -141,11 +141,13 @@ class BluetoothManager: NSObject {
     }
 
     func disconnect() {
-        guard let peripheral = peripheral else {
+        guard let peripheral = peripheral, let manager = manager else {
             return
         }
 
-        manager?.cancelPeripheralConnection(peripheral)
+        self.peripheral = nil
+        self.peripheralManager = nil
+        manager.cancelPeripheralConnection(peripheral)
     }
 }
 
