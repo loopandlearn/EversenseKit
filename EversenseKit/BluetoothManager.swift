@@ -146,7 +146,7 @@ class BluetoothManager: NSObject {
         }
 
         self.peripheral = nil
-        self.peripheralManager = nil
+        peripheralManager = nil
         manager.cancelPeripheralConnection(peripheral)
     }
 }
