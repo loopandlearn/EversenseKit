@@ -117,7 +117,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                     return
                 }
 
-                cgmManager.notifyDelegateOfDeletion {
+                cgmManager.delete {
                     DispatchQueue.main.async {
                         self.completionDelegate?.completionNotifyingDidComplete(self)
                     }

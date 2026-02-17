@@ -1837,6 +1837,18 @@
         }
       }
     },
+    "Welcome!" : {
+      "comment" : "Onboarding header",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome!"
+          }
+        }
+      }
+    },
     "Your 24-hour Warm-up Phase is complete." : {
       "comment" : "description for WarmUpPhaseCompleteAlert",
       "extractionState" : "manual",

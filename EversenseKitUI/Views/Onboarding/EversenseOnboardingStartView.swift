@@ -20,6 +20,7 @@ struct EversenseOnboardingStart: View {
     var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
+                Text(LocalizedString("Choose your Eversense transmitter", comment: "Onboarding subheader"))
                 Spacer()
 
                 ResizeablePicker(
@@ -40,7 +41,7 @@ struct EversenseOnboardingStart: View {
         }
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarHidden(false)
-        .navigationTitle(LocalizedString("Choose your Eversense transmitter", comment: "Onboarding Header"))
+        .navigationTitle(LocalizedString("Welcome!", comment: "Onboarding Header"))
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(LocalizedString("Cancel", comment: "Cancel button title"), action: {
