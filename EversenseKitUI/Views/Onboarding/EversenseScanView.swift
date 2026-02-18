@@ -12,7 +12,7 @@ struct Eversense365ScanView: View {
             List {
                 Section {
                     Text(LocalizedString(
-                        "Make sure your Eversense is resetted and put into pairing mode. Please read the manual to learn how to do this.",
+                        "Make sure your Eversense is in pairing mode. Please read the manual to learn how to do this.",
                         comment: "Scanning hint"
                     ))
 
