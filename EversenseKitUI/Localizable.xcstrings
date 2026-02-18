@@ -1483,6 +1483,30 @@
         }
       }
     },
+    "The eversense 365 is a full year implant transmitter, with improved algorithm compared to the Eversense E3" : {
+      "comment" : "Eversense 365 description",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The eversense 365 is a full year implant transmitter, with improved algorithm compared to the Eversense E3"
+          }
+        }
+      }
+    },
+    "The eversense E3 is a 90 day or 180 day implant transmitter. The first Eversense implantable device build by Senseonics" : {
+      "comment" : "Eversense E3 description",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The eversense E3 is a 90 day or 180 day implant transmitter. The first Eversense implantable device build by Senseonics"
+          }
+        }
+      }
+    },
     "The system has detected a problem with your transmitter's battery. You can continue to use your system, but please contact Eversense Customer Support for a replacement transmitter." : {
       "comment" : "description for BatteryErrorAlarm",
       "extractionState" : "manual",

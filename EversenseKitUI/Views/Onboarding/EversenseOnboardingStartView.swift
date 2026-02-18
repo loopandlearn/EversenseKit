@@ -5,37 +5,62 @@ struct EversenseOnboardingStart: View {
     @Environment(\.dismissAction) private var dismiss
 
     let nextAction: (Int) -> Void
-    let allowedOptions = [0, 1, 2]
-
-    @State var value: Int = 1 // Eversense 365 -> default
-    private var currentValue: Binding<Int> {
-        Binding(
-            get: { value },
-            set: { newValue in
-                self.value = newValue
-            }
-        )
-    }
+    @State var value: Int?
 
     var body: some View {
         VStack(alignment: .leading) {
-            VStack(alignment: .leading) {
-                Text(LocalizedString("Choose your Eversense transmitter", comment: "Onboarding subheader"))
-                Spacer()
+            List {
+                Section {
+                    Text(LocalizedString("Choose your Eversense transmitter", comment: "Onboarding subheader"))
+                }
 
-                ResizeablePicker(
-                    selection: currentValue,
-                    data: self.allowedOptions,
-                    formatter: { formatter($0) }
-                )
+                Section {
+                    CheckmarkListItem(
+                        title: Text(LocalizedString("Eversense E3", comment: "Eversense E3")),
+                        description: Text(LocalizedString(
+                            "The eversense E3 is a 90 day or 180 day implant transmitter. The first Eversense implantable device build by Senseonics",
+                            comment: "Eversense E3 description"
+                        )),
+                        isSelected: Binding(
+                            get: { self.value == 0 },
+                            set: { isSelected in
+                                if isSelected {
+                                    self.value = 0
+                                }
+                            }
+                        )
+                    )
 
-                Spacer()
+                    CheckmarkListItem(
+                        title: Text(LocalizedString("Eversense 365", comment: "Eversense 365")),
+                        description: Text(LocalizedString(
+                            "The eversense 365 is a full year implant transmitter, with improved algorithm compared to the Eversense E3",
+                            comment: "Eversense 365 description"
+                        )),
+                        isSelected: Binding(
+                            get: { self.value == 1 },
+                            set: { isSelected in
+                                if isSelected {
+                                    self.value = 1
+                                }
+                            }
+                        )
+                    )
+                }
+                .buttonStyle(PlainButtonStyle()) // Disable row highlighting on selection
             }
-            .padding(.horizontal)
+            .insetGroupedListStyle()
 
-            Button(action: { nextAction(value) }) {
+            Spacer()
+
+            Button(action: {
+                if let value = value {
+                    nextAction(value)
+                }
+            }) {
                 Text(LocalizedString("Continue", comment: "Text for continue button"))
             }
+            .disabled(value == nil)
             .buttonStyle(ActionButtonStyle())
             .padding([.bottom, .horizontal])
         }
@@ -48,17 +73,6 @@ struct EversenseOnboardingStart: View {
                     self.dismiss()
                 })
             }
-        }
-    }
-
-    private func formatter(_ index: Int) -> String {
-        switch index {
-        case 0:
-            return LocalizedString("Eversense E3", comment: "Eversense E3")
-        case 1:
-            return LocalizedString("Eversense 365", comment: "Eversense 365")
-        default:
-            return ""
         }
     }
 }

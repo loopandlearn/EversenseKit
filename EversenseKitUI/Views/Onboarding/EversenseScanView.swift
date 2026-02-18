@@ -9,26 +9,28 @@ struct Eversense365ScanView: View {
 
     var body: some View {
         VStack {
-            HStack(alignment: .center, spacing: 0) {
-                Text(LocalizedString(
-                    "Make sure your Eversense is resetted and put into pairing mode. Please read the manual to learn how to do this.",
-                    comment: "Scanning hint"
-                ))
-            }
-            .padding(.horizontal)
+            List {
+                Section {
+                    Text(LocalizedString(
+                        "Make sure your Eversense is resetted and put into pairing mode. Please read the manual to learn how to do this.",
+                        comment: "Scanning hint"
+                    ))
 
-            if !viewModel.error.isEmpty {
-                Text(viewModel.error)
-                    .foregroundStyle(.red)
-            }
+                    if !viewModel.error.isEmpty {
+                        Text(viewModel.error)
+                            .foregroundStyle(.red)
+                    }
+                }
 
-            Divider()
-            content
+                Section {
+                    content
+                }
+            }
         }
         .listStyle(InsetGroupedListStyle())
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarHidden(false)
-        .navigationTitle(LocalizedString("Find your Eversense", comment: "Scanning header"))
+        .navigationTitle(LocalizedString("Scanning", comment: "Scanning header"))
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(LocalizedString("Cancel", comment: "Cancel button title"), action: {
@@ -44,26 +46,23 @@ struct Eversense365ScanView: View {
     }
 
     @ViewBuilder private var content: some View {
-        List {
-            ForEach($viewModel.results) { $result in
-                Button(action: { viewModel.connect($result.wrappedValue) }) {
-                    HStack {
-                        Text($result.name.wrappedValue)
-                        Spacer()
-                        if viewModel.connectingTo.isEmpty {
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: UIFont.systemFontSize, weight: .medium))
-                                .opacity(0.35)
-                        } else if $result.name.wrappedValue == viewModel.connectingTo {
-                            ActivityIndicator(isAnimating: .constant(true), style: .medium)
-                        }
+        ForEach($viewModel.results) { $result in
+            Button(action: { viewModel.connect($result.wrappedValue) }) {
+                HStack {
+                    Text($result.name.wrappedValue)
+                    Spacer()
+                    if viewModel.connectingTo.isEmpty {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: UIFont.systemFontSize, weight: .medium))
+                            .opacity(0.35)
+                    } else if $result.name.wrappedValue == viewModel.connectingTo {
+                        ActivityIndicator(isAnimating: .constant(true), style: .medium)
                     }
-                    .padding(.horizontal)
                 }
-                .disabled(!viewModel.connectingTo.isEmpty)
-                .buttonStyle(.plain)
+                .padding(.horizontal)
             }
+            .disabled(!viewModel.connectingTo.isEmpty)
+            .buttonStyle(.plain)
         }
-        .listStyle(.plain)
     }
 }
