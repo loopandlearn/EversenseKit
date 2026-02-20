@@ -10,11 +10,10 @@ struct EversenseOnboardingStart: View {
     var body: some View {
         VStack(alignment: .leading) {
             List {
-                Section {
-                    Text(LocalizedString("Choose your Eversense transmitter", comment: "Onboarding subheader"))
-                }
-
-                Section {
+                Section(header: SectionHeader(label: LocalizedString(
+                    "Choose your Eversense transmitter",
+                    comment: "Onboarding subheader"
+                ))) {
                     CheckmarkListItem(
                         title: Text(LocalizedString("Eversense E3", comment: "Eversense E3")),
                         description: Text(LocalizedString(
