@@ -34,7 +34,7 @@ class TransmitterSettingsViewModel: ObservableObject {
     init(cgmManager: EversenseCGMManager?, unit: HKUnit) {
         self.cgmManager = cgmManager
         self.unit = unit
-        formatString = unit == .milligramsPerDeciliterPerMinute ? "%.1f mg/dl/min" : "%.2f mmol/L/min"
+        formatString = unit == .milligramsPerDeciliter ? "%.1f mg/dl/min" : "%.2f mmol/L/min"
 
         guard let cgmManager = cgmManager else {
             return
