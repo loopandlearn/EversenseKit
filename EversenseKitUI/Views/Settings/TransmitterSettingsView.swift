@@ -10,6 +10,9 @@ struct TransmitterSettingsView: View {
     @State var pickerPredictionLowThreshold = false
     @State var pickerGlucoseHigh = false
     @State var pickerGlucoseLow = false
+    @State var pickerBleDisconnect = false
+    @State var pickerRepeatLow = false
+    @State var pickerRepeatHigh = false
 
     @EnvironmentObject private var displayGlucosePreference: DisplayGlucosePreference
     @ObservedObject var viewModel: TransmitterSettingsViewModel
@@ -119,6 +122,81 @@ struct TransmitterSettingsView: View {
                     allowedTimeOptions: viewModel.timeAllowedOptions,
                     allowedThresholdOptions: viewModel.glucoseLowAllowedOptions
                 )
+
+                Section {
+                    HStack {
+                        Text(LocalizedString("Low Snooze", comment: "label low snooze"))
+                            .foregroundStyle(pickerRepeatLow ? .blue : .primary)
+                        Spacer()
+                        Text(timeFormatter(viewModel.repeatLow))
+                            .foregroundStyle(pickerRepeatLow ? .blue : .secondary)
+                    }
+                    .onTapGesture {
+                        pickerRepeatLow.toggle()
+                    }
+
+                    if pickerRepeatLow {
+                        ResizeablePicker(
+                            selection: $viewModel.repeatLow,
+                            data: viewModel.repeatLowAllowedOptions,
+                            formatter: { timeFormatter($0) }
+                        )
+                    }
+
+                    HStack {
+                        Text(LocalizedString("High Snooze", comment: "label high snooze"))
+                            .foregroundStyle(pickerRepeatHigh ? .blue : .primary)
+                        Spacer()
+                        Text(timeFormatter(viewModel.repeatHigh))
+                            .foregroundStyle(pickerRepeatHigh ? .blue : .secondary)
+                    }
+                    .onTapGesture {
+                        pickerRepeatHigh.toggle()
+                    }
+
+                    if pickerRepeatHigh {
+                        ResizeablePicker(
+                            selection: $viewModel.repeatHigh,
+                            data: viewModel.repeatHighAllowedOptions,
+                            formatter: { timeFormatter($0) }
+                        )
+                    }
+                } footer: {
+                    Text(LocalizedString(
+                        "Configure how much time should be configured between each low or high glucose alert",
+                        comment: "label lowhigh snooze"
+                    ))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+
+                Section {
+                    HStack {
+                        Text(LocalizedString("BLE disconnect alert", comment: "label ble disconnect"))
+                            .foregroundStyle(pickerBleDisconnect ? .blue : .primary)
+                        Spacer()
+                        Text(timeFormatter(viewModel.bleDisconnect))
+                            .foregroundStyle(pickerBleDisconnect ? .blue : .secondary)
+                    }
+                    .onTapGesture {
+                        pickerBleDisconnect.toggle()
+                    }
+
+                    if pickerBleDisconnect {
+                        ResizeablePicker(
+                            selection: $viewModel.bleDisconnect,
+                            data: viewModel.bleDisconnectAllowedOptions,
+                            formatter: { timeFormatter($0) }
+                        )
+                    }
+                } footer: {
+                    Text(LocalizedString(
+                        "Configure how long the transmitter is allowed to be disconnected from your phone",
+                        comment: "label ble disconnect footer"
+                    ))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
             }
 
             Spacer()
@@ -132,7 +210,7 @@ struct TransmitterSettingsView: View {
                 if viewModel.loading {
                     ActivityIndicator(isAnimating: .constant(true), style: .medium)
                 } else {
-                    Text(LocalizedString("Continue", comment: "Text for continue button"))
+                    Text(LocalizedString("Save", comment: "Text for continue button"))
                 }
             }
             .buttonStyle(ActionButtonStyle())

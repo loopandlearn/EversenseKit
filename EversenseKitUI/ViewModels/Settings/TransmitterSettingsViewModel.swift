@@ -23,10 +23,17 @@ class TransmitterSettingsViewModel: ObservableObject {
     @Published var predictionLowThreshold: Double = 70
     @Published var predictionHighThreshold: Double = 180
 
+    @Published var bleDisconnect: Double = .minutes(5)
+    @Published var repeatLow: Double = .minutes(15)
+    @Published var repeatHigh: Double = .minutes(15)
+
     public let rateAllowedOptions: [Double] = (0 ..< 8).map { 1.5 + Double($0) * 0.5 }
     public let glucoseHighAllowedOptions: [Double] = (0 ... 110).map { Double($0 * 2 + 180) }
     public let glucoseLowAllowedOptions: [Double] = (0 ... 15).map { Double($0 * 2 + 40) }
     public let timeAllowedOptions: [Double] = (5 ... 30).map { Double($0) }
+    public let bleDisconnectAllowedOptions: [Double] = (1 ... 6).map { TimeInterval(minutes: Double($0 * 5)) }
+    public let repeatLowAllowedOptions: [Double] = (1 ... 6).map { TimeInterval(minutes: Double($0 * 5)) }
+    public let repeatHighAllowedOptions: [Double] = (1 ... 33).map { TimeInterval(minutes: Double($0 * 5 + 15)) }
 
     private let cgmManager: EversenseCGMManager?
     private let unit: HKUnit
@@ -57,6 +64,10 @@ class TransmitterSettingsViewModel: ObservableObject {
         predictionHighTime = cgmManager.state.predictionRisingInterval
         predictionLowThreshold = Double(cgmManager.state.predictionFallingThreshold)
         predictionHighThreshold = Double(cgmManager.state.predictionRisingThreshold)
+
+        bleDisconnect = cgmManager.state.bleDisconnectTimeout
+        repeatLow = cgmManager.state.repeatLowTimeout
+        repeatHigh = cgmManager.state.repeatHighTimeout
     }
 
     func toHkQuantity(_ value: Double) -> HKQuantity {
@@ -98,21 +109,27 @@ class TransmitterSettingsViewModel: ObservableObject {
 
                 rateFallingEnabled: self.rateFallingEnabled,
                 rateRisingEnabled: self.rateRisingEnabled,
-                rateFallingThreshold: UInt8(self.rateFallingThreshold),
-                rateRisingThreshold: UInt8(self.rateRisingThreshold),
+                rateFallingThreshold: UInt8(self.rateFallingThreshold * 10),
+                rateRisingThreshold: UInt8(self.rateRisingThreshold * 10),
 
                 predictiveHighEnabled: self.predictionHighEnabled,
                 predictiveHighThreshold: UInt16(self.predictionHighThreshold),
                 predictiveHighTime: self.predictionHighTime,
                 predictiveLowEnabled: self.predictionLowEnabled,
                 predictiveLowThreshold: UInt16(self.predictionLowThreshold),
-                predictiveLowTime: self.predictionLowTime
+                predictiveLowTime: self.predictionLowTime,
+
+                repeatAlarmLow: self.repeatLow,
+                repeatAlarmHigh: self.repeatHigh,
+                bleDisconnect: self.bleDisconnect
             )
 
             if !cgmManager.state.is365 {
                 EversenseE3.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
+                EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: cgmManager)
             } else {
                 Eversense365.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
+                Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: cgmManager)
             }
 
             DispatchQueue.main.async {

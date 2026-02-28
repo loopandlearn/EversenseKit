@@ -164,6 +164,7 @@ enum Eversense365 {
         case Calibration = 12
         case AppVersion = 14
         case VibrateMode = 16
+        case BleDisconnect = 17
         case PredictionLowThreshold = 18
         case PredictionHighThreshold = 19
         case RateFallingEnabled = 20

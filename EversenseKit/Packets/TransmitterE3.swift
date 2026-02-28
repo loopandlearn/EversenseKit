@@ -238,6 +238,16 @@ extension EversenseE3 {
             cgmManager.state.rateFallingThreshold = rateFallingThreshold.value
             cgmManager.state.rateRisingThreshold = rateRisingThreshold.value
 
+            // Get interval values
+            let bleDisconnect: GetBleDisconnectResponse = try peripheralManager.write(GetBleDisconnectPacket())
+            let lowGlucoseInterval: GetLowGlucoseRepeatIntervalResponse = try peripheralManager
+                .write(GetLowGlucoseRepeatIntervalPacket())
+            let highGlucoseInterval: GetHighGlucoseRepeatIntervalResponse = try peripheralManager
+                .write(GetHighGlucoseRepeatIntervalPacket())
+            cgmManager.state.repeatLowTimeout = lowGlucoseInterval.interval
+            cgmManager.state.repeatHighTimeout = highGlucoseInterval.interval
+            cgmManager.state.bleDisconnectTimeout = bleDisconnect.interval
+
             // Get signal strength
             let rawSignalStrength: GetSignalStrengthRawResponse = try peripheralManager
                 .write(GetSignalStrengthRawPacket())
@@ -303,6 +313,16 @@ extension EversenseE3 {
                 .write(SetPredictionLowTimePacket(time: data.predictiveLowTime))
             let _: SetPredictionLowThresholdResponse = try peripheralManager
                 .write(SetPredictionLowThresholdPacket(value: data.predictiveLowThreshold))
+
+            let _: SetBleDisconnectResponse = try peripheralManager.write(SetBleDisconnectPacket(interval: data.bleDisconnect))
+            let _: SetLowGlucoseRepeatIntervalResponse = try peripheralManager
+                .write(SetLowGlucoseRepeatIntervalDayPacket(interval: data.repeatAlarmLow))
+            let _: SetLowGlucoseRepeatIntervalResponse = try peripheralManager
+                .write(SetLowGlucoseRepeatIntervalNightPacket(interval: data.repeatAlarmLow))
+            let _: SetHighGlucoseRepeatIntervalResponse = try peripheralManager
+                .write(SetHighGlucoseRepeatIntervalDayPacket(interval: data.repeatAlarmHigh))
+            let _: SetHighGlucoseRepeatIntervalResponse = try peripheralManager
+                .write(SetHighGlucoseRepeatIntervalNightPacket(interval: data.repeatAlarmHigh))
 
             logger.info("[E3] Transmitter settings have been written - timestamp: \(Date.now)")
         } catch {

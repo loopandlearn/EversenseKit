@@ -64,6 +64,9 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         predictionFallingInterval = rawValue["predictionFallingInterval"] as? TimeInterval ?? .minutes(5)
         predictionRisingThreshold = rawValue["predictionRisingThreshold"] as? UInt16 ?? 180
         predictionFallingThreshold = rawValue["predictionFallingThreshold"] as? UInt16 ?? 70
+        repeatLowTimeout = rawValue["repeatLowTimeout"] as? TimeInterval ?? .minutes(15)
+        repeatHighTimeout = rawValue["repeatHighTimeout"] as? TimeInterval ?? .minutes(15)
+        bleDisconnectTimeout = rawValue["bleDisconnectTimeout"] as? TimeInterval ?? .minutes(5)
         isFallingRateEnabled = rawValue["isRateEnabled"] as? Bool ?? false
         isRisingRateEnabled = rawValue["isRisingRateEnabled"] as? Bool ?? false
         rateFallingThreshold = rawValue["rateFallingThreshold"] as? Double ?? 0
@@ -163,6 +166,9 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["predictionFallingInterval"] = predictionFallingInterval
         value["predictionFallingThreshold"] = predictionFallingThreshold
         value["predictionRisingThreshold"] = predictionRisingThreshold
+        value["repeatLowTimeout"] = repeatLowTimeout
+        value["repeatHighTimeout"] = repeatHighTimeout
+        value["bleDisconnectTimeout"] = bleDisconnectTimeout
         value["isFallingRateEnabled"] = isFallingRateEnabled
         value["isRisingRateEnabled"] = isRisingRateEnabled
         value["rateFallingThreshold"] = rateFallingThreshold
@@ -231,6 +237,9 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var isRisingRateEnabled: Bool
     public var rateFallingThreshold: Double
     public var rateRisingThreshold: Double
+    public var repeatLowTimeout: TimeInterval
+    public var repeatHighTimeout: TimeInterval
+    public var bleDisconnectTimeout: TimeInterval
 
     public var recentGlucoseInMgDl: UInt16?
     public var recentGlucoseDateTime: Date?

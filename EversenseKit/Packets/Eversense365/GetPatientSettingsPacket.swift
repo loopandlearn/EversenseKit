@@ -1,6 +1,7 @@
 extension Eversense365 {
     class GetPatientSettingsResponse {
         let vibrateMode: Bool
+        let disconnectTimeout: TimeInterval
         let highGlucoseEnabled: Bool
         let lowGlucoseAlarmInMgDl: UInt16
         let highGlucoseAlarmInMgDl: UInt16
@@ -14,9 +15,12 @@ extension Eversense365 {
         let rateRisingEnabled: Bool
         let rateFallingThreshold: Double
         let rateRisingThreshold: Double
+        let repeatLowTimeout: TimeInterval
+        let repeatHighTimeout: TimeInterval
 
         init(
             vibrateMode: Bool,
+            disconnectTimeout: TimeInterval,
             highGlucoseEnabled: Bool,
             highGlucoseAlarmInMgDl: UInt16,
             lowGlucoseAlarmInMgDl: UInt16,
@@ -29,9 +33,12 @@ extension Eversense365 {
             rateFallingEnabled: Bool,
             rateRisingEnabled: Bool,
             rateFallingThreshold: Double,
-            rateRisingThreshold: Double
+            rateRisingThreshold: Double,
+            repeatLowTimeout: TimeInterval,
+            repeatHighTimeout: TimeInterval
         ) {
             self.vibrateMode = vibrateMode
+            self.disconnectTimeout = disconnectTimeout
             self.highGlucoseEnabled = highGlucoseEnabled
             self.highGlucoseAlarmInMgDl = highGlucoseAlarmInMgDl
             self.lowGlucoseAlarmInMgDl = lowGlucoseAlarmInMgDl
@@ -45,6 +52,8 @@ extension Eversense365 {
             self.rateRisingEnabled = rateRisingEnabled
             self.rateFallingThreshold = rateFallingThreshold
             self.rateRisingThreshold = rateRisingThreshold
+            self.repeatLowTimeout = repeatLowTimeout
+            self.repeatHighTimeout = repeatHighTimeout
         }
     }
 
@@ -89,8 +98,11 @@ extension Eversense365 {
         /// 34 -> Battery Temp Thresh Mode Change
         /// 44 -> Battery Temp Thresh Warn
         func parseResponse(data: Data) -> GetPatientSettingsResponse {
-            GetPatientSettingsResponse(
+            let disconnectTimeout = UInt16(data[Offset.DISCONNECT_TIMEOUT]) | (UInt16(data[Offset.DISCONNECT_TIMEOUT + 1]) << 8)
+
+            return GetPatientSettingsResponse(
                 vibrateMode: data[Offset.IS_DO_NOT_DISTURB_ENABLED] != 0x00,
+                disconnectTimeout: TimeInterval(seconds: Double(disconnectTimeout)),
                 highGlucoseEnabled: data[Offset.ALARM_HIGH_GLUCOSE_ENABLED] != 0x00,
                 highGlucoseAlarmInMgDl: UInt16(data[Offset.ALARM_HIGH_GLUCOSE_THRESHOLD]) |
                     (UInt16(data[Offset.ALARM_HIGH_GLUCOSE_THRESHOLD + 1]) << 8),
@@ -107,7 +119,9 @@ extension Eversense365 {
                 rateFallingEnabled: data[Offset.ALARM_RATE_FALLING_ENABLED] != 0x00,
                 rateRisingEnabled: data[Offset.ALARM_RATE_RISING_ENABLED] != 0x00,
                 rateFallingThreshold: Double(data[Offset.ALARM_RATE_FALLING_THRESHOLD]) / 10,
-                rateRisingThreshold: Double(data[Offset.ALARM_RATE_RISING_THRESHOLD]) / 10
+                rateRisingThreshold: Double(data[Offset.ALARM_RATE_RISING_THRESHOLD]) / 10,
+                repeatLowTimeout: TimeInterval(minutes: Double(data[Offset.ALARM_LOW_GLUCOSE_REPEAT_INTERVAL])),
+                repeatHighTimeout: TimeInterval(minutes: Double(data[Offset.ALARM_HIGH_GLUCOSE_REPEAT_INTERVAL]))
             )
         }
 
@@ -120,10 +134,7 @@ extension Eversense365 {
 
             static let IS_CLINICAL_MODE_ENABLED = 43
             static let IS_DO_NOT_DISTURB_ENABLED = 44
-
-            static let BLE_CONNECT_TIME_START = 45
-            static let BLE_CONNECT_TIME_END = 47
-
+            static let DISCONNECT_TIMEOUT = 45
             static let LOW_SUGAR_TARGET = 47
             static let HIGH_SUGAR_TARGET = 49
             static let ALARM_RATE_FALLING_ENABLED = 51

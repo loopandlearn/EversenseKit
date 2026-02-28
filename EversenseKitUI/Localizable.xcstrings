@@ -139,6 +139,18 @@
         }
       }
     },
+    "BLE disconnect alert" : {
+      "comment" : "label ble disconnect",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BLE disconnect alert"
+          }
+        }
+      }
+    },
     "Calibrate Again" : {
       "comment" : "title for CalibrationFailedAlert",
       "extractionState" : "manual",
@@ -267,6 +279,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Choose your Eversense transmitter"
+          }
+        }
+      }
+    },
+    "Configure how long the transmitter is allowed to be disconnected from your phone" : {
+      "comment" : "label ble disconnect footer",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure how long the transmitter is allowed to be disconnected from your phone"
+          }
+        }
+      }
+    },
+    "Configure how much time should be configured between each low or high glucose alert" : {
+      "comment" : "label lowhigh snooze",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure how much time should be configured between each low or high glucose alert"
           }
         }
       }
@@ -667,6 +703,18 @@
         }
       }
     },
+    "High snooze" : {
+      "comment" : "label high snooze",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High snooze"
+          }
+        }
+      }
+    },
     "High Transmitter Temperature" : {
       "comment" : "title for ReaderTemperatureAlarm",
       "extractionState" : "manual",
@@ -867,6 +915,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Low Sensor Temperature"
+          }
+        }
+      }
+    },
+    "Low Snooze" : {
+      "comment" : "label low snooze",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low Snooze"
           }
         }
       }
@@ -1275,6 +1335,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rising alarming enabled"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "comment" : "label save",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
           }
         }
       }
