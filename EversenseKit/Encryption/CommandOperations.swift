@@ -29,6 +29,11 @@ enum FlashMemory: UInt32 {
     case rateRisingAlert = 0x0000_1026
     case rateFallingThreshold = 0x0000_1011
     case rateRisingThreshold = 0x0000_1012
+    case bleDisconnect = 0x0000_08B2
+    case lowGlucoseAlarmRepeatIntervalDay = 0x0000_1032
+    case highGlucoseAlarmRepeatIntervalDay = 0x0000_1033
+    case lowGlucoseAlarmRepeatIntervalNight = 0x0000_110E
+    case highGlucoseAlarmRepeatIntervalNight = 0x0000_110F
 
     case warmUpDuration = 0x0000_0016
     case clinicalMode = 0x0000_0B49
@@ -66,10 +71,6 @@ enum FlashMemory: UInt32 {
     case mmaFeatures = 0x0000_0137
     case dayStartTime = 0x0000_1110
     case nightStartTime = 0x0000_1112
-    case lowGlucoseAlarmRepeatIntervalDayTime = 0x0000_1032
-    case highGlucoseAlarmRepeatIntervalDayTime = 0x0000_1033
-    case lowGlucoseAlarmRepeatIntervalNightTime = 0x0000_110E
-    case highGlucoseAlarmRepeatIntervalNightTime = 0x0000_110F
 
     case mepSavedValue = 0x0000_00B3
     case mepSavedRefChannelMetric = 0x0000_00B7

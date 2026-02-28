@@ -16,4 +16,8 @@ struct TransmitterSettings {
     let predictiveLowEnabled: Bool
     let predictiveLowThreshold: UInt16
     let predictiveLowTime: TimeInterval
+
+    let repeatAlarmLow: TimeInterval
+    let repeatAlarmHigh: TimeInterval
+    let bleDisconnect: TimeInterval
 }

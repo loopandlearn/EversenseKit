@@ -155,6 +155,9 @@ extension Eversense365 {
             cgmManager.state.isRisingRateEnabled = patientSettings.rateRisingEnabled
             cgmManager.state.rateFallingThreshold = patientSettings.rateFallingThreshold
             cgmManager.state.rateRisingThreshold = patientSettings.rateRisingThreshold
+            cgmManager.state.bleDisconnectTimeout = patientSettings.disconnectTimeout
+            cgmManager.state.repeatLowTimeout = patientSettings.repeatLowTimeout
+            cgmManager.state.repeatHighTimeout = patientSettings.repeatHighTimeout
 
             logger.debug("Sending GetActiveAlarmsPacket")
             let activeAlarms: GetActiveAlarmsResponse = try peripheralManager.write(GetActiveAlarmsPacket())
@@ -177,7 +180,7 @@ extension Eversense365 {
     ) {
         do {
             logger.debug("Write vibration")
-            let _: SetVibrateModeResponse = try peripheralManager.write(SetVibrateModePacket(enabled: data.vibrationMode))
+            let _: SetDoNotDisturbResponse = try peripheralManager.write(SetDoNotDisturbRequest(silenced: data.vibrationMode))
 
             logger.debug("Write glucose alerts")
             let _: SetHighGlucoseAlarmEnabledResponse = try peripheralManager
@@ -210,6 +213,13 @@ extension Eversense365 {
                 .write(SetPredictionHighIntervalPacket(time: data.predictiveHighTime))
             let _: SetPredictionHighThresholdResponse = try peripheralManager
                 .write(SetPredictionHighThresholdPacket(value: data.predictiveHighThreshold))
+
+            logger.debug("Write timeouts")
+            let _: SetBleDisconnectResponse = try peripheralManager.write(SetBleDisconnectPacket(interval: data.bleDisconnect))
+            let _: SetRepeatLowGlucoseResponse = try peripheralManager
+                .write(SetRepeatLowGlucosePacket(interval: data.repeatAlarmLow))
+            let _: SetRepeatHighGlucoseResponse = try peripheralManager
+                .write(SetRepeatHighGlucosePacket(interval: data.repeatAlarmHigh))
 
             logger.info("[365] Transmitter settings have been written - timestamp: \(Date.now)")
         } catch {

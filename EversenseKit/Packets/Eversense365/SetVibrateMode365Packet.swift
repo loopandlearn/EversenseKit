@@ -1,8 +1,8 @@
 extension Eversense365 {
-    class SetVibrateModeResponse {}
+    class SetDoNotDisturbResponse {}
 
-    class SetVibrateModePacket: BasePacket {
-        typealias T = SetVibrateModeResponse
+    class SetDoNotDisturbRequest: BasePacket {
+        typealias T = SetDoNotDisturbResponse
 
         var responseType: UInt8 {
             PacketIds.WriteResponseId.rawValue
@@ -12,18 +12,18 @@ extension Eversense365 {
             WriteIds.VibrateMode.rawValue
         }
 
-        let enabled: Bool
-        init(enabled: Bool) {
-            self.enabled = enabled
+        let silenced: Bool
+        init(silenced: Bool) {
+            self.silenced = silenced
         }
 
         func getRequestData() -> Data {
-            let data = Data([PacketIds.WriteCommandId.rawValue, WriteIds.VibrateMode.rawValue, enabled ? 1 : 0])
+            let data = Data([PacketIds.WriteCommandId.rawValue, WriteIds.VibrateMode.rawValue, silenced ? 0 : 1])
             return CryptoUtil.shared.encrypt(data: data)
         }
 
-        func parseResponse(data _: Data) -> SetVibrateModeResponse {
-            SetVibrateModeResponse()
+        func parseResponse(data _: Data) -> SetDoNotDisturbResponse {
+            SetDoNotDisturbResponse()
         }
     }
 }
