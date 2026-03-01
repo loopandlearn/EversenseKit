@@ -12,68 +12,100 @@ public enum Alarm: UInt8, Codable {
     case SensorLowTemperatureAlarm = 4
     case ReaderTemperatureAlarm = 5
     case SensorAwolAlarm = 6
-    case InvalidSensorAlarm = 7
-    case CalibrationRequiredAlarm = 8
-    case SeriouslyLowAlarm = 9
-    case SeriouslyHighAlarm = 10
-    case LowGlucoseAlarm = 11
-    case HighGlucoseAlarm = 12
-    case PredictiveLowAlarm = 13
-    case PredictiveHighAlarm = 14
-    case RateFallingAlarm = 15
-    case RateRisingAlarm = 16
-    case CalibrationGracePeriodAlarm = 17
-    case CalibrationExpiredAlarm = 18
-    case SensorRetiringSoon1Alarm = 19
-    case SensorRetiringSoon3Alarm = 20
-    case SensorRetiringSoon4Alarm = 21
-    case SensorRetiringSoon5Alarm = 22
-    case SensorRetiringSoon6Alarm = 23
-    case SensorRetiringSoon7Alarm = 36
-    case VeryLowBatteryAlarm = 24
-    case InvalidClockAlarm = 25
-    case TransmitterDisconnected = 27
-    case VibrationCurrentAlarm = 28
-    case MSPAlarm = 29
-    case CalibrationFailedAlert = 30
-    case CalibrationSuspiciousAlert = 31
-    case CalibrationNowAlarm = 32
-    case TransmitterEOL396 = 33
-    case TransmitterEOL366 = 34
-    case BatteryErrorAlarm = 35
-    case TransmitterEOL330 = 37
-    case TransmitterEOL395 = 38
-    case OneCal = 39
-    case CalibrationSuspicious2Alert = 40
-    case BatteryStatusAlarm = 41
-    case SensorConnection = 42
-    case EarlySensorRetirement = 43
-    case GeneralGlucoseSuspended = 44
-    case SensorGraceAlarm = 45
-    case SensorSyncConfirmedAlarm = 46
-    case TxDockedAlert = 47
-    case TxUndockedAlert = 48
-    case TransmitterReconnected = 49
-    case TransmitterKeepAliveNotReceived = 50
-    case TransmitterGlucoseStale = 51
-    case SystemTime = 52
-    case IncompatibleTx = 53
-    case SensorFile = 54
-    case SensorRelink = 55
-//    case NewPasswordDetected = 56
-    case BatteryOptimization = 57
-    case WarmUpPhaseCompleteAlert = 58
-    case ResetLogReport = 59
-    case InValidTx = 60
-//    case RomeSensorLinkFail = 61
-//    case RomeSensorUnlinkable = 62
-    case TxPairingError = 63
-    case TxPairingErrorOnKeyInvalid = 64
-    case TransmitterOrSensorConnectionLostDuringLinking = 65
-    case PairingMetricsError = 66
-    case SmfSyncFailed = 67
-    case OtaUpgradeComplete = 69
-    case NoAlarmActive = 74
+    case InvalidSensorAlarm = 8
+    case CalibrationRequiredAlarm = 11
+    case SeriouslyLowAlarm = 12
+    case SeriouslyHighAlarm = 13
+    case LowGlucoseAlarm = 14
+    case HighGlucoseAlarm = 15
+    case PredictiveLowAlarm = 18
+    case PredictiveHighAlarm = 19
+    case RateFallingAlarm = 20
+    case RateRisingAlarm = 21
+    case CalibrationGracePeriodAlarm = 22
+    case CalibrationExpiredAlarm = 23
+    case SensorRetiringSoon1Alarm = 24
+    case SensorRetiringSoon3Alarm = 26
+    case SensorRetiringSoon4Alarm = 27
+    case SensorRetiringSoon5Alarm = 28
+    case SensorRetiringSoon6Alarm = 29
+    case SensorRetiringSoon7Alarm = 53
+    case VeryLowBatteryAlarm = 31
+    case InvalidClockAlarm = 33
+    case SensorStability = 34
+    case TransmitterDisconnected = 35
+    case VibrationCurrentAlarm = 36
+    case MSPAlarm = 45
+    case CalibrationFailedAlert = 47
+    case CalibrationSuspiciousAlert = 48
+    case CalibrationNowAlarm = 49
+    case TransmitterEOL396 = 50
+    case TransmitterEOL366 = 51
+    case BatteryErrorAlarm = 52
+    case TransmitterEOL330 = 55
+    case TransmitterEOL395 = 56
+    case OneCal = 57
+    case CalibrationSuspicious2Alert = 59
+    case BatteryStatusAlarm = 60
+    case SensorConnection = 62
+    case EarlySensorRetirement = 64
+    case GeneralGlucoseSuspended = 65
+    case SensorGraceAlarm = 66
+    case SensorSyncConfirmedAlarm = 67
+    case TxDockedAlert = 68
+    case TxUndockedAlert = 69
+// Custom error codes in Eversense app
+//    case TransmitterReconnected = 1001
+//    case TransmitterKeepAliveNotReceived = 1002
+//    case TransmitterGlucoseStale = 1003
+//    case SystemTime = 1005
+//    case IncompatibleTx = 1007
+//    case SensorFile = 1008
+//    case SensorRelink = 1009
+//    case NewPasswordDetected = 1010
+//    case BatteryOptimization = 1012
+//    case WarmUpPhaseCompleteAlert = 1013
+//    case ResetLogReport = 1014
+//    case InValidTx = 1015
+//    case RomeSensorLinkFail = 1016
+//    case RomeSensorUnlinkable = 1017
+//    case TxPairingError = 1018
+//    case TxPairingErrorOnKeyInvalid = 1019
+//    case TransmitterOrSensorConnectionLostDuringLinking = 1020
+//    case PairingMetricsError = 1021
+//    case SmfSyncFailed = 1022
+//    case OtaUpgradeAvailable = 1023
+//    case OtaUpgradeComplete = 1024
+//    case OtaUpgradeError = 1025
+//    case OtaAttemptRestart = 1026
+//    case OtaUpgradeStatus = 1027
+//    case PlannedMaintenanceAlert = 2001
+//    case NoAlarmActive = 20000
+//    case TransmitterKeepAliveNotReceived = 1002
+//    case TransmitterGlucoseStale = 1003
+//    case SystemTime = 1005
+//    case IncompatibleTx = 1007
+//    case SensorFile = 1008
+//    case SensorRelink = 1009
+//    case NewPasswordDetected = 1010
+//    case BatteryOptimization = 1012
+//    case WarmUpPhaseCompleteAlert = 1013
+//    case ResetLogReport = 1014
+//    case InValidTx = 1015
+//    case RomeSensorLinkFail = 1016
+//    case RomeSensorUnlinkable = 1017
+//    case TxPairingError = 1018
+//    case TxPairingErrorOnKeyInvalid = 1019
+//    case TransmitterOrSensorConnectionLostDuringLinking = 1020
+//    case PairingMetricsError = 1021
+//    case SmfSyncFailed = 1022
+//    case OtaUpgradeAvailable = 1023
+//    case OtaUpgradeComplete = 1024
+//    case OtaUpgradeError = 1025
+//    case OtaAttemptRestart = 1026
+//    case OtaUpgradeStatus = 1027
+//    case PlannedMaintenanceAlert = 2001
+//    case NoAlarmActive = 20000
     case TwoCal = 90
     case unknown = 255
 
@@ -89,12 +121,8 @@ public enum Alarm: UInt8, Codable {
 
     var type: AlarmType {
         switch self {
-        case .BatteryOptimization,
-             .BatteryStatusAlarm,
-             .InValidTx,
+        case .BatteryStatusAlarm,
              .OneCal,
-             .OtaUpgradeComplete,
-             .ResetLogReport,
              .SensorRetiringSoon1Alarm,
              .SensorRetiringSoon3Alarm,
              .SensorRetiringSoon4Alarm,
@@ -102,8 +130,7 @@ public enum Alarm: UInt8, Codable {
              .SensorRetiringSoon6Alarm,
              .SensorRetiringSoon7Alarm,
              .SensorSyncConfirmedAlarm,
-             .TwoCal,
-             .WarmUpPhaseCompleteAlert:
+             .TwoCal:
             return .Info
 
         case .CalibrationFailedAlert,
@@ -214,39 +241,8 @@ public enum Alarm: UInt8, Codable {
             return LocalizedString("Transmitter Inactive", comment: "title for TxDockedAlert")
         case .TxUndockedAlert:
             return LocalizedString("Transmitter Active", comment: "title for TxUndockedAlert")
-        case .TransmitterReconnected:
-            return LocalizedString("Transmitter Connected", comment: "title for TransmitterReconnected")
-        case .TransmitterGlucoseStale,
-             .TransmitterKeepAliveNotReceived:
-            return LocalizedString("Data Unavailable", comment: "title for TransmitterKeepAliveNotReceived")
-        case .SystemTime:
-            return LocalizedString("System Time", comment: "title for SystemTime")
-        case .IncompatibleTx,
-             .InValidTx:
-            return LocalizedString("Incompatible Transmitter", comment: "title for IncompatibleTx")
-        case .SensorFile:
-            return LocalizedString("Sensor File", comment: "title for SensorFile")
-        case .SensorRelink:
-            return LocalizedString("Sensor Re-link", comment: "title for SensorRelink")
-        case .BatteryOptimization:
-            return LocalizedString("Battery optimization", comment: "title for BatteryOptimization")
-        case .WarmUpPhaseCompleteAlert:
-            return LocalizedString("Warm-Up Complete", comment: "title for WarmUpPhaseCompleteAlert")
-        case .ResetLogReport:
-            return LocalizedString("Transmitter Reset", comment: "title for ResetLogReport")
-        case .TxPairingError,
-             .TxPairingErrorOnKeyInvalid:
-            return LocalizedString("Pairing Error", comment: "title for TxPairingError")
-        case .TransmitterOrSensorConnectionLostDuringLinking:
-            return LocalizedString("Connection Lost", comment: "title for TransmitterOrSensorConnectionLostDuringLinking")
-        case .PairingMetricsError:
-            return LocalizedString("Pairing Metrics", comment: "title for PairingMetricsError")
-        case .SmfSyncFailed:
-            return LocalizedString("SMF Sync Failed", comment: "title for SmfSyncFailed")
-        case .NoAlarmActive:
-            return LocalizedString("", comment: "title for NoAlarmActive")
-        case .OtaUpgradeComplete:
-            return LocalizedString("", comment: "title for NoAlarmActive")
+        case .SensorStability:
+            return LocalizedString("Sensor Stability", comment: "title for unknown")
         case .unknown:
             return LocalizedString("Unknown error", comment: "title for unknown")
         }
@@ -369,9 +365,7 @@ public enum Alarm: UInt8, Codable {
                 "The connection between your sensor and transmitter is not stable. Please position your transmitter for better signal strength.",
                 comment: "description for SensorConnection"
             )
-        case .GeneralGlucoseSuspended,
-             .TransmitterGlucoseStale,
-             .TransmitterKeepAliveNotReceived:
+        case .GeneralGlucoseSuspended:
             return LocalizedString(
                 "Use your BG meter to monitor your glucose. Contact Eversense Customer Support if the issue persists.",
                 comment: "description for GeneralGlucoseSuspended"
@@ -385,30 +379,6 @@ public enum Alarm: UInt8, Codable {
             return LocalizedString(
                 "Your transmitter has synced with your sensor.",
                 comment: "description for SensorSyncConfirmedAlarm"
-            )
-        case .IncompatibleTx,
-             .InValidTx:
-            return LocalizedString(
-                "Incompatible transmitter detected. Please try again. If the error persists, contact Eversense Customer Support.",
-                comment: "description for IncompatibleTx"
-            )
-        case .SensorFile:
-            return LocalizedString(
-                "Unable to download sensor files. Please try again. If the error persists, contact Eversense Customer Support.",
-                comment: "description for SensorFile"
-            )
-        case .WarmUpPhaseCompleteAlert:
-            return LocalizedString("Your 24-hour Warm-up Phase is complete.", comment: "description for WarmUpPhaseCompleteAlert")
-        case .TxPairingError,
-             .TxPairingErrorOnKeyInvalid:
-            return LocalizedString(
-                "Please try again. If the error persists, contact Eversense Customer Support.",
-                comment: "description for TxPairingError"
-            )
-        case .TransmitterOrSensorConnectionLostDuringLinking:
-            return LocalizedString(
-                "Check the connection between the transmitter, app, and sensor.",
-                comment: "description for TransmitterOrSensorConnectionLostDuringLinking"
             )
         default:
             return nil

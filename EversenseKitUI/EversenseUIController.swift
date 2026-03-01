@@ -209,7 +209,6 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                 cgmManager.state.lastSynced = Date.now
                 cgmManager.state.activeAlarms = [
                     ActiveAlarm(code: .CalibrationNowAlarm, codeRaw: Alarm.CalibrationNowAlarm.rawValue, flag: 0, priority: 0),
-                    ActiveAlarm(code: .BatteryOptimization, codeRaw: Alarm.BatteryOptimization.rawValue, flag: 0, priority: 1),
                     ActiveAlarm(code: .PredictiveHighAlarm, codeRaw: Alarm.CalibrationNowAlarm.rawValue, flag: 0, priority: 2)
                 ]
 

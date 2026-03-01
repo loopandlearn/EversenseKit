@@ -103,18 +103,6 @@
         }
       }
     },
-    "Battery optimization" : {
-      "comment" : "title BatteryOptimization",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Battery optimization"
-          }
-        }
-      }
-    },
     "Battery percentage" : {
       "comment" : "transmitter battery level",
       "extractionState" : "manual",
@@ -259,18 +247,6 @@
         }
       }
     },
-    "Check the connection between the transmitter, app, and sensor." : {
-      "comment" : "description for TransmitterOrSensorConnectionLostDuringLinking",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check the connection between the transmitter, app, and sensor."
-          }
-        }
-      }
-    },
     "Choose your Eversense transmitter" : {
       "comment" : "Onboarding Header",
       "extractionState" : "manual",
@@ -331,18 +307,6 @@
         }
       }
     },
-    "Connection Lost" : {
-      "comment" : "title for TransmitterOrSensorConnectionLostDuringLinking",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connection Lost"
-          }
-        }
-      }
-    },
     "Continue" : {
       "comment" : "Text for continue button",
       "extractionState" : "manual",
@@ -375,18 +339,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Current phase"
-          }
-        }
-      }
-    },
-    "Data Unavailable" : {
-      "comment" : "title for TransmitterKeepAliveNotReceived",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Data Unavailable"
           }
         }
       }
@@ -751,30 +703,6 @@
         }
       }
     },
-    "Incompatible Transmitter" : {
-      "comment" : "title for IncompatibleTx",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Incompatible Transmitter"
-          }
-        }
-      }
-    },
-    "Incompatible transmitter detected. Please try again. If the error persists, contact Eversense Customer Support." : {
-      "comment" : "description for IncompatibleTx",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Incompatible transmitter detected. Please try again. If the error persists, contact Eversense Customer Support."
-          }
-        }
-      }
-    },
     "Information" : {
       "comment" : "The information section",
       "extractionState" : "manual",
@@ -1111,30 +1039,6 @@
         }
       }
     },
-    "Pairing Error" : {
-      "comment" : "title for TxPairingError",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pairing Error"
-          }
-        }
-      }
-    },
-    "Pairing Metrics" : {
-      "comment" : "title for PairingMetricsError",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pairing Metrics"
-          }
-        }
-      }
-    },
     "Password" : {
       "comment" : "Label for password",
       "extractionState" : "manual",
@@ -1155,18 +1059,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Placement Guide"
-          }
-        }
-      }
-    },
-    "Please try again. If the error persists, contact Eversense Customer Support." : {
-      "comment" : "description for TxPairingError",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please try again. If the error persists, contact Eversense Customer Support."
           }
         }
       }
@@ -1375,18 +1267,6 @@
         }
       }
     },
-    "Sensor File" : {
-      "comment" : "title for SensorFile",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sensor File"
-          }
-        }
-      }
-    },
     "Sensor is expired" : {
       "comment" : "title for SensorEol",
       "extractionState" : "manual",
@@ -1423,18 +1303,6 @@
         }
       }
     },
-    "Sensor Re-link" : {
-      "comment" : "title for SensorRelink",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sensor Re-link"
-          }
-        }
-      }
-    },
     "Sensor Replacement" : {
       "comment" : "title for SensorRetiredAlarm",
       "extractionState" : "manual",
@@ -1455,6 +1323,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sensor Retirement Area"
+          }
+        }
+      }
+    },
+    "Sensor Stability" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor Stability"
           }
         }
       }
@@ -1495,18 +1374,6 @@
         }
       }
     },
-    "SMF Sync Failed" : {
-      "comment" : "title for SmfSyncFailed",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SMF Sync Failed"
-          }
-        }
-      }
-    },
     "State" : {
       "comment" : "Transmitter state",
       "extractionState" : "manual",
@@ -1515,18 +1382,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "State"
-          }
-        }
-      }
-    },
-    "System Time" : {
-      "comment" : "title for SystemTime",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "System Time"
           }
         }
       }
@@ -1693,18 +1548,6 @@
         }
       }
     },
-    "Transmitter Connected" : {
-      "comment" : "title for TransmitterReconnected",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transmitter Connected"
-          }
-        }
-      }
-    },
     "Transmitter Disconnected" : {
       "comment" : "title for TransmitterDisconnected",
       "extractionState" : "manual",
@@ -1789,18 +1632,6 @@
         }
       }
     },
-    "Transmitter Reset" : {
-      "comment" : "title for ResetLogReport",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transmitter Reset"
-          }
-        }
-      }
-    },
     "Transmitter settings" : {
       "comment" : "go to transmitter settings",
       "extractionState" : "manual",
@@ -1821,18 +1652,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Transmitter State"
-          }
-        }
-      }
-    },
-    "Unable to download sensor files. Please try again. If the error persists, contact Eversense Customer Support." : {
-      "comment" : "description for SensorFile",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unable to download sensor files. Please try again. If the error persists, contact Eversense Customer Support."
           }
         }
       }
@@ -1909,18 +1728,6 @@
         }
       }
     },
-    "Warm-Up Complete" : {
-      "comment" : "title for WarmUpPhaseCompleteAlert",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Warm-Up Complete"
-          }
-        }
-      }
-    },
     "Weekly calibration" : {
       "comment" : "phase weekly calibration",
       "extractionState" : "manual",
@@ -1941,18 +1748,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Welcome!"
-          }
-        }
-      }
-    },
-    "Your 24-hour Warm-up Phase is complete." : {
-      "comment" : "description for WarmUpPhaseCompleteAlert",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your 24-hour Warm-up Phase is complete."
           }
         }
       }
