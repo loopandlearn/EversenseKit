@@ -52,9 +52,9 @@ extension EversenseCGMManager: CGMManagerUI {
     }
 
     public var cgmLifecycleProgress: (any LoopKit.DeviceLifecycleProgress)? {
-        if state.activeAlarms.contains(where: { Alarm.retiringSoonAlarms.contains($0.code) }) {
+        if let nextCalibration = state.nextCalibration, nextCalibration.addingTimeInterval(.days(-1)) >= Date.now {
             return EversenseLifecycleProgress(
-                percentComplete: 1 - (state.expiresAt.timeIntervalSinceNow / (state.is365 ? .days(365) : .days(180))),
+                percentComplete: 1 - (nextCalibration.timeIntervalSinceNow / .days(1)),
                 progressState: .warning
             )
         }
