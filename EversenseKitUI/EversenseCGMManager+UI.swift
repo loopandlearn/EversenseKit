@@ -54,7 +54,7 @@ extension EversenseCGMManager: CGMManagerUI {
     public var cgmLifecycleProgress: (any LoopKit.DeviceLifecycleProgress)? {
         if let nextCalibration = state.nextCalibration, nextCalibration.addingTimeInterval(.days(-1)) >= Date.now {
             return EversenseLifecycleProgress(
-                percentComplete: 1 - max((nextCalibration.timeIntervalSinceNow / .days(1)), 0),
+                percentComplete: 1 - max(nextCalibration.timeIntervalSinceNow / .days(1), 0),
                 progressState: nextCalibration >= Date.now ? .critical : .warning
             )
         }

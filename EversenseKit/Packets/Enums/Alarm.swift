@@ -54,7 +54,7 @@ public enum Alarm: UInt8, Codable {
     case SensorSyncConfirmedAlarm = 67
     case TxDockedAlert = 68
     case TxUndockedAlert = 69
-// Custom error codes in Eversense app
+    // Custom error codes in Eversense app
 //    case TransmitterReconnected = 1001
 //    case TransmitterKeepAliveNotReceived = 1002
 //    case TransmitterGlucoseStale = 1003
