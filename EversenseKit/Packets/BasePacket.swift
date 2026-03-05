@@ -196,6 +196,7 @@ enum Eversense365 {
 
     enum PushIds: UInt8 {
         case KeepAlive = 2
+        case AlarmWithData = 3
     }
 }
 

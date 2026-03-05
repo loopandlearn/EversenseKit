@@ -253,6 +253,21 @@ extension PeripheralManager: CBPeripheralDelegate {
             return
         }
 
+        if actualData[0] == Eversense365.PacketIds.NotificationId.rawValue,
+           actualData[1] == Eversense365.PushIds.AlarmWithData.rawValue
+        {
+            let packet = Eversense365.PushAlarmWithDataPacket()
+            let response = packet.parseResponse(data: actualData)
+            
+            DispatchQueue.main.async {
+                self.cgmManager.state.activeAlarms = [response.alarm]
+                self.cgmManager.notifyStateDidChange()
+            }
+
+            logger.debug("[365] Received alarm")
+            return
+        }
+
         if actualData[0] == EversenseE3.PacketIds.errorResponseId.rawValue {
             EversenseE3.handleError(data: actualData)
 

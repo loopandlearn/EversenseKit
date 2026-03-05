@@ -227,16 +227,17 @@ extension Eversense365 {
         }
     }
 
-    static func updateSignalStrength(cgmManager: EversenseCGMManager) {
+    static func updateSignalStrength(cgmManager: EversenseCGMManager) -> GetSignalStrenghtResponse? {
         do {
             logger.debug("sending GetSignalStrenghtResponse...")
             let signalStrength: GetSignalStrenghtResponse = try cgmManager.bluetoothManager.write(GetSignalStrenghtPacket())
             cgmManager.state.signalStrengthRaw = signalStrength.rawValue
             cgmManager.state.signalStrength = signalStrength.signalStrength
-
-            cgmManager.notifyStateDidChange()
+            
+            return signalStrength
         } catch {
             logger.error("Failed to update signal strength - error: \(error)")
+            return nil
         }
     }
 

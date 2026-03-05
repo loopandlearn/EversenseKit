@@ -1,10 +1,10 @@
 extension EversenseE3 {
     class GetSignalStrengthRawResponse {
-        let value: SignalStrength
+        let signalStrength: SignalStrength
         let rawValue: UInt16
 
-        init(value: SignalStrength, rawValue: UInt16) {
-            self.value = value
+        init(signalStrength: SignalStrength, rawValue: UInt16) {
+            self.signalStrength = signalStrength
             self.rawValue = rawValue
         }
     }
@@ -39,7 +39,7 @@ extension EversenseE3 {
                 signalStrength = SignalStrength.Poor
             }
 
-            return GetSignalStrengthRawResponse(value: signalStrength, rawValue: value)
+            return GetSignalStrengthRawResponse(signalStrength: signalStrength, rawValue: value)
         }
     }
 }

@@ -265,16 +265,17 @@ extension EversenseE3 {
         cgmManager.notifyStateDidChange()
     }
 
-    static func updateSignalStrength(cgmManager: EversenseCGMManager) {
+    static func updateSignalStrength(cgmManager: EversenseCGMManager) -> GetSignalStrengthRawResponse? {
         do {
             let rawSignalStrength: GetSignalStrengthRawResponse = try cgmManager.bluetoothManager
                 .write(GetSignalStrengthRawPacket())
-            cgmManager.state.signalStrength = rawSignalStrength.value
+            cgmManager.state.signalStrength = rawSignalStrength.signalStrength
             cgmManager.state.signalStrengthRaw = rawSignalStrength.rawValue
 
-            cgmManager.notifyStateDidChange()
+            return rawSignalStrength
         } catch {
             logger.error("Failed to update signal strength - error: \(error)")
+            return nil
         }
     }
 

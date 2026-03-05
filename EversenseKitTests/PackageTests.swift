@@ -91,4 +91,12 @@ struct PackageTest {
 
         #expect(result.glucoseInMgDl == 0)
     }
+
+    @Test func keepAlive() async throws {
+        let data = Data(hex: "44028ba79fe2c40000005851109fe2c4000000232b82e2c4000000")
+        let packet = Eversense365.PushKeepAlivePacket()
+        let result = packet.parseResponse(data: data)
+
+        #expect(result.batteryLevel != 0)
+    }
 }

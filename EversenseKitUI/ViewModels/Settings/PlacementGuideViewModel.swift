@@ -21,11 +21,10 @@ class PlacementGuideViewModel: ObservableObject {
             return
         }
 
-        stateDidUpdate(cgmManager.state)
-        cgmManager.addStateObserver(state: self, queue: .main)
-
-        // Start polling latest signal strength
-        updateSignalStrength(cgmManager: cgmManager)
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            self.updateSignalStrength(cgmManager: cgmManager)
+        }
     }
 
     public func stop() {
@@ -37,28 +36,25 @@ class PlacementGuideViewModel: ObservableObject {
             return
         }
 
-        Task {
-            if cgmManager.state.is365 {
-                Eversense365.updateSignalStrength(cgmManager: cgmManager)
-            } else {
-                EversenseE3.updateSignalStrength(cgmManager: cgmManager)
+        if cgmManager.state.is365 {
+            if let response = Eversense365.updateSignalStrength(cgmManager: cgmManager) {
+                DispatchQueue.main.async {
+                    self.lastUpdate = self.dateFormatter.string(from: Date.now)
+                    self.strength = response.signalStrength
+                    self.strengthRaw = min(response.rawValue, 100)
+                }
             }
-
-            try await Task.sleep(nanoseconds: 500_000_000) // .5s waiting
-            updateSignalStrength(cgmManager: cgmManager)
-        }
-    }
-}
-
-extension PlacementGuideViewModel: StateObserver {
-    func stateDidUpdate(_ state: EversenseCGMState) {
-        lastUpdate = dateFormatter.string(from: Date.now)
-        strength = state.signalStrength
-
-        if state.is365 {
-            strengthRaw = min(state.signalStrengthRaw, 100)
         } else {
-            strengthRaw = state.signalStrengthRaw / 20
+            if let response = EversenseE3.updateSignalStrength(cgmManager: cgmManager) {
+                DispatchQueue.main.async {
+                    self.lastUpdate = self.dateFormatter.string(from: Date.now)
+                    self.strength = response.signalStrength
+                    self.strengthRaw = response.rawValue / 20
+                }
+            }
         }
+
+        Thread.sleep(forTimeInterval: .seconds(0.5))
+        updateSignalStrength(cgmManager: cgmManager)
     }
 }
