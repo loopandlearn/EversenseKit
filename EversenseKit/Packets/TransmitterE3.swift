@@ -251,7 +251,7 @@ extension EversenseE3 {
             // Get signal strength
             let rawSignalStrength: GetSignalStrengthRawResponse = try peripheralManager
                 .write(GetSignalStrengthRawPacket())
-            cgmManager.state.signalStrength = rawSignalStrength.value
+            cgmManager.state.signalStrength = rawSignalStrength.signalStrength
             cgmManager.state.signalStrengthRaw = rawSignalStrength.rawValue
 
             logger.info("[E3] Sync completed - timestamp: \(Date.now)")
