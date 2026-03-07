@@ -199,7 +199,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                 cgmManager.state.recentGlucoseTrend = .flat
                 cgmManager.state.signalStrength = .Good
                 cgmManager.state.signalStrengthRaw = 1350
-                cgmManager.state.batteryPercentage = 25
+                cgmManager.state.batteryPercentage = 75
                 cgmManager.state.calibrationMode = .WeeklySingle
                 cgmManager.state.calibrationPhase = .DAILY_CALIBRATION
                 cgmManager.state.calibrationReadiness = .Ready
