@@ -106,10 +106,6 @@ extension EversenseE3 {
                     .write(SetCurrentDateTimePacket())
             }
 
-            let communicationVersion: GetCommunicationVersionResponse = try peripheralManager
-                .write(GetCommunicationVersionPacket())
-            cgmManager.state.communicationProtocol = communicationVersion.version
-
             // Get MMA Features
             let mmaResponse: GetMmaFeaturesResponse = try peripheralManager
                 .write(GetMmaFeaturesPacket())

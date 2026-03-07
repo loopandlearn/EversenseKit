@@ -20,11 +20,11 @@ extension EversenseE3 {
         }
 
         func getRequestData() -> Data {
-            var data = Data([PacketIds.sendBloodGlucoseDataWithTwoTimestampsCommandId.rawValue])
+            var data = Data([PacketIds.sendBloodGlucoseDataCommandId.rawValue])
             data.append(timestamp.toUnix2000())
             data.append(Date.now.toUnix2000())
             data.append(BinaryOperations.dataFrom16Bits(value: glucoseInMgDl))
-            data.append(Data([0x00, 0x00, 0x00, 0x55]))
+            data.append(0x55)
 
             let checksum = BinaryOperations.generateChecksumCRC16(data: data)
             data.append(BinaryOperations.dataFrom16Bits(value: checksum))
