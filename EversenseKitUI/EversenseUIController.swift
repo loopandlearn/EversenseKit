@@ -205,7 +205,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                 cgmManager.state.calibrationReadiness = .Ready
                 cgmManager.state.activatedAt = Date.now
                 cgmManager.state.lastCalibration = Date.now
-                cgmManager.state.nextCalibration = Date.now.addingTimeInterval(TimeInterval(days: 7))
+                cgmManager.state.nextCalibration = Date.now.addingTimeInterval(.hours(17))
                 cgmManager.state.lastSynced = Date.now
                 cgmManager.state.activeAlarms = [
                     ActiveAlarm(code: .CalibrationNowAlarm, codeRaw: Alarm.CalibrationNowAlarm.rawValue, flag: 0, priority: 0),

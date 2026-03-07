@@ -106,6 +106,10 @@ extension EversenseE3 {
                     .write(SetCurrentDateTimePacket())
             }
 
+            let communicationVersion: GetCommunicationVersionResponse = try peripheralManager
+                .write(GetCommunicationVersionPacket())
+            cgmManager.state.communicationProtocol = communicationVersion.version
+
             // Get MMA Features
             let mmaResponse: GetMmaFeaturesResponse = try peripheralManager
                 .write(GetMmaFeaturesPacket())
@@ -352,7 +356,7 @@ extension EversenseE3 {
             logger.info("Sending SetBloodGlucosePointPacket - glucose: \(glucoseInMgDl)mg/dl, timestamp: \(timestamp)")
 
             let _: SetBloodGlucosePointResponse = try cgmManager.bluetoothManager
-                .write(SetBloodGlucosePointPacket(glucoseInMgDl: glucoseInMgDl, timestamp: timestamp))
+                .write(SetBloodGlucosePointPacket(glucoseInMgDl: glucoseInMgDl, timestamp: timestamp), timeout: .seconds(15))
 
             logger.info("[E3] Calibation has been send - timestamp: \(Date.now)")
         } catch {

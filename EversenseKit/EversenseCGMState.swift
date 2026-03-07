@@ -13,7 +13,7 @@ public enum ConnectionStatus: UInt8 {
         case .connecting:
             return LocalizedString("Connecting", comment: "connection status connecting")
         case .connected:
-            return LocalizedString("Connected", comment: "connection status connected")
+            return LocalizedString("Operational", comment: "connection status connected")
         }
     }
 }

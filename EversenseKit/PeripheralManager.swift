@@ -258,7 +258,7 @@ extension PeripheralManager: CBPeripheralDelegate {
         {
             let packet = Eversense365.PushAlarmWithDataPacket()
             let response = packet.parseResponse(data: actualData)
-            
+
             DispatchQueue.main.async {
                 self.cgmManager.state.activeAlarms = [response.alarm]
                 self.cgmManager.notifyStateDidChange()
