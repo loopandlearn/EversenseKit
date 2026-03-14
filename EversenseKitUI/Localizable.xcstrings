@@ -251,6 +251,18 @@
         }
       }
     },
+    "Charging" : {
+      "comment" : "battery charging",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charging"
+          }
+        }
+      }
+    },
     "Choose your Eversense transmitter" : {
       "comment" : "Onboarding Header",
       "extractionState" : "manual",

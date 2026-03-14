@@ -118,7 +118,11 @@ extension EversenseSettingsViewModel: StateObserver {
             .map { item in ActiveAlarmItem(code: item.code, codeRaw: item.codeRaw, priority: item.priority) }
 
         batteryLevel = "\(state.batteryPercentage)"
-        if state.batteryPercentage > 90 {
+        if state.batteryPercentage == 255 {
+            batteryLevel = LocalizedString("Charging", comment: "battery charging")
+            batteryIcon = "battery.100.bolt"
+            batteryIconColor = .green
+        } else if state.batteryPercentage > 90 {
             batteryIcon = "battery.100"
             batteryIconColor = .green
         } else if state.batteryPercentage > 65 {

@@ -293,7 +293,6 @@
 				en,
 				Base,
 				de,
-				he,
 				ar,
 				"zh-Hans",
 				ja,
