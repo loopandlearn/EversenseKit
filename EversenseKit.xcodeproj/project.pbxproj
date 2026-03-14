@@ -306,7 +306,6 @@
 				cs,
 				tr,
 				pl,
-				vi,
 				ru,
 				fr,
 				fi,
