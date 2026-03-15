@@ -257,12 +257,12 @@ struct EversenseSettingsView: View {
     }
 
     @ViewBuilder private var transmitterBattery: some View {
-        VStack(alignment: .trailing) {
+        VStack(alignment: .trailing, spacing: 0) {
             Text(LocalizedString("Battery", comment: "Transmitter name"))
                 .foregroundColor(Color(UIColor.secondaryLabel))
             HStack(alignment: .center, spacing: 5) {
-                Image(systemName: viewModel.batteryIcon)
-                    .foregroundStyle(viewModel.batteryIconColor)
+                BatteryView(batteryLevel: viewModel.batteryPercentage)
+                    .frame(width: 35, height: 16)
 
                 HStack(alignment: .firstTextBaseline, spacing: 3) {
                     Text(viewModel.batteryLevel)
@@ -270,9 +270,11 @@ struct EversenseSettingsView: View {
                         .fontWeight(.heavy)
                         .fixedSize()
 
-                    Text("%")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                    if viewModel.batteryPercentage <= 1 {
+                        Text("%")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
         }

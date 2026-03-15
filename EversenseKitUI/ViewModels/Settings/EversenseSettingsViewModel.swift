@@ -24,8 +24,7 @@ class EversenseSettingsViewModel: ObservableObject {
     @Published var nextCalibrationHours: Double = 0
     @Published var nextCalibrationMinutes: Double = 0
     @Published var batteryLevel: String = "0"
-    @Published var batteryIcon: String = "battery.0"
-    @Published var batteryIconColor: Color = .red
+    @Published var batteryPercentage: Double = 0
     @Published var signalStrength: String = ""
     @Published var connectionStatus: String = ""
     @Published var lastSync: String = ""
@@ -117,26 +116,12 @@ extension EversenseSettingsViewModel: StateObserver {
             .filter { $0.code.type != .Info }
             .map { item in ActiveAlarmItem(code: item.code, codeRaw: item.codeRaw, priority: item.priority) }
 
-        batteryLevel = "\(state.batteryPercentage)"
         if state.batteryPercentage == 255 {
             batteryLevel = LocalizedString("Charging", comment: "battery charging")
-            batteryIcon = "battery.100.bolt"
-            batteryIconColor = .green
-        } else if state.batteryPercentage > 90 {
-            batteryIcon = "battery.100"
-            batteryIconColor = .green
-        } else if state.batteryPercentage > 65 {
-            batteryIcon = "battery.75"
-            batteryIconColor = .green
-        } else if state.batteryPercentage > 35 {
-            batteryIcon = "battery.50"
-            batteryIconColor = .green
-        } else if state.batteryPercentage > 5 {
-            batteryIcon = "battery.25"
-            batteryIconColor = .orange
+            batteryPercentage = 1.1
         } else {
-            batteryIcon = "battery.0"
-            batteryIconColor = .red
+            batteryLevel = "\(state.batteryPercentage)"
+            batteryPercentage = Double(state.batteryPercentage) / 100
         }
 
         if let value = state.recentGlucoseInMgDl {
