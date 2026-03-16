@@ -19,10 +19,12 @@ class EversenseSettingsViewModel: ObservableObject {
     @Published var nextCalibrationTime: String = ""
     @Published var nextCalibrationDate: String = ""
     @Published var nextCalibrationProcess: Double = 0
+    @Published var nextCalibrationProcessColor: Color = .accentColor
     @Published var nextCalibrationDays: Double = 0
     @Published var nextCalibrationHours: Double = 0
     @Published var nextCalibrationMinutes: Double = 0
-    @Published var batteryLevel: String = "0%"
+    @Published var batteryLevel: String = "0"
+    @Published var batteryPercentage: Double = 0
     @Published var signalStrength: String = ""
     @Published var connectionStatus: String = ""
     @Published var lastSync: String = ""
@@ -109,12 +111,18 @@ extension EversenseSettingsViewModel: StateObserver {
         calibrationReadiness = state.calibrationReadiness
         insertionDate = dateFormatter.string(from: state.activatedAt)
         insertionTime = timeFormatter.string(from: state.activatedAt)
-
         signalStrength = state.signalStrength.title
-        batteryLevel = "\(state.batteryPercentage)%"
         activeAlarm = state.activeAlarms
             .filter { $0.code.type != .Info }
             .map { item in ActiveAlarmItem(code: item.code, codeRaw: item.codeRaw, priority: item.priority) }
+
+        if state.batteryPercentage == 255 {
+            batteryLevel = LocalizedString("Charging", comment: "battery charging")
+            batteryPercentage = 1.1
+        } else {
+            batteryLevel = "\(state.batteryPercentage)"
+            batteryPercentage = Double(state.batteryPercentage) / 100
+        }
 
         if let value = state.recentGlucoseInMgDl {
             lastMeasurement = HKQuantity(unit: .milligramsPerDeciliter, doubleValue: Double(value))
@@ -142,6 +150,14 @@ extension EversenseSettingsViewModel: StateObserver {
             nextCalibrationDays = max(floor(nextCalibrationIn / .days(1)), 0)
             nextCalibrationHours = max(floor(nextCalibrationIn.truncatingRemainder(dividingBy: .days(1)) / .hours(1)), 0)
             nextCalibrationMinutes = max(floor(nextCalibrationIn.truncatingRemainder(dividingBy: .hours(1)) / .minutes(1)), 0)
+
+            if nextCalibrationProcess == 1 {
+                nextCalibrationProcessColor = .red
+            } else if nextCalibrationIn <= .hours(24) {
+                nextCalibrationProcessColor = .orange
+            } else {
+                nextCalibrationProcessColor = .accentColor
+            }
         }
     }
 }

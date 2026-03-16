@@ -55,12 +55,13 @@ struct EversenseSettingsView: View {
                     ProgressView(value: viewModel.nextCalibrationProcess)
                         .scaleEffect(x: 1, y: 4, anchor: .center)
                         .padding(.top, 2)
+                        .tint(viewModel.nextCalibrationProcessColor)
                 }
 
                 HStack(alignment: .top) {
                     transmitterState
                     Spacer()
-                    transmitterSerial
+                    transmitterBattery
                 }
                 .padding(.bottom, 5)
 
@@ -143,6 +144,10 @@ struct EversenseSettingsView: View {
                 comment: "transmitter section"
             ))) {
                 SectionItem(
+                    title: LocalizedString("Transmitter name", comment: "name"),
+                    value: viewModel.transmitterName
+                )
+                SectionItem(
                     title: LocalizedString("Current phase", comment: "current phase"),
                     value: viewModel.currentPhase
                 )
@@ -152,7 +157,7 @@ struct EversenseSettingsView: View {
                 )
                 SectionItem(
                     title: LocalizedString("Battery percentage", comment: "transmitter battery level"),
-                    value: viewModel.batteryLevel
+                    value: viewModel.batteryLevel + "%"
                 )
                 HStack {
                     Text(LocalizedString("Insertion date", comment: "insertiondate"))
@@ -243,29 +248,42 @@ struct EversenseSettingsView: View {
     @ViewBuilder private var transmitterState: some View {
         VStack(alignment: .leading) {
             Text(LocalizedString("State", comment: "Transmitter state"))
+                .foregroundColor(Color(UIColor.secondaryLabel))
+            Text(viewModel.connectionStatus)
+                .font(.title3)
                 .fontWeight(.heavy)
                 .fixedSize()
-            Text(viewModel.connectionStatus)
-                .foregroundColor(.secondary)
-                .textSelection(.enabled)
         }
     }
 
-    @ViewBuilder private var transmitterSerial: some View {
-        VStack(alignment: .trailing) {
-            Text(LocalizedString("Name", comment: "Transmitter name"))
-                .fontWeight(.heavy)
-                .fixedSize()
-            Text(viewModel.transmitterName)
-                .foregroundColor(.secondary)
-                .textSelection(.enabled)
+    @ViewBuilder private var transmitterBattery: some View {
+        VStack(alignment: .trailing, spacing: 0) {
+            Text(LocalizedString("Battery", comment: "Transmitter name"))
+                .foregroundColor(Color(UIColor.secondaryLabel))
+            HStack(alignment: .center, spacing: 5) {
+                BatteryView(batteryLevel: viewModel.batteryPercentage)
+                    .frame(width: 35, height: 16)
+
+                HStack(alignment: .firstTextBaseline, spacing: 3) {
+                    Text(viewModel.batteryLevel)
+                        .font(.title3)
+                        .fontWeight(.heavy)
+                        .fixedSize()
+
+                    if viewModel.batteryPercentage <= 1 {
+                        Text("%")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
         }
     }
 
     @ViewBuilder private var calibarationTimer: some View {
-        HStack(alignment: .bottom) {
+        HStack(alignment: .bottom, spacing: 10) {
             if viewModel.nextCalibrationDays > 0 {
-                Group {
+                HStack(alignment: .firstTextBaseline, spacing: 3) {
                     Text("\(viewModel.nextCalibrationDays, specifier: "%.0f")")
                         .font(.system(size: 28))
                         .fontWeight(.heavy)
@@ -275,7 +293,7 @@ struct EversenseSettingsView: View {
                 }
             }
             if viewModel.nextCalibrationHours > 0 {
-                Group {
+                HStack(alignment: .firstTextBaseline, spacing: 3) {
                     Text("\(viewModel.nextCalibrationHours, specifier: "%.0f")")
                         .font(.system(size: 28))
                         .fontWeight(.heavy)
@@ -285,7 +303,7 @@ struct EversenseSettingsView: View {
                 }
             }
             if viewModel.nextCalibrationDays == 0 {
-                Group {
+                HStack(alignment: .firstTextBaseline, spacing: 3) {
                     Text("\(viewModel.nextCalibrationMinutes, specifier: "%.0f")")
                         .font(.system(size: 28))
                         .fontWeight(.heavy)

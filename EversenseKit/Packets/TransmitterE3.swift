@@ -352,7 +352,7 @@ extension EversenseE3 {
             logger.info("Sending SetBloodGlucosePointPacket - glucose: \(glucoseInMgDl)mg/dl, timestamp: \(timestamp)")
 
             let _: SetBloodGlucosePointResponse = try cgmManager.bluetoothManager
-                .write(SetBloodGlucosePointPacket(glucoseInMgDl: glucoseInMgDl, timestamp: timestamp))
+                .write(SetBloodGlucosePointPacket(glucoseInMgDl: glucoseInMgDl, timestamp: timestamp), timeout: .seconds(15))
 
             logger.info("[E3] Calibation has been send - timestamp: \(Date.now)")
         } catch {

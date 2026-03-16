@@ -233,7 +233,7 @@ extension Eversense365 {
             let signalStrength: GetSignalStrenghtResponse = try cgmManager.bluetoothManager.write(GetSignalStrenghtPacket())
             cgmManager.state.signalStrengthRaw = signalStrength.rawValue
             cgmManager.state.signalStrength = signalStrength.signalStrength
-            
+
             return signalStrength
         } catch {
             logger.error("Failed to update signal strength - error: \(error)")
