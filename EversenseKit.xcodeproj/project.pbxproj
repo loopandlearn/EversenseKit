@@ -298,7 +298,7 @@
 				ja,
 				nb,
 				es,
-				pt_BR,
+				pt-BR,
 				da,
 				it,
 				sk,
