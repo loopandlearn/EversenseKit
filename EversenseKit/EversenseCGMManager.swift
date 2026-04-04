@@ -134,8 +134,8 @@ public class EversenseCGMManager: CGMManager {
 
 extension EversenseCGMManager {
     public func fetchNewDataIfNeeded(_ completion: @escaping (CGMReadingResult) -> Void) {
-        logger.debug("Skipping fetchNewDataIfNeeded...")
         completion(.noData)
+        heartbeathOperation { }
     }
 
     /// Responsible for handling fetching Glucose data when ready
@@ -170,14 +170,18 @@ extension EversenseCGMManager {
                     cgmManager: self,
                     lastGlucoseTimestamp: lastGlucoseTimestamp
                 )
-                EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                if !samples.isEmpty {
+                    EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                }
             } else {
                 samples = Eversense365.readGlucoseData(
                     peripheralManager: peripheralManager,
                     cgmManager: self,
                     lastGlucoseTimestamp: lastGlucoseTimestamp
                 )
-                Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                if !samples.isEmpty {
+                    Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                }
             }
 
             if !samples.isEmpty {

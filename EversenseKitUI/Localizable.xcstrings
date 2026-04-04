@@ -1,6 +1,12 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
+    "%" : {
+
+    },
     "%.0f" : {
       "comment" : "A view that displays the number of hours and minutes until the next calibration of the Eversense device.",
       "extractionState" : "manual",
@@ -126,6 +132,9 @@
           }
         }
       }
+    },
+    "%u" : {
+
     },
     "1 Weekly Calibration Phase" : {
       "comment" : "title for OneCal",
@@ -3278,6 +3287,7 @@
       }
     },
     "Connecting" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -10836,6 +10846,7 @@
       }
     },
     "Operational" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -14236,6 +14247,7 @@
       }
     },
     "Sensor Stability" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

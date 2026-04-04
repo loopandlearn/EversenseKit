@@ -54,7 +54,7 @@ class PlacementGuideViewModel: ObservableObject {
             }
         }
 
-        Thread.sleep(forTimeInterval: .seconds(0.5))
+        Thread.sleep(forTimeInterval: .seconds(0.2))
         updateSignalStrength(cgmManager: cgmManager)
     }
 }
