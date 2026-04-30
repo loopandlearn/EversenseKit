@@ -18,15 +18,15 @@ struct TransmitterSettingsView: View {
     @ObservedObject var viewModel: TransmitterSettingsViewModel
 
     func timeFormatter(_ time: TimeInterval) -> String {
-        String(format: "%.0f", time.minutes) + " " + LocalizedString("min", comment: "minute")
+        String(format: "%.0f", time.minutes) + " " + String(localized: "min", comment: "minute")
     }
 
     var body: some View {
         VStack {
             List {
                 toggleRow(
-                    label: LocalizedString("Enable transmitter vibration", comment: "label vibration mode"),
-                    hint: LocalizedString(
+                    label: Text("Enable transmitter vibration", comment: "label vibration mode"),
+                    hint: Text(
                         "Disable this value if you wish to not receive any alerts from your transmitter",
                         comment: "hint vibration mode"
                     ),
@@ -34,8 +34,8 @@ struct TransmitterSettingsView: View {
                 )
 
                 valueRow(
-                    labelValue: LocalizedString("Glucose low", comment: "label glucose low"),
-                    hint: LocalizedString(
+                    labelValue: Text("Glucose low", comment: "label glucose low"),
+                    hint: Text(
                         "Configure when to receive an alert for low glucose",
                         comment: "hint glucose low"
                     ),
@@ -45,9 +45,9 @@ struct TransmitterSettingsView: View {
                 )
 
                 toggleValueRow(
-                    labelToggle: LocalizedString("Enable high glucose alerts", comment: "label toggle glucose high alert"),
-                    labelValue: LocalizedString("Glucose high", comment: "label glucose high"),
-                    hint: LocalizedString(
+                    labelToggle: Text("Enable high glucose alerts", comment: "label toggle glucose high alert"),
+                    labelValue: Text("Glucose high", comment: "label glucose high"),
+                    hint: Text(
                         "Enable this value if you wish to receive alerts from your transmitter if you exceed a high glucose",
                         comment: "hint glucose high"
                     ),
@@ -58,9 +58,9 @@ struct TransmitterSettingsView: View {
                 )
 
                 toggleValueRateRow(
-                    labelToggle: LocalizedString("Rising alarming enabled", comment: "label rising alarming enabled"),
-                    labelValue: LocalizedString("Rate change", comment: "label alarming rate change"),
-                    hint: LocalizedString(
+                    labelToggle: Text("Rising alarming enabled", comment: "label rising alarming enabled"),
+                    labelValue: Text("Rate change", comment: "label alarming rate change"),
+                    hint: Text(
                         "The transmitter can alarm you if you are rising too fast",
                         comment: "hint rising alarming"
                     ),
@@ -71,9 +71,9 @@ struct TransmitterSettingsView: View {
                 )
 
                 toggleValueRateRow(
-                    labelToggle: LocalizedString("Falling alarming enabled", comment: "label falling alarming enabled"),
-                    labelValue: LocalizedString("Rate change", comment: "label alarming rate change"),
-                    hint: LocalizedString(
+                    labelToggle: Text("Falling alarming enabled", comment: "label falling alarming enabled"),
+                    labelValue: Text("Rate change", comment: "label alarming rate change"),
+                    hint: Text(
                         "The transmitter can alarm you if you are falling too fast",
                         comment: "hint falling alarming"
                     ),
@@ -84,13 +84,13 @@ struct TransmitterSettingsView: View {
                 )
 
                 togglePredictionRow(
-                    labelToggle: LocalizedString(
+                    labelToggle: Text(
                         "Prediction high alarming enabled",
                         comment: "label prediction high alarming enabled"
                     ),
-                    labelTime: LocalizedString("Prediction period", comment: "label prediction period"),
-                    labelThreshold: LocalizedString("Prediction target", comment: "label prediction target"),
-                    hint: LocalizedString(
+                    labelTime: Text("Prediction period", comment: "label prediction period"),
+                    labelThreshold: Text("Prediction target", comment: "label prediction target"),
+                    hint: Text(
                         "The transmitter can alarm you if it predictions you are rising above the threshold",
                         comment: "hint rising prediction"
                     ),
@@ -104,13 +104,13 @@ struct TransmitterSettingsView: View {
                 )
 
                 togglePredictionRow(
-                    labelToggle: LocalizedString(
+                    labelToggle: Text(
                         "Prediction Low alarming enabled",
                         comment: "label prediction high alarming enabled"
                     ),
-                    labelTime: LocalizedString("Prediction period", comment: "label prediction period"),
-                    labelThreshold: LocalizedString("Prediction target", comment: "label prediction target"),
-                    hint: LocalizedString(
+                    labelTime: Text("Prediction period", comment: "label prediction period"),
+                    labelThreshold: Text("Prediction target", comment: "label prediction target"),
+                    hint: Text(
                         "The transmitter can alarm you if it predictions you are falling below the threshold",
                         comment: "hint falling prediction"
                     ),
@@ -125,7 +125,7 @@ struct TransmitterSettingsView: View {
 
                 Section {
                     HStack {
-                        Text(LocalizedString("Low Snooze", comment: "label low snooze"))
+                        Text("Low Snooze", comment: "label low snooze")
                             .foregroundStyle(pickerRepeatLow ? .blue : .primary)
                         Spacer()
                         Text(timeFormatter(viewModel.repeatLow))
@@ -144,7 +144,7 @@ struct TransmitterSettingsView: View {
                     }
 
                     HStack {
-                        Text(LocalizedString("High Snooze", comment: "label high snooze"))
+                        Text("High Snooze", comment: "label high snooze")
                             .foregroundStyle(pickerRepeatHigh ? .blue : .primary)
                         Spacer()
                         Text(timeFormatter(viewModel.repeatHigh))
@@ -162,17 +162,17 @@ struct TransmitterSettingsView: View {
                         )
                     }
                 } footer: {
-                    Text(LocalizedString(
+                    Text(
                         "Configure how much time should be configured between each low or high glucose alert",
                         comment: "label lowhigh snooze"
-                    ))
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                    )
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
                 }
 
                 Section {
                     HStack {
-                        Text(LocalizedString("BLE disconnect alert", comment: "label ble disconnect"))
+                        Text("BLE disconnect alert", comment: "label ble disconnect")
                             .foregroundStyle(pickerBleDisconnect ? .blue : .primary)
                         Spacer()
                         Text(timeFormatter(viewModel.bleDisconnect))
@@ -190,12 +190,12 @@ struct TransmitterSettingsView: View {
                         )
                     }
                 } footer: {
-                    Text(LocalizedString(
+                    Text(
                         "Configure how long the transmitter is allowed to be disconnected from your phone",
                         comment: "label ble disconnect footer"
-                    ))
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                    )
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
                 }
             }
 
@@ -210,34 +210,34 @@ struct TransmitterSettingsView: View {
                 if viewModel.loading {
                     ActivityIndicator(isAnimating: .constant(true), style: .medium)
                 } else {
-                    Text(LocalizedString("Save", comment: "Text for continue button"))
+                    Text("Save", comment: "Text for continue button")
                 }
             }
             .buttonStyle(ActionButtonStyle())
             .padding([.bottom, .horizontal])
             .disabled(viewModel.loading)
         }
-        .navigationBarTitle(LocalizedString("Transmitter settings", comment: "Title for user options"))
+        .navigationBarTitle(String(localized: "Transmitter settings", comment: "Title for user options"))
     }
 
-    @ViewBuilder private func toggleRow(label: String, hint: String, value: Binding<Bool>) -> some View {
+    @ViewBuilder private func toggleRow(label: Text, hint: Text, value: Binding<Bool>) -> some View {
         Section {
             VStack(alignment: .leading, spacing: 20) {
                 Toggle(isOn: value) {
-                    Text(label)
+                    label
                 }
             }
         } footer: {
-            Text(hint)
+            hint
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
     }
 
     @ViewBuilder private func toggleValueRateRow(
-        labelToggle: String,
-        labelValue: String,
-        hint: String,
+        labelToggle: Text,
+        labelValue: Text,
+        hint: Text,
         statePicker: Binding<Bool>,
         valueToggle: Binding<Bool>,
         valueValue: Binding<Double>,
@@ -246,12 +246,12 @@ struct TransmitterSettingsView: View {
         Section {
             VStack(alignment: .leading, spacing: 20) {
                 Toggle(isOn: valueToggle) {
-                    Text(labelToggle)
+                    labelToggle
                 }
 
                 if valueToggle.wrappedValue {
                     HStack {
-                        Text(labelValue)
+                        labelValue
                             .foregroundStyle(statePicker.wrappedValue ? .blue : .primary)
                         Spacer()
                         Text(viewModel.toRateFormatted(valueValue.wrappedValue))
@@ -271,16 +271,16 @@ struct TransmitterSettingsView: View {
                 }
             }
         } footer: {
-            Text(hint)
+            hint
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
     }
 
     @ViewBuilder private func toggleValueRow(
-        labelToggle: String,
-        labelValue: String,
-        hint: String,
+        labelToggle: Text,
+        labelValue: Text,
+        hint: Text,
         statePicker: Binding<Bool>,
         valueToggle: Binding<Bool>,
         valueValue: Binding<Double>,
@@ -289,12 +289,12 @@ struct TransmitterSettingsView: View {
         Section {
             VStack(alignment: .leading, spacing: 20) {
                 Toggle(isOn: valueToggle) {
-                    Text(labelToggle)
+                    labelToggle
                 }
 
                 if valueToggle.wrappedValue {
                     HStack {
-                        Text(labelValue)
+                        labelValue
                             .foregroundStyle(statePicker.wrappedValue ? .blue : .primary)
                         Spacer()
                         Text(displayGlucosePreference.format(viewModel.toHkQuantity(valueValue.wrappedValue)))
@@ -314,17 +314,17 @@ struct TransmitterSettingsView: View {
                 }
             }
         } footer: {
-            Text(hint)
+            hint
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
     }
 
     @ViewBuilder private func togglePredictionRow(
-        labelToggle: String,
-        labelTime: String,
-        labelThreshold: String,
-        hint: String,
+        labelToggle: Text,
+        labelTime: Text,
+        labelThreshold: Text,
+        hint: Text,
         stateTimePicker: Binding<Bool>,
         stateThresholdPicker: Binding<Bool>,
         valueToggle: Binding<Bool>,
@@ -336,12 +336,12 @@ struct TransmitterSettingsView: View {
         Section {
             VStack(alignment: .leading, spacing: 20) {
                 Toggle(isOn: valueToggle) {
-                    Text(labelToggle)
+                    labelToggle
                 }
 
                 if valueToggle.wrappedValue {
                     HStack {
-                        Text(labelTime)
+                        labelTime
                             .foregroundStyle(stateTimePicker.wrappedValue ? .blue : .primary)
                         Spacer()
                         Text(timeFormatter(valueTime.wrappedValue))
@@ -360,7 +360,7 @@ struct TransmitterSettingsView: View {
                     }
 
                     HStack {
-                        Text(labelThreshold)
+                        labelThreshold
                             .foregroundStyle(stateThresholdPicker.wrappedValue ? .blue : .primary)
                         Spacer()
                         Text(displayGlucosePreference.format(viewModel.toHkQuantity(valueThreshold.wrappedValue)))
@@ -380,15 +380,15 @@ struct TransmitterSettingsView: View {
                 }
             }
         } footer: {
-            Text(hint)
+            hint
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
     }
 
     @ViewBuilder private func valueRow(
-        labelValue: String,
-        hint: String,
+        labelValue: Text,
+        hint: Text,
         statePicker: Binding<Bool>,
         valueValue: Binding<Double>,
         allowedOptions: [Double]
@@ -396,7 +396,7 @@ struct TransmitterSettingsView: View {
         Section {
             VStack(alignment: .leading, spacing: 20) {
                 HStack {
-                    Text(labelValue)
+                    labelValue
                         .foregroundStyle(statePicker.wrappedValue ? .blue : .primary)
                     Spacer()
                     Text(displayGlucosePreference.format(viewModel.toHkQuantity(valueValue.wrappedValue)))
@@ -415,7 +415,7 @@ struct TransmitterSettingsView: View {
                 }
             }
         } footer: {
-            Text(hint)
+            hint
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }

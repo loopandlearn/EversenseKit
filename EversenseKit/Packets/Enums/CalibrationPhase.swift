@@ -10,28 +10,28 @@ public enum CalibrationPhase: UInt8 {
     func getTitle(calibrationMode: CalibrationMode) -> String {
         switch self {
         case .WARM_UP:
-            return LocalizedString("Warming up", comment: "phase warming up")
+            return String(localized: "Warming up", comment: "phase warming up")
         case .DAILY_CALIBRATION:
             switch calibrationMode {
             case .DailySingle:
-                return LocalizedString("Daily single calibration", comment: "phase daily calibration")
+                return String(localized: "Daily calibration", comment: "phase daily calibration")
             case .DailyDual:
-                return LocalizedString("Daily dual calibration", comment: "phase daily calibration")
+                return String(localized: "Daily dual calibration", comment: "phase daily calibration")
             case .WeeklySingle:
-                return LocalizedString("Weekly calibration", comment: "phase weekly calibration")
+                return String(localized: "Weekly calibration", comment: "phase weekly calibration")
             case .Default:
-                return LocalizedString("Daily calibration", comment: "phase daily calibration")
+                return String(localized: "Daily calibration", comment: "phase daily calibration")
             }
         case .INITIALIZATION:
-            return LocalizedString("Initialization", comment: "phase init")
+            return String(localized: "Initialization", comment: "phase init")
         case .SUSPICIOUS:
-            return LocalizedString("Suspicious fingerstick", comment: "phase suspicious")
+            return String(localized: "Suspicious fingerstick", comment: "phase suspicious")
         case .DROPOUT:
-            return LocalizedString("Dropout", comment: "phase dropout")
+            return String(localized: "Dropout", comment: "phase dropout")
         case .DEBUG:
-            return LocalizedString("Debug/test", comment: "phase debug")
+            return String(localized: "Debug/test", comment: "phase debug")
         default:
-            return LocalizedString("Unknown", comment: "phase unknown")
+            return String(localized: "Unknown", comment: "phase unknown")
         }
     }
 

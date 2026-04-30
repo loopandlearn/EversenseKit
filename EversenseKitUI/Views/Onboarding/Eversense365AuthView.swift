@@ -10,23 +10,23 @@ struct Eversense365Auth: View {
         VStack {
             List {
                 Section {
-                    TextField(LocalizedString("Email address", comment: "Label for email address"), text: $viewModel.username)
+                    TextField(String(localized: "Email address", comment: "Label for email address"), text: $viewModel.username)
                         .textContentType(.emailAddress)
-                    SecureField(LocalizedString("Password", comment: "Label for password"), text: $viewModel.password)
+                    SecureField(String(localized: "Password", comment: "Label for password"), text: $viewModel.password)
                         .textContentType(.password)
                 } footer: {
-                    Text(LocalizedString(
+                    Text(
                         "If your Eversense 365 is already active, please make sure to use the same account",
                         comment: "login footer same account"
-                    ))
+                    )
                 }
 
                 Section {
-                    Button(LocalizedString("Create account", comment: "label to create account")) {
-                        viewModel.openRegistrationUrl()
+                    Button(action: viewModel.openRegistrationUrl) {
+                        Text("Create account", comment: "label to create account")
                     }
-                    Button(LocalizedString("Forgot password", comment: "Label for forgot password")) {
-                        viewModel.openForgotPasswordUrl()
+                    Button(action: viewModel.openForgotPasswordUrl) {
+                        Text("Forgot password", comment: "Label for forgot password")
                     }
                 }
             }
@@ -39,7 +39,7 @@ struct Eversense365Auth: View {
             }
 
             Button(action: viewModel.login) {
-                Text(LocalizedString("Login", comment: "label for Login"))
+                Text("Login", comment: "label for Login")
             }
             .disabled(viewModel.username.isEmpty || viewModel.password.isEmpty || viewModel.isLoading)
             .buttonStyle(ActionButtonStyle())
@@ -48,12 +48,12 @@ struct Eversense365Auth: View {
         .listStyle(InsetGroupedListStyle())
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarHidden(false)
-        .navigationTitle(LocalizedString("Eversense Account", comment: "Login header"))
+        .navigationTitle(String(localized: "Eversense Account", comment: "Login header"))
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(LocalizedString("Cancel", comment: "Cancel button title"), action: {
-                    self.dismiss()
-                })
+                Button(action: self.dismiss) {
+                    Text("Cancel", comment: "Cancel button title")
+                }
             }
         }
     }
