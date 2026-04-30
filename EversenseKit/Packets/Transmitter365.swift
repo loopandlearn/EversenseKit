@@ -241,6 +241,15 @@ extension Eversense365 {
         }
     }
 
+    static func setDiagnosticMode(cgmManager: EversenseCGMManager, isEnabled: Bool) {
+        do {
+            logger.debug("sending \(isEnabled ? "enterDiagnosticModePhx2" : "exitDiagnosticModePhx2")...")
+            let _: SetDiagnosticModeResponse = try cgmManager.bluetoothManager.write(SetDiagnosticModePacket(enabled: isEnabled))
+        } catch {
+            logger.error("Failed to set diagnostic mode: \(error)")
+        }
+    }
+
     static func calibrateSensors(cgmManager: EversenseCGMManager, glucoseInMgDl: UInt16, timestamp: Date) throws {
         do {
             logger.info("Sending SetBloodGlucosePointPacket - glucose: \(glucoseInMgDl)mg/dl, timestamp: \(timestamp)")

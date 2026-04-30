@@ -131,6 +131,9 @@ enum EversenseE3 {
 
 enum Eversense365 {
     enum PacketIds: UInt8 {
+        case OperationCommandId = 1
+        case OperationResponseId = 65
+
         case AuthenticateV2CommandId = 9
         case AuthenticateV2ResponseId = 11
 
@@ -157,6 +160,11 @@ enum Eversense365 {
         case ActiveAlerts = 34
         case LogRange = 56
         case LogValue = 58
+    }
+
+    enum OperationIds: UInt8 {
+        case enterDiagnosticMode = 8
+        case exitDiagnosticMode = 9
     }
 
     enum WriteIds: UInt8 {

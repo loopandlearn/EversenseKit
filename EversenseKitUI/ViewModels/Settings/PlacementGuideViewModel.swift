@@ -23,6 +23,13 @@ class PlacementGuideViewModel: ObservableObject {
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
+
+            if cgmManager.state.is365 {
+                Eversense365.setDiagnosticMode(cgmManager: cgmManager, isEnabled: true)
+            } else {
+                EversenseE3.setDiagnosticMode(cgmManager: cgmManager, isEnabled: true)
+            }
+
             self.updateSignalStrength(cgmManager: cgmManager)
         }
     }
@@ -33,6 +40,11 @@ class PlacementGuideViewModel: ObservableObject {
 
     private func updateSignalStrength(cgmManager: EversenseCGMManager) {
         guard running else {
+            if cgmManager.state.is365 {
+                Eversense365.setDiagnosticMode(cgmManager: cgmManager, isEnabled: false)
+            } else {
+                EversenseE3.setDiagnosticMode(cgmManager: cgmManager, isEnabled: false)
+            }
             return
         }
 
@@ -54,7 +66,7 @@ class PlacementGuideViewModel: ObservableObject {
             }
         }
 
-        Thread.sleep(forTimeInterval: .seconds(0.2))
+        Thread.sleep(forTimeInterval: .seconds(0.5))
         updateSignalStrength(cgmManager: cgmManager)
     }
 }
