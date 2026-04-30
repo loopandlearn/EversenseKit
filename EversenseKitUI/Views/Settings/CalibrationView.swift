@@ -17,14 +17,14 @@ struct CalibrationView: View {
             List {
                 Section {
                     DatePicker(
-                        LocalizedString("Time", comment: "label time"),
+                        String(localized: "Time", comment: "label time"),
                         selection: $viewModel.time,
                         displayedComponents: .hourAndMinute
                     )
 
                     Button(action: { withAnimation { isEdittingGlucose.toggle() } }) {
                         HStack(alignment: .bottom) {
-                            Text(LocalizedString("Glucose level", comment: "label glucose"))
+                            Text("Glucose level", comment: "label glucose")
                                 .foregroundColor(isEdittingGlucose ? .blue : .primary)
                             Spacer()
                             Text(formatGlucose(viewModel.glucose))
@@ -51,13 +51,13 @@ struct CalibrationView: View {
                     .foregroundStyle(.red)
             }
             Button(action: viewModel.calibrate) {
-                Text(LocalizedString("Calibrate transmitter", comment: "calibration"))
+                Text("Calibrate transmitter", comment: "calibration")
             }
             .buttonStyle(ActionButtonStyle())
             .padding([.bottom, .horizontal])
             .disabled(!viewModel.allowCalibrations || viewModel.isLoading)
         }
-        .navigationTitle(LocalizedString("Calibration", comment: "Calibation header"))
+        .navigationTitle(String(localized: "Calibration", comment: "Calibation header"))
     }
 
     private func formatGlucose(_ value: UInt16) -> String {
