@@ -9,11 +9,11 @@ public enum ConnectionStatus: UInt8 {
     var title: String {
         switch self {
         case .idle:
-            return LocalizedString("Idle", comment: "connection status idle")
+            return String(localized: "Idle", comment: "connection status idle")
         case .connecting:
-            return LocalizedString("Connecting", comment: "connection status connecting")
+            return String(localized: "Connecting", comment: "connection status connecting")
         case .connected:
-            return LocalizedString("Operational", comment: "connection status connected")
+            return String(localized: "Operational", comment: "connection status connected")
         }
     }
 }
@@ -266,10 +266,10 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
 
     public var modelStr: String? {
         if is365 {
-            return LocalizedString("Eversense 365", comment: "Eversense 365 (1year)")
+            return String(localized: "Eversense 365", comment: "Eversense 365 (1year)")
         }
 
-        return LocalizedString("Eversense E3", comment: "Eversense E3")
+        return String(localized: "Eversense E3", comment: "Eversense E3")
     }
 
     public var debugDescription: String {

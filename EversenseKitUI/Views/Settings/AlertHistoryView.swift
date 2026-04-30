@@ -8,7 +8,7 @@ struct AlertHistoryView: View {
         NavigationView {
             if viewModel.isLoading {
                 ActivityIndicator(isAnimating: .constant(true), style: .large)
-                Text(LocalizedString("Loading data...", comment: "loading calibration data"))
+                Text("Loading data...", comment: "loading calibration data")
             } else {
                 List {
                     ForEach($viewModel.history.reversed()) { group in
@@ -26,11 +26,9 @@ struct AlertHistoryView: View {
                 }
             }
         }
-        .navigationTitle(LocalizedString("Alert history", comment: "Alert history header"))
+        .navigationTitle(String(localized: "Alert history", comment: "Alert history header"))
         .onAppear {
             viewModel.start()
         }
     }
-
-    private func groupByDate(_: Date) {}
 }

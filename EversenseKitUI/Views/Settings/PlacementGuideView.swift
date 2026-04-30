@@ -7,13 +7,13 @@ import SwiftUI
     var body: some View {
         HStack(alignment: .center) {
             VStack(alignment: .center) {
-                Text(
-                    LocalizedString("Signal strength", comment: "transmitter implant signal strength") + ": " + viewModel
-                        .strength.title
-                )
-                .font(.headline)
+                Text(String(
+                    format: String(localized: "Signal strength: %@", comment: "transmitter implant signal strength"),
+                    viewModel.strength.title
+                ))
+                    .font(.headline)
 
-                Text(LocalizedString("Last update: ", comment: "label for last update") + viewModel.lastUpdate)
+                Text(String(format: String(localized: "Last update: %@", comment: "label for last update"), viewModel.lastUpdate))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.bottom, 50)
@@ -31,7 +31,7 @@ import SwiftUI
                 .frame(width: 150, height: 400)
             }
         }
-        .navigationBarTitle(LocalizedString("Placement Guide", comment: "Title for placement guide"))
+        .navigationBarTitle(String(localized: "Placement Guide", comment: "Title for placement guide"))
         .navigationBarTitleDisplayMode(.inline)
         .onDisappear {
             viewModel.stop()
@@ -43,6 +43,6 @@ import SwiftUI
 struct PlacementGuideEmpty: View {
     var body: some View {
         VStack {}
-            .navigationBarTitle(LocalizedString("Placement Guide", comment: "Title for placement guide"))
+            .navigationBarTitle(String(localized: "Placement Guide", comment: "Title for placement guide"))
     }
 }

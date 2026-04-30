@@ -11,10 +11,10 @@ struct Eversense365ScanView: View {
         VStack {
             List {
                 Section {
-                    Text(LocalizedString(
+                    Text(
                         "Make sure your Eversense is in pairing mode. Please read the manual to learn how to do this.",
                         comment: "Scanning hint"
-                    ))
+                    )
 
                     if !viewModel.error.isEmpty {
                         Text(viewModel.error)
@@ -30,12 +30,12 @@ struct Eversense365ScanView: View {
         .listStyle(InsetGroupedListStyle())
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarHidden(false)
-        .navigationTitle(LocalizedString("Scanning", comment: "Scanning header"))
+        .navigationTitle(String(localized: "Scanning", comment: "Scanning header"))
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(LocalizedString("Cancel", comment: "Cancel button title"), action: {
-                    self.dismiss()
-                })
+                Button(action: dismiss) {
+                    Text("Cancel", comment: "Cancel button title")
+                }
             }
         }
         .onChange(of: isPresented) { newValue in

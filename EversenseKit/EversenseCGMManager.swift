@@ -135,7 +135,7 @@ public class EversenseCGMManager: CGMManager {
 extension EversenseCGMManager {
     public func fetchNewDataIfNeeded(_ completion: @escaping (CGMReadingResult) -> Void) {
         completion(.noData)
-        heartbeathOperation { }
+        heartbeathOperation {}
     }
 
     /// Responsible for handling fetching Glucose data when ready

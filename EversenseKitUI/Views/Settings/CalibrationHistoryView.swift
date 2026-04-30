@@ -8,7 +8,7 @@ struct CalibrationHistoryView: View {
         VStack(alignment: .center) {
             if viewModel.isLoading {
                 ActivityIndicator(isAnimating: .constant(true), style: .large)
-                Text(LocalizedString("Loading data...", comment: "loading calibration data"))
+                Text("Loading data...", comment: "loading calibration data")
             } else {
                 List {
                     ForEach($viewModel.history.reversed()) { group in
@@ -29,11 +29,9 @@ struct CalibrationHistoryView: View {
                 }
             }
         }
-        .navigationTitle(LocalizedString("Calibration history", comment: "Calibation history header"))
+        .navigationTitle(String(localized: "Calibration history", comment: "Calibation history header"))
         .onAppear {
             viewModel.start()
         }
     }
-
-    private func groupByDate(_: Date) {}
 }
