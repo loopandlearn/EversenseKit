@@ -30,6 +30,7 @@ class PlacementGuideViewModel: ObservableObject {
                 EversenseE3.setDiagnosticMode(cgmManager: cgmManager, isEnabled: true)
             }
 
+            Thread.sleep(forTimeInterval: .seconds(0.5))
             self.updateSignalStrength(cgmManager: cgmManager)
         }
     }
