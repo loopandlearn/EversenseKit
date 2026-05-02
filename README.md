@@ -9,4 +9,5 @@ Eversense Bluetooth CGMManager For Loop.
 ## For more information
 
 Please join loop zulipchat at https://loop.zulipchat.com/
+
 Or the Trio discord at https://discord.gg/FnwFEFUwXE
