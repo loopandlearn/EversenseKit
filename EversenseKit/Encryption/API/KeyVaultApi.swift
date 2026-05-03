@@ -1,10 +1,10 @@
 enum KeyVaultApi {
-    static let baseUrl = "https://deviceauthorization.eversensedms.com/api/vault"
-    static let transmitterNo = "000000"
-    static let clientNo = 2
-    static let clientType = 128
+    private static let baseUrl = "https://deviceauthorization.eversensedms.com/api/vault"
+    private static let transmitterNo = "000000"
+    private static let clientNo = 2
+    private static let clientType = 128
 
-    static let logger = EversenseLogger(category: "KeyVaultApi")
+    private static let logger = EversenseLogger(category: "KeyVaultApi")
 
     static func getFleetSecret(accessToken: String) async throws -> SecureKeyResponse {
         let message = [

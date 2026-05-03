@@ -163,7 +163,7 @@ extension EversenseCGMManager {
                 return
             }
 
-            var samples: [NewGlucoseSample] = []
+            var samples: [CGMReadingResult] = []
             if !self.state.is365 {
                 samples = EversenseE3.readGlucoseData(
                     peripheralManager: peripheralManager,
@@ -185,9 +185,59 @@ extension EversenseCGMManager {
             }
 
             if !samples.isEmpty {
-                self.delegate.notify { delegate in
-                    delegate?.cgmManager(self, hasNew: .newData(samples))
+                self.state.readingsToUpload += samples
+
+                if let lastReading = samples.last {
+                    self.state.recentGlucoseInMgDl = lastReading.glucoseInMgDl
+                    self.state.recentGlucoseDateTime = lastReading.datetime
+                    self.state.recentGlucoseTrend = lastReading.trend ?? .flat
                 }
+                
+                self.notifyStateDidChange()
+                
+                self.delegate.notify { delegate in
+                    guard let delegate else {
+                        return
+                    }
+                    
+                    delegate.cgmManager(self, hasNew: .newData(
+                        samples.map {
+                            NewGlucoseSample(
+                                cgmManager: self,
+                                value: $0.glucoseInMgDl,
+                                trend: $0.trend,
+                                dateTime: $0.datetime
+                            )
+                        }
+                    ))
+                }
+            }
+            
+            Task {
+                if self.state.readingsToUpload.isEmpty {
+                    self.logger.debug("Nothing to upload...")
+                    return
+                }
+                
+                guard await DMSApi.uploadGlucoseReadings(cgmManager: self, readings: self.state.readingsToUpload) else {
+                    self.logger.warning("Failed to upload readings")
+                    return
+                }
+                
+                guard let lastReading = self.state.readingsToUpload.last,
+                      await DMSApi.uploadCurrentValues(cgmManager: self, reading: lastReading)
+                else {
+                    self.logger.warning("Failed to upload current reading")
+                    return
+                }
+                
+                guard await DMSApi.uploadDeviceEvents(cgmManager: self) else {
+                    self.logger.warning("Failed to upload device events")
+                    return
+                }
+                
+                self.state.readingsToUpload = []
+                self.notifyStateDidChange()
             }
 
             completion?()

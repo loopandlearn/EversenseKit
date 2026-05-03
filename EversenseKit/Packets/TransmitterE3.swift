@@ -8,7 +8,7 @@ extension EversenseE3 {
         peripheralManager: PeripheralManager,
         cgmManager: EversenseCGMManager,
         lastGlucoseTimestamp: Date
-    ) -> [NewGlucoseSample] {
+    ) -> [CGMReadingResult] {
         do {
             let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager)
 
@@ -33,37 +33,27 @@ extension EversenseE3 {
             }
 
             var samples = glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
-                NewGlucoseSample(
-                    cgmManager: cgmManager,
-                    value: $0.glucoseInMgDl,
+                CGMReadingResult(
+                    glucoseInMgDl: $0.glucoseInMgDl,
+                    datetime: $0.datetime,
                     trend: nil,
-                    dateTime: $0.datetime
+                    raw: ""
                 )
             }
 
-            if let mostRecentGlucose = mostRecentGlucose,
-               mostRecentGlucose.datetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
-            {
-                cgmManager.state.recentGlucoseInMgDl = mostRecentGlucose.glucoseInMgDl
-                cgmManager.state.recentGlucoseDateTime = mostRecentGlucose.datetime
-
+            if let mostRecentGlucose = mostRecentGlucose {
                 samples.append(
-                    NewGlucoseSample(
-                        cgmManager: cgmManager,
-                        value: mostRecentGlucose.glucoseInMgDl,
+                    CGMReadingResult(
+                        glucoseInMgDl: mostRecentGlucose.glucoseInMgDl,
+                        datetime: mostRecentGlucose.datetime,
                         trend: mostRecentGlucose.trend,
-                        dateTime: mostRecentGlucose.datetime
+                        raw: mostRecentGlucose.raw
                     )
                 )
-            } else if let recentGlucose = glucoseHistory.last,
-                      recentGlucose.datetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
-            {
-                cgmManager.state.recentGlucoseInMgDl = recentGlucose.glucoseInMgDl
-                cgmManager.state.recentGlucoseDateTime = recentGlucose.datetime
             }
 
             logger.info("[E3] Glucose data read  - timestamp: \(Date.now), count: \(samples.count)")
-            return samples
+            return samples.sorted { $0.datetime < $1.datetime }
         } catch {
             logger.error("[E3] Something went wrong during readGlucoseData: \(error)")
             return []

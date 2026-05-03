@@ -47,6 +47,8 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         lastSynced = rawValue["lastSynced"] as? Date
         version = rawValue["version"] as? String
         extVersion = rawValue["extVersion"] as? String
+        transmitterId = rawValue["transmitterId"] as? String
+        sensorId = rawValue["sensorId"] as? String
         communicationProtocol = rawValue["communicationProtocol"] as? Double ?? 0
         activatedAt = rawValue["activatedAt"] as? Date ?? Date.distantPast
         expiresAt = rawValue["expiresAt"] as? Date ?? Date.distantPast
@@ -132,6 +134,17 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
             EversenseLogger(category: "EversenseCGMState").error("Failed to decode activeAlarms - \(error.localizedDescription)")
             activeAlarms = []
         }
+        
+        do {
+            if let readingsToUploadData = rawValue["readingsToUpload"] as? Data {
+                readingsToUpload = try JSONDecoder().decode([CGMReadingResult].self, from: readingsToUploadData)
+            } else {
+                readingsToUpload = []
+            }
+        } catch {
+            EversenseLogger(category: "EversenseCGMState").error("Failed to decode readingsToUpload - \(error.localizedDescription)")
+            readingsToUpload = []
+        }
     }
 
     public var rawValue: RawValue {
@@ -143,6 +156,8 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["lastSynced"] = lastSynced
         value["version"] = version
         value["extVersion"] = extVersion
+        value["transmitterId"] = transmitterId
+        value["sensorId"] = sensorId
         value["communicationProtocol"] = communicationProtocol
         value["activatedAt"] = activatedAt
         value["expiresAt"] = expiresAt
@@ -192,6 +207,12 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         } catch {
             EversenseLogger(category: "EversenseCGMState").error("Failed to encode activeAlarms - \(error.localizedDescription)")
         }
+        
+        do {
+            value["readingsToUpload"] = try JSONEncoder().encode(readingsToUpload)
+        } catch {
+            EversenseLogger(category: "EversenseCGMState").error("Failed to encode readingsToUpload - \(error.localizedDescription)")
+        }
 
         return value
     }
@@ -203,6 +224,8 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var lastSynced: Date?
     public var version: String?
     public var extVersion: String?
+    public var transmitterId: String?
+    public var sensorId: String?
     public var communicationProtocol: Double
     public var activatedAt: Date
     public var expiresAt: Date
@@ -246,6 +269,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var recentGlucoseTrend: GlucoseTrend
 
     public var activeAlarms: [ActiveAlarm]
+    public var readingsToUpload: [CGMReadingResult]
 
     // Eversense 365
     public var security: SecurityType = .none
