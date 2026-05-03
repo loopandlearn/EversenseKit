@@ -4,5 +4,5 @@ struct UploadCurrentGlucoseRequest: Codable {
     let GlucoseTrend: Int
     let SignalStrength: Int
     let BatteryStrength: Int
-    let IsTransmitterConnected: Int
+    let IsTransmitterConnected: Bool
 }

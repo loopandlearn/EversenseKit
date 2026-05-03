@@ -163,25 +163,32 @@ extension EversenseCGMManager {
                 return
             }
 
+            var sensorId = Data(repeating: 0, count: 10)
             var samples: [CGMReading] = []
             if !self.state.is365 {
-                samples = EversenseE3.readGlucoseData(
+                guard let (newSamples, newSensorId) = EversenseE3.readGlucoseData(
                     peripheralManager: peripheralManager,
                     cgmManager: self,
                     lastGlucoseTimestamp: lastGlucoseTimestamp
-                )
-                if !samples.isEmpty {
-                    EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                ) else {
+                    return
                 }
+
+                EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                samples = newSamples
+                sensorId = newSensorId
             } else {
-                samples = Eversense365.readGlucoseData(
+                guard let (newSamples, newSensorId) = Eversense365.readGlucoseData(
                     peripheralManager: peripheralManager,
                     cgmManager: self,
                     lastGlucoseTimestamp: lastGlucoseTimestamp
-                )
-                if !samples.isEmpty {
-                    Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                ) else {
+                    return
                 }
+
+                Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self)
+                samples = newSamples
+                sensorId = newSensorId
             }
 
             if !samples.isEmpty {
@@ -219,7 +226,11 @@ extension EversenseCGMManager {
                     return
                 }
 
-                guard await DMSApi.uploadGlucoseReadings(cgmManager: self, readings: self.state.readingsToUpload) else {
+                guard await DMSApi.uploadGlucoseReadings(
+                    cgmManager: self,
+                    readings: self.state.readingsToUpload,
+                    sensorId: sensorId
+                ) else {
                     self.logger.warning("Failed to upload readings")
                     return
                 }
@@ -231,7 +242,9 @@ extension EversenseCGMManager {
                     return
                 }
 
-                guard await DMSApi.uploadDeviceEvents(cgmManager: self, readings: self.state.readingsToUpload) else {
+                guard await DMSApi
+                    .uploadDeviceEvents(cgmManager: self, readings: self.state.readingsToUpload, sensorId: sensorId)
+                else {
                     self.logger.warning("Failed to upload device events")
                     return
                 }

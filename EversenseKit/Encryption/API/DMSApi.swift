@@ -13,9 +13,14 @@ enum DMSApi {
         return formatter
     }()
 
-    static func uploadGlucoseReadings(cgmManager: EversenseCGMManager, readings: [CGMReading]) async -> Bool {
+    static func uploadGlucoseReadings(cgmManager: EversenseCGMManager, readings: [CGMReading], sensorId: Data) async -> Bool {
         guard let url = URL(string: "\(uploadBaseUrl)api/v1.0/DiagnosticLog/PostEssentialLogs") else {
             logger.error("Could not create URL...")
+            return false
+        }
+
+        guard let lastSync = cgmManager.state.lastSynced else {
+            logger.error("lastSynced is nil")
             return false
         }
 
@@ -24,28 +29,22 @@ enum DMSApi {
             return false
         }
 
-        guard let sensorIdStr = cgmManager.state.sensorId, let sensorIdData = Data(hexString: sensorIdStr) else {
-            logger.error("sensorId is nil")
-            return false
-        }
-
         guard let token = await getAccessToken(cgmManager: cgmManager) else {
             return false
         }
 
         do {
-            let sensorId = Data(sensorIdData.subdata(in: 0 ..< 8).reversed()).hexString()
+            let syncDate = dateFormatter.string(from: lastSync)
+            let sensorId = Data(sensorId.subdata(in: 0 ..< 8).reversed()).hexString()
             let message = readings.map { reading in
-                let ts = dateFormatter.string(from: reading.datetime)
-
-                return UploadGlucoseReadingRequest(
+                UploadGlucoseReadingRequest(
                     SensorId: sensorId,
                     TransmitterId: transmitterId,
-                    Timestamp: ts,
+                    Timestamp: syncDate,
                     CurrentGlucoseValue: Int(reading.glucoseInMgDl),
-                    CurrentGlucoseDateTime: ts,
+                    CurrentGlucoseDateTime: dateFormatter.string(from: reading.datetime),
                     FWVersion: cgmManager.state.version ?? "",
-                    EssentialLog: reading.raw
+                    EssentialLog: ""
                 )
             }
 
@@ -92,7 +91,7 @@ enum DMSApi {
                 GlucoseTrend: mapTrend(reading.trend),
                 SignalStrength: Int(cgmManager.state.signalStrength.rawValue),
                 BatteryStrength: cgmManager.state.batteryPercentage,
-                IsTransmitterConnected: 1
+                IsTransmitterConnected: true
             )
 
             var request = URLRequest(url: url)
@@ -121,7 +120,7 @@ enum DMSApi {
         }
     }
 
-    static func uploadDeviceEvents(cgmManager: EversenseCGMManager, readings: [CGMReading]) async -> Bool {
+    static func uploadDeviceEvents(cgmManager: EversenseCGMManager, readings: [CGMReading], sensorId: Data) async -> Bool {
         guard let url = URL(string: "\(careBaseUrl)api/care/PutDeviceEvents") else {
             logger.error("Could not create URL...")
             return false
@@ -132,11 +131,6 @@ enum DMSApi {
             return false
         }
 
-        guard let sensorId = cgmManager.state.sensorId else {
-            logger.error("sensorId is nil")
-            return false
-        }
-
         guard let token = await getAccessToken(cgmManager: cgmManager) else {
             return false
         }
@@ -144,7 +138,7 @@ enum DMSApi {
         do {
             let message = UploadDeviceEventRequest(
                 deviceType: "SMSIMeter",
-                deviceName: "Smart Transmitter (Android)",
+                deviceName: "Senseonics Transmitter",
                 deviceID: transmitterId,
                 offsetBytes: buildOffsetBytes(),
                 sgBytes: buildSgBytes(readings: readings, sensorId: sensorId),
@@ -247,32 +241,28 @@ enum DMSApi {
         return data.base64EncodedString()
     }
 
-    private static func buildAlertBytes(sensorId: String) -> String {
-        let sensorIdData = Data(hexString: sensorId) ?? Data(repeating: 0, count: 10)
-
+    private static func buildAlertBytes(sensorId: Data) -> String {
         // Header: 93 01 00 + count(2 bytes LE) + sensorIdBytes + 00  → 0 alerts
         var data = Data([0x93, 0x01, 0x00, 0x00, 0x00])
-        data.append(sensorIdData)
+        data.append(sensorId)
         data.append(0x00)
 
         return data.base64EncodedString()
     }
 
-    private static func buildSgBytes(readings: [CGMReading], sensorId: String) -> String {
+    private static func buildSgBytes(readings: [CGMReading], sensorId: Data) -> String {
         // Header: 8C 00 01 00 00 + count (3 bytes LE)
         var data = Data([0x8C, 0x00, 0x01, 0x00, 0x00])
         data.append(Int64(readings.count).toData(length: 3))
 
         let zeroInt16 = Int64(0).toData(length: 2)
-        let sensorIdData = Data(hexString: sensorId) ?? Data(repeating: 0, count: 10)
-
         for (idx, r) in readings.enumerated() {
             data.append(Int64(idx + 1).toData(length: 3)) // record number (1-based)
             data.append(calcDateBytes(date: r.datetime)) // date
             data.append(calcTimeBytes(date: r.datetime)) // time
             data.append(Int64(r.glucoseInMgDl).toData(length: 2)) // glucose
             data.append(0x00) // padding
-            data.append(sensorIdData) // sensor ID
+            data.append(sensorId) // sensor ID
 
             // RAW_DATA_INDEX 1, 2, 3, 7, 8 (no raw ADC data available)
             for _ in 0 ..< 5 {

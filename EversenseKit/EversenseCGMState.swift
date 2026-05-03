@@ -135,17 +135,18 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
             activeAlarms = []
         }
 
-        do {
-            if let readingsToUploadData = rawValue["readingsToUpload"] as? Data {
-                readingsToUpload = try JSONDecoder().decode([CGMReading].self, from: readingsToUploadData)
-            } else {
-                readingsToUpload = []
-            }
-        } catch {
-            EversenseLogger(category: "EversenseCGMState")
-                .error("Failed to decode readingsToUpload - \(error.localizedDescription)")
-            readingsToUpload = []
-        }
+        readingsToUpload = []
+//        do {
+//            if let readingsToUploadData = rawValue["readingsToUpload"] as? Data {
+//                readingsToUpload = try JSONDecoder().decode([CGMReading].self, from: readingsToUploadData)
+//            } else {
+//                readingsToUpload = []
+//            }
+//        } catch {
+//            EversenseLogger(category: "EversenseCGMState")
+//                .error("Failed to decode readingsToUpload - \(error.localizedDescription)")
+//            readingsToUpload = []
+//        }
     }
 
     public var rawValue: RawValue {

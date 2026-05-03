@@ -8,9 +8,11 @@ extension EversenseE3 {
         peripheralManager: PeripheralManager,
         cgmManager _: EversenseCGMManager,
         lastGlucoseTimestamp: Date
-    ) -> [CGMReading] {
+    ) -> ([CGMReading], Data)? {
         do {
-            let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager)
+            guard let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager) else {
+                return nil
+            }
 
             logger.debug("Sending GetLogRangePacket...")
             let glucoseRange: GetLogRangeResponse = try peripheralManager.write(GetLogRangePacket(type: .bloodGlucose))
@@ -41,22 +43,21 @@ extension EversenseE3 {
                 )
             }
 
-            if let mostRecentGlucose = mostRecentGlucose {
-                samples.append(
-                    CGMReading(
-                        glucoseInMgDl: mostRecentGlucose.glucoseInMgDl,
-                        datetime: mostRecentGlucose.datetime,
-                        trend: mostRecentGlucose.trend,
-                        raw: mostRecentGlucose.raw
-                    )
+            samples.append(
+                CGMReading(
+                    glucoseInMgDl: mostRecentGlucose.glucoseInMgDl,
+                    datetime: mostRecentGlucose.datetime,
+                    trend: mostRecentGlucose.trend,
+                    raw: mostRecentGlucose.raw
                 )
-            }
+            )
 
+            // TODO: Fetch sensorId
             logger.info("[E3] Glucose data read  - timestamp: \(Date.now), count: \(samples.count)")
-            return samples.sorted { $0.datetime < $1.datetime }
+            return (samples.sorted { $0.datetime < $1.datetime }, Data())
         } catch {
             logger.error("[E3] Something went wrong during readGlucoseData: \(error)")
-            return []
+            return nil
         }
     }
 
