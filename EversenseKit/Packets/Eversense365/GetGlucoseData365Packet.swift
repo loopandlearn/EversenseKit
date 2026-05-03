@@ -99,7 +99,7 @@ extension Eversense365 {
                 ),
                 glucoseInMgDl: UInt16(data[Offset.GLUCOSE + sensorIdLength]) |
                     (UInt16(data[Offset.GLUCOSE + sensorIdLength + 1]) << 8),
-                raw: data.base64EncodedString()
+                raw: "0x" + data.hexString()
             )
         }
 

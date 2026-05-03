@@ -134,15 +134,16 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
             EversenseLogger(category: "EversenseCGMState").error("Failed to decode activeAlarms - \(error.localizedDescription)")
             activeAlarms = []
         }
-        
+
         do {
             if let readingsToUploadData = rawValue["readingsToUpload"] as? Data {
-                readingsToUpload = try JSONDecoder().decode([CGMReadingResult].self, from: readingsToUploadData)
+                readingsToUpload = try JSONDecoder().decode([CGMReading].self, from: readingsToUploadData)
             } else {
                 readingsToUpload = []
             }
         } catch {
-            EversenseLogger(category: "EversenseCGMState").error("Failed to decode readingsToUpload - \(error.localizedDescription)")
+            EversenseLogger(category: "EversenseCGMState")
+                .error("Failed to decode readingsToUpload - \(error.localizedDescription)")
             readingsToUpload = []
         }
     }
@@ -207,11 +208,12 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         } catch {
             EversenseLogger(category: "EversenseCGMState").error("Failed to encode activeAlarms - \(error.localizedDescription)")
         }
-        
+
         do {
             value["readingsToUpload"] = try JSONEncoder().encode(readingsToUpload)
         } catch {
-            EversenseLogger(category: "EversenseCGMState").error("Failed to encode readingsToUpload - \(error.localizedDescription)")
+            EversenseLogger(category: "EversenseCGMState")
+                .error("Failed to encode readingsToUpload - \(error.localizedDescription)")
         }
 
         return value
@@ -269,7 +271,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var recentGlucoseTrend: GlucoseTrend
 
     public var activeAlarms: [ActiveAlarm]
-    public var readingsToUpload: [CGMReadingResult]
+    public var readingsToUpload: [CGMReading]
 
     // Eversense 365
     public var security: SecurityType = .none

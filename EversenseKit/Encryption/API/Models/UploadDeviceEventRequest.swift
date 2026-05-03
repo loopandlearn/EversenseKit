@@ -1,4 +1,4 @@
-struct UploadDeviceEventRequest : Codable {
+struct UploadDeviceEventRequest: Codable {
     let deviceType: String
     let deviceName: String
     let deviceID: String

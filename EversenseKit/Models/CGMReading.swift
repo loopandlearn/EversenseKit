@@ -1,6 +1,6 @@
 import LoopKit
 
-public struct CGMReadingResult : Codable, Equatable {
+public struct CGMReading: Codable, Equatable {
     let glucoseInMgDl: UInt16
     let datetime: Date
     let trend: GlucoseTrend?

@@ -9,7 +9,7 @@ extension Eversense365 {
         peripheralManager: PeripheralManager,
         cgmManager: EversenseCGMManager,
         lastGlucoseTimestamp: Date
-    ) -> [CGMReadingResult] {
+    ) -> [CGMReading] {
         do {
             logger.debug("sending GetRecentGlucosePacket...")
             let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager)
@@ -29,19 +29,19 @@ extension Eversense365 {
             logger.debug(message)
             let historyResponse: GetGlucoseLogValuesResponse = try peripheralManager
                 .write(GetGlucoseLogValuesPacket(from: range.from, to: range.to), timeout: .seconds(15))
-            
+
             var samples = historyResponse.glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
-                CGMReadingResult(
+                CGMReading(
                     glucoseInMgDl: $0.valueInMgDl,
                     datetime: $0.datetime,
                     trend: $0.trend,
                     raw: ""
                 )
             }
-            
+
             if let mostRecentGlucose = mostRecentGlucose {
                 samples.append(
-                    CGMReadingResult(
+                    CGMReading(
                         glucoseInMgDl: mostRecentGlucose.glucoseInMgDl,
                         datetime: mostRecentGlucose.glucoseDatetime,
                         trend: mostRecentGlucose.trend,

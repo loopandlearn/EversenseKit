@@ -1,4 +1,4 @@
-struct UploadCurrentGlucoseRequest : Codable {
+struct UploadCurrentGlucoseRequest: Codable {
     let CurrentGlucose: Int
     let CGTime: String
     let GlucoseTrend: Int

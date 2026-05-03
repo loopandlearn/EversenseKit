@@ -1,4 +1,4 @@
-struct UploadGlucoseReadingRequest : Codable {
+struct UploadGlucoseReadingRequest: Codable {
     let SensorId: String
     let TransmitterId: String
     let Timestamp: String

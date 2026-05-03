@@ -6,9 +6,9 @@ extension EversenseE3 {
 
     static func readGlucoseData(
         peripheralManager: PeripheralManager,
-        cgmManager: EversenseCGMManager,
+        cgmManager _: EversenseCGMManager,
         lastGlucoseTimestamp: Date
-    ) -> [CGMReadingResult] {
+    ) -> [CGMReading] {
         do {
             let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager)
 
@@ -33,7 +33,7 @@ extension EversenseE3 {
             }
 
             var samples = glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
-                CGMReadingResult(
+                CGMReading(
                     glucoseInMgDl: $0.glucoseInMgDl,
                     datetime: $0.datetime,
                     trend: nil,
@@ -43,7 +43,7 @@ extension EversenseE3 {
 
             if let mostRecentGlucose = mostRecentGlucose {
                 samples.append(
-                    CGMReadingResult(
+                    CGMReading(
                         glucoseInMgDl: mostRecentGlucose.glucoseInMgDl,
                         datetime: mostRecentGlucose.datetime,
                         trend: mostRecentGlucose.trend,
