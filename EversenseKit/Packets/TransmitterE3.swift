@@ -8,7 +8,7 @@ extension EversenseE3 {
         peripheralManager: PeripheralManager,
         cgmManager _: EversenseCGMManager,
         lastGlucoseTimestamp: Date
-    ) -> (CGMReading, [CGMReading], Data)? {
+    ) -> (CGMReading, [CGMReading])? {
         do {
             guard let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager) else {
                 return nil
@@ -34,7 +34,7 @@ extension EversenseE3 {
                 glucoseHistory.append(pageResponse)
             }
 
-            var samples = glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
+            let samples = glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
                 CGMReading(
                     glucoseInMgDl: $0.glucoseInMgDl,
                     datetime: $0.datetime,
@@ -43,7 +43,6 @@ extension EversenseE3 {
                 )
             }
 
-            // TODO: Fetch sensorId
             logger.info("[E3] Glucose data read  - timestamp: \(Date.now), count: \(samples.count)")
             return (
                 CGMReading(
@@ -52,8 +51,7 @@ extension EversenseE3 {
                     trend: mostRecentGlucose.trend,
                     raw: ""
                 ),
-                samples.sorted { $0.datetime < $1.datetime },
-                Data()
+                samples.sorted { $0.datetime < $1.datetime }
             )
         } catch {
             logger.error("[E3] Something went wrong during readGlucoseData: \(error)")
@@ -76,6 +74,17 @@ extension EversenseE3 {
             return glucoseData
         } catch {
             logger.error("[E3] Failed to get recent glucose: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    private static func getSensorId(peripheralManager: PeripheralManager) -> Data? {
+        do {
+            logger.debug("Sending GetSensorIdPacket...")
+            let response: GetSensorIdResponse = try peripheralManager.write(GetSensorIdPacket())
+            return response.sensorId
+        } catch {
+            logger.error("[E3] Failed to get sensorId: \(error.localizedDescription)")
             return nil
         }
     }
@@ -109,6 +118,9 @@ extension EversenseE3 {
 
             // Do Ping
             let _: PingResponse = try peripheralManager.write(PingPacket())
+            
+            let sensorIdResponse: GetSensorIdResponse = try peripheralManager.write(GetSensorIdPacket())
+            cgmManager.state.sensorId = sensorIdResponse.sensorId
 
             // Get Transmitter version & extended Version
             let versionResponse: GetVersionResponse = try peripheralManager

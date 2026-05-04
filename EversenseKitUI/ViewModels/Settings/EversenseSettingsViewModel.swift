@@ -103,7 +103,7 @@ class EversenseSettingsViewModel: ObservableObject {
 
 extension EversenseSettingsViewModel: StateObserver {
     func stateDidUpdate(_ state: EversenseCGMState) {
-        transmitterModel = state.modelStr ?? "UNKNOWN"
+        transmitterModel = state.modelStr
         is365 = state.is365
         transmitterName = state.bleNameString ?? ""
         connectionStatus = state.connectionStatus.title

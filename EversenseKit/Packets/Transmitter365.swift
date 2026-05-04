@@ -9,7 +9,7 @@ extension Eversense365 {
         cgmManager: EversenseCGMManager,
         peripheralManager: PeripheralManager,
         lastGlucoseTimestamp: Date
-    ) -> (CGMReading, [CGMReading], Data)? {
+    ) -> (CGMReading, [CGMReading])? {
         do {
             logger.debug("sending GetRecentGlucosePacket...")
             guard let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager) else {
@@ -50,8 +50,7 @@ extension Eversense365 {
                     trend: mostRecentGlucose.trend,
                     raw: ""
                 ),
-                samples.sorted { $0.datetime < $1.datetime },
-                mostRecentGlucose.sensorId
+                samples.sorted { $0.datetime < $1.datetime }
             )
         } catch {
             logger.error("[365] Something went wrong during readGlucoseData: \(error)")

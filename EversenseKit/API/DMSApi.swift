@@ -1,7 +1,6 @@
 import LoopKit
 
 enum DMSApi {
-    private static let uploadBaseUrl = "https://usmobileappmsprod.eversensedms.com/"
     private static let careBaseUrl = "https://usapialpha.eversensedms.com/"
 
     private static let logger = EversenseLogger(category: "DMSApi")
@@ -12,67 +11,6 @@ enum DMSApi {
         formatter.timeZone = TimeZone(identifier: "GMT")!
         return formatter
     }()
-
-    static func uploadGlucoseReadings(cgmManager: EversenseCGMManager, readings: [CGMReading], sensorId: Data) async -> Bool {
-        guard let url = URL(string: "\(uploadBaseUrl)api/v1.0/DiagnosticLog/PostEssentialLogs") else {
-            logger.error("Could not create URL...")
-            return false
-        }
-
-        guard let lastSync = cgmManager.state.lastSynced else {
-            logger.error("lastSynced is nil")
-            return false
-        }
-
-        guard let transmitterId = cgmManager.state.transmitterId else {
-            logger.error("transmitterId is nil")
-            return false
-        }
-
-        guard let token = await getAccessToken(cgmManager: cgmManager) else {
-            return false
-        }
-
-        do {
-            let syncDate = dateFormatter.string(from: lastSync)
-            let sensorId = Data(sensorId.subdata(in: 0 ..< 8).reversed()).hexString()
-            let message = readings.map {
-                UploadGlucoseReadingRequest(
-                    SensorId: sensorId,
-                    TransmitterId: transmitterId,
-                    Timestamp: syncDate,
-                    CurrentGlucoseValue: Int($0.glucoseInMgDl),
-                    CurrentGlucoseDateTime: dateFormatter.string(from: $0.datetime),
-                    FWVersion: cgmManager.state.version ?? "",
-                    EssentialLog: $0.raw
-                )
-            }
-
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            request.httpBody = try JSONEncoder().encode(message)
-
-            let (data, response) = try await URLSession.shared.data(for: request)
-            guard let response = response as? HTTPURLResponse, response.statusCode < 400 else {
-                let message =
-                    "Got invalid response from PostEssentialLogs: \((response as? HTTPURLResponse)?.statusCode ?? -1) \(String(data: data, encoding: .utf8) ?? "No data")"
-
-                logger.error(message)
-                return false
-            }
-
-            logger
-                .debug(
-                    "PostEssentialLogs success! httpCode: \((response as? HTTPURLResponse)?.statusCode ?? -1), response: \(String(data: data, encoding: .utf8) ?? "EMPTY")"
-                )
-            return true
-        } catch {
-            logger.error("Failed to upload readings: \(error.localizedDescription)")
-            return false
-        }
-    }
 
     static func uploadCurrentValues(cgmManager: EversenseCGMManager, reading: CGMReading) async -> Bool {
         guard let url = URL(string: "\(careBaseUrl)api/care/PutCurrentValues") else {
