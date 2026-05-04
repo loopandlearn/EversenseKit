@@ -5,13 +5,11 @@ extension EversenseE3 {
         let datetime: Date
         let glucoseInMgDl: UInt16
         let trend: GlucoseTrend
-        let raw: String
 
-        init(datetime: Date, glucoseInMgDl: UInt16, trend: GlucoseTrend, raw: String) {
+        init(datetime: Date, glucoseInMgDl: UInt16, trend: GlucoseTrend) {
             self.datetime = datetime
             self.glucoseInMgDl = glucoseInMgDl
             self.trend = trend
-            self.raw = raw
         }
     }
 
@@ -41,8 +39,7 @@ extension EversenseE3 {
                     time: BinaryOperations.toTimeComponents(data: data, start: start + 5)
                 ),
                 glucoseInMgDl: UInt16(data[start + 8]) | (UInt16(data[start + 9]) << 8),
-                trend: getTrend(value: data[start + 12]),
-                raw: data.base64EncodedString()
+                trend: getTrend(value: data[start + 12])
             )
         }
 

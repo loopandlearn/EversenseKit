@@ -45,10 +45,11 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         isOnboarded = rawValue["isOnboarded"] as? Bool ?? false
         isSyncing = rawValue["isSyncing"] as? Bool ?? false
         lastSynced = rawValue["lastSynced"] as? Date
+        lastOnlineSync = rawValue["lastOnlineSync"] as? Date ?? lastSynced
         version = rawValue["version"] as? String
         extVersion = rawValue["extVersion"] as? String
         transmitterId = rawValue["transmitterId"] as? String
-        sensorId = rawValue["sensorId"] as? String
+        sensorId = Data() // rawValue["sensorId"] as? Data ?? Data()
         communicationProtocol = rawValue["communicationProtocol"] as? Double ?? 0
         activatedAt = rawValue["activatedAt"] as? Date ?? Date.distantPast
         expiresAt = rawValue["expiresAt"] as? Date ?? Date.distantPast
@@ -156,6 +157,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["isOnboarded"] = isOnboarded
         value["isSyncing"] = isSyncing
         value["lastSynced"] = lastSynced
+        value["lastOnlineSync"] = lastOnlineSync
         value["version"] = version
         value["extVersion"] = extVersion
         value["transmitterId"] = transmitterId
@@ -225,10 +227,11 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var isOnboarded: Bool
     public var isSyncing: Bool
     public var lastSynced: Date?
+    public var lastOnlineSync: Date?
     public var version: String?
     public var extVersion: String?
     public var transmitterId: String?
-    public var sensorId: String?
+    public var sensorId: Data
     public var communicationProtocol: Double
     public var activatedAt: Date
     public var expiresAt: Date

@@ -93,7 +93,7 @@ class EversenseSettingsViewModel: ObservableObject {
 
     public func readGlucose() {
         forceSyncing = true
-        cgmManager?.heartbeathOperation {
+        cgmManager?.heartbeathOperation(force: true) {
             DispatchQueue.main.async {
                 self.forceSyncing = false
             }

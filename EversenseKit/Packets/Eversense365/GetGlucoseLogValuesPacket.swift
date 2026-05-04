@@ -5,6 +5,7 @@ extension Eversense365 {
         let valueInMgDl: UInt16
         let datetime: Date
         let trend: GlucoseTrend
+        let raw: String
     }
 
     class GetGlucoseLogValuesResponse {
@@ -77,7 +78,8 @@ extension Eversense365 {
                 history.append(GlucoseHistoryItem(
                     valueInMgDl: glucose,
                     datetime: datetime,
-                    trend: trend
+                    trend: trend,
+                    raw: "0x" + chunk.hexString().uppercased()
                 ))
             }
 

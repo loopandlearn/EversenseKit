@@ -6,10 +6,10 @@ extension Eversense365 {
     static var sensorIdLength = 0x00
 
     static func readGlucoseData(
-        peripheralManager: PeripheralManager,
         cgmManager: EversenseCGMManager,
+        peripheralManager: PeripheralManager,
         lastGlucoseTimestamp: Date
-    ) -> ([CGMReading], Data)? {
+    ) -> (CGMReading, [CGMReading], Data)? {
         do {
             logger.debug("sending GetRecentGlucosePacket...")
             guard let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager) else {
@@ -29,29 +29,30 @@ extension Eversense365 {
             let message =
                 "GetLogValuePacket -  from: \(range.from), to: \(range.to), lastGlucoseTimestamp: \(lastGlucoseTimestamp)"
             logger.debug(message)
+
             let historyResponse: GetGlucoseLogValuesResponse = try peripheralManager
                 .write(GetGlucoseLogValuesPacket(from: range.from, to: range.to), timeout: .seconds(15))
 
-            var samples = historyResponse.glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
+            let samples = historyResponse.glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
                 CGMReading(
                     glucoseInMgDl: $0.valueInMgDl,
                     datetime: $0.datetime,
                     trend: $0.trend,
-                    raw: ""
+                    raw: $0.raw
                 )
             }
 
-            samples.append(
+            logger.info("[365] Glucose data read  - timestamp: \(Date.now), count: \(samples.count)")
+            return (
                 CGMReading(
                     glucoseInMgDl: mostRecentGlucose.glucoseInMgDl,
                     datetime: mostRecentGlucose.glucoseDatetime,
                     trend: mostRecentGlucose.trend,
-                    raw: mostRecentGlucose.raw
-                )
+                    raw: ""
+                ),
+                samples.sorted { $0.datetime < $1.datetime },
+                mostRecentGlucose.sensorId
             )
-
-            logger.info("[365] Glucose data read  - timestamp: \(Date.now), count: \(samples.count)")
-            return (samples.sorted { $0.datetime < $1.datetime }, mostRecentGlucose.sensorId)
         } catch {
             logger.error("[365] Something went wrong during readGlucoseData: \(error)")
             return nil

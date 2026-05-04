@@ -36,15 +36,15 @@ enum DMSApi {
         do {
             let syncDate = dateFormatter.string(from: lastSync)
             let sensorId = Data(sensorId.subdata(in: 0 ..< 8).reversed()).hexString()
-            let message = readings.map { reading in
+            let message = readings.map {
                 UploadGlucoseReadingRequest(
                     SensorId: sensorId,
                     TransmitterId: transmitterId,
                     Timestamp: syncDate,
-                    CurrentGlucoseValue: Int(reading.glucoseInMgDl),
-                    CurrentGlucoseDateTime: dateFormatter.string(from: reading.datetime),
+                    CurrentGlucoseValue: Int($0.glucoseInMgDl),
+                    CurrentGlucoseDateTime: dateFormatter.string(from: $0.datetime),
                     FWVersion: cgmManager.state.version ?? "",
-                    EssentialLog: ""
+                    EssentialLog: $0.raw
                 )
             }
 
@@ -225,7 +225,7 @@ enum DMSApi {
     private static func buildOffsetBytes() -> String {
         let tzOffsetSec = TimeZone.current.secondsFromGMT()
         return Int64(tzOffsetSec)
-            .toData(length: 3)
+            .toData(length: 4)
             .base64EncodedString()
     }
 
