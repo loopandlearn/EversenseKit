@@ -126,10 +126,10 @@ struct TransmitterSettingsView: View {
                 Section {
                     HStack {
                         Text("Low Snooze", comment: "label low snooze")
-                            .foregroundStyle(pickerRepeatLow ? .blue : .primary)
+                            .foregroundStyle(pickerRepeatLow ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                         Spacer()
                         Text(timeFormatter(viewModel.repeatLow))
-                            .foregroundStyle(pickerRepeatLow ? .blue : .secondary)
+                            .foregroundStyle(pickerRepeatLow ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     }
                     .onTapGesture {
                         pickerRepeatLow.toggle()
@@ -145,10 +145,10 @@ struct TransmitterSettingsView: View {
 
                     HStack {
                         Text("High Snooze", comment: "label high snooze")
-                            .foregroundStyle(pickerRepeatHigh ? .blue : .primary)
+                            .foregroundStyle(pickerRepeatHigh ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                         Spacer()
                         Text(timeFormatter(viewModel.repeatHigh))
-                            .foregroundStyle(pickerRepeatHigh ? .blue : .secondary)
+                            .foregroundStyle(pickerRepeatHigh ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     }
                     .onTapGesture {
                         pickerRepeatHigh.toggle()
@@ -173,10 +173,10 @@ struct TransmitterSettingsView: View {
                 Section {
                     HStack {
                         Text("BLE disconnect alert", comment: "label ble disconnect")
-                            .foregroundStyle(pickerBleDisconnect ? .blue : .primary)
+                            .foregroundStyle(pickerBleDisconnect ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                         Spacer()
                         Text(timeFormatter(viewModel.bleDisconnect))
-                            .foregroundStyle(pickerBleDisconnect ? .blue : .secondary)
+                            .foregroundStyle(pickerBleDisconnect ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     }
                     .onTapGesture {
                         pickerBleDisconnect.toggle()
@@ -252,10 +252,10 @@ struct TransmitterSettingsView: View {
                 if valueToggle.wrappedValue {
                     HStack {
                         labelValue
-                            .foregroundStyle(statePicker.wrappedValue ? .blue : .primary)
+                            .foregroundStyle(statePicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                         Spacer()
                         Text(viewModel.toRateFormatted(valueValue.wrappedValue))
-                            .foregroundStyle(statePicker.wrappedValue ? .blue : .secondary)
+                            .foregroundStyle(statePicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     }
                     .onTapGesture {
                         statePicker.wrappedValue.toggle()
@@ -295,10 +295,10 @@ struct TransmitterSettingsView: View {
                 if valueToggle.wrappedValue {
                     HStack {
                         labelValue
-                            .foregroundStyle(statePicker.wrappedValue ? .blue : .primary)
+                            .foregroundStyle(statePicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                         Spacer()
                         Text(displayGlucosePreference.format(viewModel.toHkQuantity(valueValue.wrappedValue)))
-                            .foregroundStyle(statePicker.wrappedValue ? .blue : .secondary)
+                            .foregroundStyle(statePicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     }
                     .onTapGesture {
                         statePicker.wrappedValue.toggle()
@@ -342,10 +342,10 @@ struct TransmitterSettingsView: View {
                 if valueToggle.wrappedValue {
                     HStack {
                         labelTime
-                            .foregroundStyle(stateTimePicker.wrappedValue ? .blue : .primary)
+                            .foregroundStyle(stateTimePicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                         Spacer()
                         Text(timeFormatter(valueTime.wrappedValue))
-                            .foregroundStyle(stateTimePicker.wrappedValue ? .blue : .secondary)
+                            .foregroundStyle(stateTimePicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     }
                     .onTapGesture {
                         stateTimePicker.wrappedValue.toggle()
@@ -361,10 +361,10 @@ struct TransmitterSettingsView: View {
 
                     HStack {
                         labelThreshold
-                            .foregroundStyle(stateThresholdPicker.wrappedValue ? .blue : .primary)
+                            .foregroundStyle(stateThresholdPicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                         Spacer()
                         Text(displayGlucosePreference.format(viewModel.toHkQuantity(valueThreshold.wrappedValue)))
-                            .foregroundStyle(stateThresholdPicker.wrappedValue ? .blue : .secondary)
+                            .foregroundStyle(stateThresholdPicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     }
                     .onTapGesture {
                         stateThresholdPicker.wrappedValue.toggle()
@@ -397,10 +397,10 @@ struct TransmitterSettingsView: View {
             VStack(alignment: .leading, spacing: 20) {
                 HStack {
                     labelValue
-                        .foregroundStyle(statePicker.wrappedValue ? .blue : .primary)
+                        .foregroundStyle(statePicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                     Spacer()
                     Text(displayGlucosePreference.format(viewModel.toHkQuantity(valueValue.wrappedValue)))
-                        .foregroundStyle(statePicker.wrappedValue ? .blue : .secondary)
+                        .foregroundStyle(statePicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                 }
                 .onTapGesture {
                     statePicker.wrappedValue.toggle()

@@ -77,7 +77,7 @@ extension EversenseE3 {
             return nil
         }
     }
-    
+
     private static func getSensorId(peripheralManager: PeripheralManager) -> Data? {
         do {
             logger.debug("Sending GetSensorIdPacket...")
@@ -118,7 +118,7 @@ extension EversenseE3 {
 
             // Do Ping
             let _: PingResponse = try peripheralManager.write(PingPacket())
-            
+
             let sensorIdResponse: GetSensorIdResponse = try peripheralManager.write(GetSensorIdPacket())
             cgmManager.state.sensorId = sensorIdResponse.sensorId
 
@@ -189,7 +189,7 @@ extension EversenseE3 {
 
             // Get glucose alarms & status
             let glucoseAlarmsStatus: GetGlucoseAlertsAndStatusPacketResonse = try peripheralManager
-                .write(GetGlucoseAlertsAndStatusPacket())
+                .write(GetGlucoseAlertsAndStatusPacket(currentGlucose: cgmManager.state.recentGlucoseInMgDl ?? 0))
             cgmManager.state.activeAlarms = glucoseAlarmsStatus.alarms
 
             let vibrateMode: GetVibrateModeResponse = try peripheralManager

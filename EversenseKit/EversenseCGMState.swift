@@ -50,6 +50,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         extVersion = rawValue["extVersion"] as? String
         transmitterId = rawValue["transmitterId"] as? String
         shouldUploadToEversenseDMS = rawValue["shouldUploadToEversenseDMS"] as? Bool ?? true
+        uploadBatchSize = rawValue["uploadBatchSize"] as? Int ?? 12
         sensorId = rawValue["sensorId"] as? Data ?? Data()
         communicationProtocol = rawValue["communicationProtocol"] as? Double ?? 0
         activatedAt = rawValue["activatedAt"] as? Date ?? Date.distantPast
@@ -159,6 +160,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["lastSynced"] = lastSynced
         value["lastOnlineSync"] = lastOnlineSync
         value["shouldUploadToEversenseDMS"] = shouldUploadToEversenseDMS
+        value["uploadBatchSize"] = uploadBatchSize
         value["version"] = version
         value["extVersion"] = extVersion
         value["transmitterId"] = transmitterId
@@ -235,8 +237,9 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var communicationProtocol: Double
     public var activatedAt: Date
     public var expiresAt: Date
-    
+
     public var shouldUploadToEversenseDMS: Bool
+    public var uploadBatchSize: Int
     public var lastOnlineSync: Date?
 
     public var mmaFeatures: UInt8
@@ -298,7 +301,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     }
 
     public var modelStr: String {
-        return is365 ?
+        is365 ?
             String(localized: "Eversense 365", comment: "Eversense 365 (1year)") :
             String(localized: "Eversense E3", comment: "Eversense E3")
     }

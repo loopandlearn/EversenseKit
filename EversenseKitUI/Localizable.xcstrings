@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "%" : {
       "comment" : "A unit of measurement for battery percentage.",
       "extractionState" : "manual",
@@ -163,6 +166,9 @@
         }
       }
     },
+    "1 hour" : {
+      "comment" : "Batch size - 1 hour"
+    },
     "1 Weekly Calibration Phase" : {
       "comment" : "title for OneCal",
       "extractionState" : "manual",
@@ -324,6 +330,12 @@
           }
         }
       }
+    },
+    "15 minutes" : {
+      "comment" : "Batch size - 15min"
+    },
+    "30 minutes" : {
+      "comment" : "Batch size - 30min"
     },
     "A calibration has not been performed in 24 hours. Your system is now in re-initialization phase and you will have to perform 4 fingerstick calibration tests." : {
       "comment" : "description for CalibrationExpiredAlarm",
@@ -810,6 +822,9 @@
           }
         }
       }
+    },
+    "Allow upload to Eversense DMS" : {
+      "comment" : "toggle enable DMS"
     },
     "Are you sure you want to stop using Eversense CGM?" : {
       "comment" : "Message for CgmManager deletion action sheet",
@@ -5185,163 +5200,163 @@
         }
       }
     },
-    "Create account" : {
+    "Create Account" : {
       "comment" : "label to create account",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "إنشاء حساب"
           }
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Vytvořit účet"
           }
         },
         "da" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Opret konto"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Konto erstellen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create account"
+            "value" : "Create Account"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Crear una cuenta"
           }
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Luo tili"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Créer un compte"
           }
         },
         "he" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "צור חשבון"
           }
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Fiók létrehozása"
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Creare un account"
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "アカウント作成"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "계정 만들기"
           }
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Opprett konto"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Account aanmaken"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Utwórz konto"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Criar conta"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Creați un cont"
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Создать учетную запись"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Vytvorenie účtu"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ustvarite račun"
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Skapa konto"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Hesap oluştur"
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Створити обліковий запис"
           }
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Tạo tài khoản"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "创建账户"
           }
         }
@@ -6805,6 +6820,12 @@
         }
       }
     },
+    "DMS settings" : {
+
+    },
+    "DMS Settings" : {
+      "comment" : "DMS header"
+    },
     "Done" : {
       "comment" : "done button title",
       "extractionState" : "manual",
@@ -7452,6 +7473,9 @@
           }
         }
       }
+    },
+    "Email Address" : {
+      "comment" : "Label for email address"
     },
     "Enable high glucose alerts" : {
       "comment" : "label toggle glucose high alert",
@@ -8425,6 +8449,9 @@
         }
       }
     },
+    "Eversense NOW" : {
+      "comment" : "Eversense NOW section"
+    },
     "Excellent" : {
       "comment" : "signalStrength excellent",
       "extractionState" : "manual",
@@ -9073,163 +9100,163 @@
         }
       }
     },
-    "Forgot password" : {
+    "Forgot Password" : {
       "comment" : "Label for forgot password",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "نسيت كلمة المرور"
           }
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Zapomenuté heslo"
           }
         },
         "da" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Glemt adgangskode"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Passwort vergessen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Forgot password"
+            "value" : "Forgot Password"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Contraseña olvidada"
           }
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Unohditko salasanan"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Mot de passe oublié"
           }
         },
         "he" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "שכחתי סיסמה"
           }
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Elfelejtett jelszó"
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Password dimenticata"
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "パスワードを忘れた"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "비밀번호 찾기"
           }
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Glemt passord"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Wachtwoord vergeten"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Nie pamiętam hasła"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Esqueci-me da palavra-passe"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ați uitat parola"
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Забыли пароль"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Zabudnuté heslo"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Pozabljeno geslo"
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Glömt lösenord"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Şifremi unuttum"
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Забули пароль"
           }
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Quên mật khẩu"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "忘记密码"
           }
         }
@@ -12313,6 +12340,9 @@
         }
       }
     },
+    "Increasing the Upload Delay will lower the Internet usage, but gives the Eversense DMS a small delay" : {
+      "comment" : "batch size hint"
+    },
     "Information" : {
       "comment" : "The information section",
       "extractionState" : "manual",
@@ -13284,6 +13314,10 @@
           }
         }
       }
+    },
+    "Invite person" : {
+      "comment" : "A button that invites a user to join the app.",
+      "isCommentAutoGenerated" : true
     },
     "Last calibration time" : {
       "comment" : "last calibration",
@@ -16686,6 +16720,9 @@
           }
         }
       }
+    },
+    "None" : {
+      "comment" : "Batch size - directly"
     },
     "Not enough data" : {
       "comment" : "title for NotEnoughData",
@@ -28189,6 +28226,9 @@
         }
       }
     },
+    "Upload Delay" : {
+      "comment" : "DMS batching label"
+    },
     "Use your BG meter to monitor your glucose. Contact Eversense Customer Support if the issue persists." : {
       "comment" : "description for GeneralGlucoseSuspended",
       "extractionState" : "manual",
@@ -31916,5 +31956,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.1"
 }

@@ -20,6 +20,11 @@ extension EversenseE3 {
             nil
         }
 
+        let currentGlucose: UInt16
+        init(currentGlucose: UInt16) {
+            self.currentGlucose = currentGlucose
+        }
+
         func getRequestData() -> Data {
             var data = Data([0x10])
             let checksum = BinaryOperations.generateChecksumCRC16(data: data)
@@ -83,7 +88,7 @@ extension EversenseE3 {
 
             return GetGlucoseAlertsAndStatusPacketResonse(
                 alarms: alarms
-                    .map { ActiveAlarm(code: $0, codeRaw: $0.rawValue, flag: 0, priority: 0) }
+                    .map { ActiveAlarm(code: $0, codeRaw: $0.rawValue, glucoseInMgDl: currentGlucose, flag: 0, priority: 0) }
             )
         }
     }

@@ -10,7 +10,7 @@ struct Eversense365Auth: View {
         VStack {
             List {
                 Section {
-                    TextField(String(localized: "Email address", comment: "Label for email address"), text: $viewModel.username)
+                    TextField(String(localized: "Email Address", comment: "Label for email address"), text: $viewModel.username)
                         .textContentType(.emailAddress)
                     SecureField(String(localized: "Password", comment: "Label for password"), text: $viewModel.password)
                         .textContentType(.password)
@@ -23,10 +23,10 @@ struct Eversense365Auth: View {
 
                 Section {
                     Button(action: viewModel.openRegistrationUrl) {
-                        Text("Create account", comment: "label to create account")
+                        Text("Create Account", comment: "label to create account")
                     }
                     Button(action: viewModel.openForgotPasswordUrl) {
-                        Text("Forgot password", comment: "Label for forgot password")
+                        Text("Forgot Password", comment: "Label for forgot password")
                     }
                 }
             }

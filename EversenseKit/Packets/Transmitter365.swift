@@ -150,7 +150,8 @@ extension Eversense365 {
             cgmManager.state.repeatHighTimeout = patientSettings.repeatHighTimeout
 
             logger.debug("Sending GetActiveAlarmsPacket")
-            let activeAlarms: GetActiveAlarmsResponse = try peripheralManager.write(GetActiveAlarmsPacket())
+            let alarmsRequest = GetActiveAlarmsPacket(currentGlucose: cgmManager.state.recentGlucoseInMgDl ?? 0)
+            let activeAlarms: GetActiveAlarmsResponse = try peripheralManager.write(alarmsRequest)
             cgmManager.state.activeAlarms = activeAlarms.alarms
 
             logger.info("[365] Sync completed - timestamp: \(Date.now)")

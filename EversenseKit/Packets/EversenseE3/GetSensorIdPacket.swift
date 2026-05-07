@@ -23,8 +23,8 @@ extension EversenseE3 {
         }
 
         func parseResponse(data: Data) -> GetSensorIdResponse {
-            return GetSensorIdResponse(
-                sensorId: Data(data.subdata(in: start..<start+3))
+            GetSensorIdResponse(
+                sensorId: Data(data.subdata(in: start ..< start + 3))
             )
         }
     }

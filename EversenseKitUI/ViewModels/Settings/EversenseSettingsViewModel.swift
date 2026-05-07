@@ -55,6 +55,7 @@ class EversenseSettingsViewModel: ObservableObject {
     public let allowCalibrations = FeatureFlags.ALLOW_CALIBRATION
     public let deleteCgm: () -> Void
     public let toTransmitterSettings: () -> Void
+    public let toDMSSettings: () -> Void
     public let toPlacementGuide: () -> Void
     public let toCalibration: () -> Void
     public let toCalibrationHistory: () -> Void
@@ -63,6 +64,7 @@ class EversenseSettingsViewModel: ObservableObject {
         cgmManager: EversenseCGMManager?,
         deleteCgm: @escaping () -> Void,
         toTransmitterSettings: @escaping () -> Void,
+        toDMSSettings: @escaping () -> Void,
         toPlacementGuide: @escaping () -> Void,
         toCalibration: @escaping () -> Void,
         toCalibrationHistory: @escaping () -> Void,
@@ -72,6 +74,7 @@ class EversenseSettingsViewModel: ObservableObject {
         self.deleteCgm = deleteCgm
         self.toTransmitterSettings = toTransmitterSettings
         self.toPlacementGuide = toPlacementGuide
+        self.toDMSSettings = toDMSSettings
         self.toCalibration = toCalibration
         self.toCalibrationHistory = toCalibrationHistory
         self.toAlertHistory = toAlertHistory

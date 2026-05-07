@@ -12,6 +12,7 @@ enum EversenseUIScreen {
     case calibration
     case calibrationHistory
     case alertHistory
+    case dmsSettings
 }
 
 class EversenseUIController: UINavigationController, CGMManagerOnboarding, CompletionNotifying, UINavigationControllerDelegate {
@@ -123,30 +124,16 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                     }
                 }
             }
-            let toTransmitterSettings = {
-                self.navigateTo(.transmitterSettings)
-            }
-            let toPlacementGuide = {
-                self.navigateTo(.placementGuide)
-            }
-            let toCalibration = {
-                self.navigateTo(.calibration)
-            }
-            let toCalibrationHistory = {
-                self.navigateTo(.calibrationHistory)
-            }
-            let toAlertHistory = {
-                self.navigateTo(.alertHistory)
-            }
 
             let viewModel = EversenseSettingsViewModel(
                 cgmManager: cgmManager,
                 deleteCgm: deleteCgm,
-                toTransmitterSettings: toTransmitterSettings,
-                toPlacementGuide: toPlacementGuide,
-                toCalibration: toCalibration,
-                toCalibrationHistory: toCalibrationHistory,
-                toAlertHistory: toAlertHistory
+                toTransmitterSettings: { self.navigateTo(.transmitterSettings) },
+                toDMSSettings: { self.navigateTo(.dmsSettings) },
+                toPlacementGuide: { self.navigateTo(.placementGuide) },
+                toCalibration: { self.navigateTo(.calibration) },
+                toCalibrationHistory: { self.navigateTo(.calibrationHistory) },
+                toAlertHistory: { self.navigateTo(.alertHistory) }
             )
             return hostingController(rootView: EversenseSettingsView(viewModel: viewModel))
         case .transmitterSettings:
@@ -168,6 +155,9 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
         case .alertHistory:
             let viewModel = AlertHistoryViewModel(cgmManager: cgmManager)
             return hostingController(rootView: AlertHistoryView(viewModel: viewModel))
+        case .dmsSettings:
+            let viewModel = DMSSettingsViewModel(cgmManager: cgmManager)
+            return hostingController(rootView: DMSSettingsView(viewModel: viewModel))
         }
     }
 
@@ -208,8 +198,20 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                 cgmManager.state.nextCalibration = Date.now.addingTimeInterval(.days(7))
                 cgmManager.state.lastSynced = Date.now
                 cgmManager.state.activeAlarms = [
-                    ActiveAlarm(code: .CalibrationNowAlarm, codeRaw: Alarm.CalibrationNowAlarm.rawValue, flag: 0, priority: 0),
-                    ActiveAlarm(code: .PredictiveHighAlarm, codeRaw: Alarm.CalibrationNowAlarm.rawValue, flag: 0, priority: 2)
+                    ActiveAlarm(
+                        code: .CalibrationNowAlarm,
+                        codeRaw: Alarm.CalibrationNowAlarm.rawValue,
+                        glucoseInMgDl: 0,
+                        flag: 0,
+                        priority: 0
+                    ),
+                    ActiveAlarm(
+                        code: .PredictiveHighAlarm,
+                        codeRaw: Alarm.CalibrationNowAlarm.rawValue,
+                        glucoseInMgDl: 0,
+                        flag: 0,
+                        priority: 2
+                    )
                 ]
 
                 if let cgmManagerOnboardingDelegate = self.cgmManagerOnboardingDelegate {

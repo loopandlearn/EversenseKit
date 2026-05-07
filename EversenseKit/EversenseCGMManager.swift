@@ -201,22 +201,24 @@ extension EversenseCGMManager {
                         self.logger.warning("Failed to upload current reading")
                         return
                     }
-                    
+
                     self.state.readingsToUpload += samples
-                    if self.state.readingsToUpload.isEmpty {
+                    if self.state.readingsToUpload.count < self.state.uploadBatchSize {
                         self.logger.debug("Nothing to upload...")
                         return
                     }
-                    
+
                     guard await DMSApi.uploadDeviceEvents(
                         cgmManager: self,
+                        sensorId: self.state.sensorId,
                         readings: self.state.readingsToUpload,
-                        sensorId: self.state.sensorId
+                        calibrations: [],
+                        alerts: self.state.activeAlarms
                     ) else {
                         self.logger.warning("Failed to upload device events")
                         return
                     }
-                    
+
                     self.state.lastOnlineSync = self.state.readingsToUpload.map(\.datetime).max()
                     self.state.readingsToUpload = []
                     self.notifyStateDidChange()

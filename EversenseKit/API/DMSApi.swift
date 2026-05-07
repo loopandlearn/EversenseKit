@@ -58,7 +58,13 @@ enum DMSApi {
         }
     }
 
-    static func uploadDeviceEvents(cgmManager: EversenseCGMManager, readings: [CGMReading], sensorId: Data) async -> Bool {
+    static func uploadDeviceEvents(
+        cgmManager: EversenseCGMManager,
+        sensorId: Data,
+        readings: [CGMReading],
+        calibrations: [CalibrationEvent],
+        alerts: [ActiveAlarm]
+    ) async -> Bool {
         guard let url = URL(string: "\(careBaseUrl)api/care/PutDeviceEvents") else {
             logger.error("Could not create URL...")
             return false
@@ -80,9 +86,9 @@ enum DMSApi {
                 deviceID: transmitterId,
                 offsetBytes: buildOffsetBytes(),
                 sgBytes: buildSgBytes(readings: readings, sensorId: sensorId),
-                mgBytes: buildEmptyMgBytes(),
+                mgBytes: buildEmptyMgBytes(calibrations: calibrations),
                 patientBytes: buildEmptyPatientBytes(),
-                alertBytes: buildAlertBytes(sensorId: sensorId),
+                alertBytes: buildAlertBytes(alerts: alerts, sensorId: sensorId),
                 algorithmVersion: "10"
             )
 
@@ -110,6 +116,14 @@ enum DMSApi {
             logger.error("Failed to upload readings: \(error.localizedDescription)")
             return false
         }
+    }
+
+    public static func fetchEversenseNow(cgmManager: EversenseCGMManager) async -> [String] {
+        guard let token = await getAccessToken(cgmManager: cgmManager) else {
+            return []
+        }
+
+        return []
     }
 
     private static func getAccessToken(cgmManager: EversenseCGMManager) async -> String? {
@@ -173,17 +187,41 @@ enum DMSApi {
         return data.base64EncodedString()
     }
 
-    private static func buildEmptyMgBytes() -> String {
+    private static func buildEmptyMgBytes(calibrations: [CalibrationEvent]) -> String {
         // Header: 98 01 00 + count(2 bytes LE) + 00  → 0 records
-        let data = Data([0x98, 0x01, 0x00, 0x00, 0x00, 0x00])
+        var data = Data([0x98, 0x01, 0x00, 0x00])
+        data.append(Int64(calibrations.count).toData(length: 2))
+        data.append(0x00)
+
+        let zeroInt16 = Int64(0).toData(length: 2)
+        for (idx, r) in calibrations.enumerated() {
+            data.append(Int64(idx + 1).toData(length: 3)) // record number (1-based)
+            data.append(calcDateBytes(date: r.datetime)) // date
+            data.append(calcTimeBytes(date: r.datetime)) // time
+            data.append(Int64(r.glucoseInMgDl).toData(length: 2)) // glucose
+            data.append(zeroInt16) // Padding
+            data.append(Data([255, 0, 0, 0])) // Custom field
+        }
+
         return data.base64EncodedString()
     }
 
-    private static func buildAlertBytes(sensorId: Data) -> String {
-        // Header: 93 01 00 + count(2 bytes LE) + sensorIdBytes + 00  → 0 alerts
-        var data = Data([0x93, 0x01, 0x00, 0x00, 0x00])
+    private static func buildAlertBytes(alerts: [ActiveAlarm], sensorId: Data) -> String {
+        // Header: 93 01 00 + count(2 bytes LE) + sensorIdBytes + 00
+        var data = Data([0x93, 0x01, 0x00])
+        data.append(Int64(alerts.count).toData(length: 2))
         data.append(sensorId)
         data.append(0x00)
+
+        let zeroInt16 = Int64(0).toData(length: 2)
+        for (idx, r) in alerts.enumerated() {
+            data.append(Int64(idx + 1).toData(length: 3)) // record number (1-based)
+            data.append(calcDateBytes(date: r.datetime)) // date
+            data.append(calcTimeBytes(date: r.datetime)) // time
+            data.append(Int64(r.glucoseInMgDl).toData(length: 2)) // glucose
+            data.append(zeroInt16) // Padding
+            data.append(Data([255, 0, 0, 0])) // Custom field
+        }
 
         return data.base64EncodedString()
     }

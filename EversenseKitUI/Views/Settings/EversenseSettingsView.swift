@@ -180,6 +180,17 @@ struct EversenseSettingsView: View {
                 }
                 .buttonStyle(PlainButtonStyle())
 
+                Button(action: viewModel.toDMSSettings) {
+                    HStack {
+                        Text("DMS settings", comment: "go to eversense dms settings")
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: UIFont.systemFontSize, weight: .medium))
+                            .opacity(0.35)
+                    }
+                }
+                .buttonStyle(PlainButtonStyle())
+
                 Button(action: { viewModel.toAlertHistory() }) {
                     HStack {
                         Text("Alert history", comment: "alerts")

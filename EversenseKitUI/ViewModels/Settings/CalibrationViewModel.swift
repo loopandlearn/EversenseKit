@@ -37,27 +37,43 @@ class CalibrationViewModel: ObservableObject {
             glucose = UInt16(mgdl)
         }
 
-        Task {
-            do {
-                if cgmManager.state.is365 {
-                    try Eversense365.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose, timestamp: time)
-                } else {
-                    try EversenseE3.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose, timestamp: time)
+        do {
+            if cgmManager.state.is365 {
+                try Eversense365.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose, timestamp: time)
+            } else {
+                try EversenseE3.calibrateSensors(cgmManager: cgmManager, glucoseInMgDl: glucose, timestamp: time)
+            }
+
+            if cgmManager.state.shouldUploadToEversenseDMS {
+                Task {
+                    if await DMSApi.uploadDeviceEvents(
+                        cgmManager: cgmManager,
+                        sensorId: cgmManager.state.sensorId,
+                        readings: [],
+                        calibrations: [
+                            CalibrationEvent(
+                                glucoseInMgDl: glucose,
+                                datetime: time
+                            )
+                        ],
+                        alerts: []
+                    ) == false {
+                        self.logger.warning("Failed to upload device events")
+                    }
                 }
+            }
 
-                cgmManager.heartbeathOperation {}
-
-                await MainActor.run {
+            cgmManager.heartbeathOperation {
+                DispatchQueue.main.async {
                     self.isLoading = false
                     self.done()
                 }
-            } catch {
-                logger.error("Error during calibration: \(error)")
-
-                await MainActor.run {
-                    self.error = error.localizedDescription
-                    self.isLoading = false
-                }
+            }
+        } catch {
+            logger.error("Error during calibration: \(error)")
+            DispatchQueue.main.async {
+                self.error = error.localizedDescription
+                self.isLoading = false
             }
         }
     }
