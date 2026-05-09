@@ -118,12 +118,138 @@ enum DMSApi {
         }
     }
 
-    public static func fetchEversenseNow(cgmManager: EversenseCGMManager) async -> [String] {
+    public static func updateFollowers(cgmManager: EversenseCGMManager) async -> [NowFollowerUI] {
         guard let token = await getAccessToken(cgmManager: cgmManager) else {
             return []
         }
 
-        return []
+        do {
+            guard let urlFollowers = URL(string: "\(careBaseUrl)api/care/GetMyFollowerPatientList") else {
+                logger.error("Could not create follower URL...")
+                return []
+            }
+
+            guard let urlPending = URL(string: "\(careBaseUrl)api/care/GetMyPendingFollowerPatientList") else {
+                logger.error("Could not create URL...")
+                return []
+            }
+
+            var requestFollower = URLRequest(url: urlFollowers)
+            requestFollower.httpMethod = "GET"
+            requestFollower.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+            let (dataFollower, responseFollower) = try await URLSession.shared.data(for: requestFollower)
+            guard let responseFollower = responseFollower as? HTTPURLResponse, responseFollower.statusCode < 400 else {
+                let message =
+                    "Got invalid response from GetMyFollowerPatientList: \((responseFollower as? HTTPURLResponse)?.statusCode ?? -1) \(String(data: dataFollower, encoding: .utf8) ?? "No data")"
+
+                logger.error(message)
+                return []
+            }
+
+            var requestPending = URLRequest(url: urlPending)
+            requestPending.httpMethod = "GET"
+            requestPending.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+            let (dataPending, responsePending) = try await URLSession.shared.data(for: requestPending)
+            guard let responsePending = responsePending as? HTTPURLResponse, responsePending.statusCode < 400 else {
+                let message =
+                    "Got invalid response from GetMyFollowerPatientList: \((responsePending as? HTTPURLResponse)?.statusCode ?? -1) \(String(data: dataPending, encoding: .utf8) ?? "No data")"
+
+                logger.error(message)
+                return []
+            }
+
+            let followers = (try JSONDecoder().decode([NowFollower].self, from: dataFollower)).map {
+                NowFollowerUI(
+                    FollowerEmail: $0.FollowerEmail,
+                    ReferenceName: $0.ReferenceName,
+                    isPending: false
+                )
+            }
+            let pending = (try JSONDecoder().decode([NowFollower].self, from: dataPending)).map {
+                NowFollowerUI(
+                    FollowerEmail: $0.FollowerEmail,
+                    ReferenceName: $0.ReferenceName,
+                    isPending: true
+                )
+            }
+
+            return followers + pending
+        } catch {
+            logger.error("Failed to get patient followers: \(error.localizedDescription)")
+            return []
+        }
+    }
+
+    public static func inviteFollower(cgmManager: EversenseCGMManager, fullName: String, email: String) async {
+        guard let token = await getAccessToken(cgmManager: cgmManager) else {
+            return
+        }
+
+        guard let url =
+            URL(
+                string: "\(careBaseUrl)api/care/PutVerificationCode_V2?SenderEmail=\(email)&ReferenceName=\(fullName)&LangCode=en"
+            )
+        else {
+            logger.error("Could not create URL...")
+            return
+        }
+
+        do {
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let response = response as? HTTPURLResponse, response.statusCode < 400 else {
+                let message =
+                    "Got invalid response from PutVerificationCode_V2: \((response as? HTTPURLResponse)?.statusCode ?? -1) \(String(data: data, encoding: .utf8) ?? "No data")"
+
+                logger.error(message)
+                return
+            }
+
+            logger
+                .debug(
+                    "PutVerificationCode_V2 success! httpCode: \((response as? HTTPURLResponse)?.statusCode ?? -1), response: \(String(data: data, encoding: .utf8) ?? "EMPTY")"
+                )
+        } catch {
+            logger.error("Failed to invite follower: \(error.localizedDescription)")
+        }
+    }
+
+    public static func removeFollower(cgmManager: EversenseCGMManager, email: String) async {
+        guard let token = await getAccessToken(cgmManager: cgmManager) else {
+            return
+        }
+
+        guard let url = URL(string: "\(careBaseUrl)api/care/UpdateStatus?FollowerEmail=\(email)&Status=2") else {
+            logger.error("Could not create URL...")
+            return
+        }
+
+        do {
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let response = response as? HTTPURLResponse, response.statusCode < 400 else {
+                let message =
+                    "Got invalid response from UpdateStatus: \((response as? HTTPURLResponse)?.statusCode ?? -1) \(String(data: data, encoding: .utf8) ?? "No data")"
+
+                logger.error(message)
+                return
+            }
+
+            logger
+                .debug(
+                    "UpdateStatus success! httpCode: \((response as? HTTPURLResponse)?.statusCode ?? -1), response: \(String(data: data, encoding: .utf8) ?? "EMPTY")"
+                )
+        } catch {
+            logger.error("Failed to update followers: \(error.localizedDescription)")
+        }
     }
 
     private static func getAccessToken(cgmManager: EversenseCGMManager) async -> String? {
@@ -188,19 +314,19 @@ enum DMSApi {
     }
 
     private static func buildEmptyMgBytes(calibrations: [CalibrationEvent]) -> String {
-        // Header: 98 01 00 + count(2 bytes LE) + 00  → 0 records
-        var data = Data([0x98, 0x01, 0x00, 0x00])
+        // Header: 98 01 00 + count(2 bytes LE) + 00
+        var data = Data([0x98, 0x01, 0x00])
         data.append(Int64(calibrations.count).toData(length: 2))
         data.append(0x00)
 
         let zeroInt16 = Int64(0).toData(length: 2)
         for (idx, r) in calibrations.enumerated() {
-            data.append(Int64(idx + 1).toData(length: 3)) // record number (1-based)
+            data.append(Int64(idx + 1).toData(length: 2)) // record number (1-based)
             data.append(calcDateBytes(date: r.datetime)) // date
             data.append(calcTimeBytes(date: r.datetime)) // time
             data.append(Int64(r.glucoseInMgDl).toData(length: 2)) // glucose
             data.append(zeroInt16) // Padding
-            data.append(Data([255, 0, 0, 0])) // Custom field
+            data.append(Data([1, 0, 0, 0])) // Custom field
         }
 
         return data.base64EncodedString()
@@ -215,12 +341,13 @@ enum DMSApi {
 
         let zeroInt16 = Int64(0).toData(length: 2)
         for (idx, r) in alerts.enumerated() {
-            data.append(Int64(idx + 1).toData(length: 3)) // record number (1-based)
+            data.append(Int64(idx + 1).toData(length: 2)) // record number (1-based)
             data.append(calcDateBytes(date: r.datetime)) // date
             data.append(calcTimeBytes(date: r.datetime)) // time
+            data.append(Data([r.code.dmsCode]))
             data.append(Int64(r.glucoseInMgDl).toData(length: 2)) // glucose
             data.append(zeroInt16) // Padding
-            data.append(Data([255, 0, 0, 0])) // Custom field
+            data.append(zeroInt16) // Padding
         }
 
         return data.base64EncodedString()

@@ -5,6 +5,27 @@ struct DMSSettingsView: View {
     @ObservedObject var viewModel: DMSSettingsViewModel
     @State var edittingBatchSize: Bool = false
 
+    var confirmationSheet: ActionSheet {
+        ActionSheet(
+            title: Text(String(
+                format: String(localized: "Remove follower %@", comment: "title for removing EversenseNow follower"),
+                viewModel.followerToBeRemoved?.ReferenceName ?? ""
+            )),
+            message: Text(
+                "Are you sure you want to remove this follower from your Eversense NOW sharing?",
+                comment: "description for removing EversenseNow follower"
+            ),
+            buttons: [
+                .destructive(
+                    Text("Confirm", comment: "Confirmation label")
+                ) {
+                    viewModel.removeFollower()
+                },
+                .cancel()
+            ]
+        )
+    }
+
     var body: some View {
         VStack {
             List {
@@ -18,6 +39,7 @@ struct DMSSettingsView: View {
                             Text("Email Address", comment: "Label for email address")
                             TextField("", text: $viewModel.username)
                                 .textContentType(.emailAddress)
+                                .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.trailing)
                         }
 
@@ -25,6 +47,7 @@ struct DMSSettingsView: View {
                             Text("Password", comment: "Label for password")
                             SecureField("", text: $viewModel.password)
                                 .textContentType(.emailAddress)
+                                .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.trailing)
                         }
 
@@ -49,6 +72,14 @@ struct DMSSettingsView: View {
                             )
                         }
                     }
+
+                    Button { viewModel.save() } label: {
+                        Text("Save", comment: "label save")
+                            .font(.title3)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(viewModel.isDirty)
                 } footer: {
                     Text(
                         "Increasing the Upload Delay will lower the Internet usage, but gives the Eversense DMS a small delay",
@@ -58,36 +89,49 @@ struct DMSSettingsView: View {
 
                 if viewModel.enabled {
                     Section {
-                        HStack {
-                            Label("Invite person", systemImage: "plus")
-                                .foregroundStyle(.tint)
+                        if viewModel.isLoading {
+                            ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                        } else {
+                            ForEach(viewModel.eversenseNowUsers) { user in
+                                HStack {
+                                    Text(
+                                        user
+                                            .ReferenceName +
+                                            (user.isPending ? String(localized: " (Pending)", comment: "pending") : "")
+                                    )
+
+                                    if !user.isPending {
+                                        Spacer()
+                                        Button(action: { viewModel.confirmRemoveFollower(follower: user) }) {
+                                            Image(systemName: "trash")
+                                                .foregroundStyle(.red)
+                                        }
+                                    }
+                                }
+                            }
+
+                            HStack {
+                                Label("Invite follower", systemImage: "plus")
+                                    .foregroundStyle(.tint)
+                            }
+                            .onTapGesture {
+                                viewModel.inviteNowSheet.toggle()
+                            }
                         }
-                        .onTapGesture {
-                            edittingBatchSize.toggle()
-                        }
+
                     } header: {
                         Text("Eversense NOW", comment: "Eversense NOW section")
                     }
                 }
             }
-
-            Spacer()
-            if !viewModel.error.isEmpty {
-                Text(viewModel.error)
-                    .foregroundStyle(.red)
-            }
-            Button(action: viewModel.save) {
-                if viewModel.isLoading {
-                    ActivityIndicator(isAnimating: .constant(true), style: .medium)
-                } else {
-                    Text("Save", comment: "label save")
-                }
-            }
-            .buttonStyle(ActionButtonStyle())
-            .padding([.bottom, .horizontal])
-            .disabled(viewModel.isLoading)
         }
         .navigationTitle(String(localized: "DMS Settings", comment: "DMS header"))
+        .actionSheet(isPresented: $viewModel.removeConfirmationSheet) {
+            confirmationSheet
+        }
+        .sheet(isPresented: $viewModel.inviteNowSheet) {
+            NowInviteSheet(viewModel: viewModel.inviteNowViewModel)
+        }
     }
 
     func formatBatchSize(_ size: Int) -> String {

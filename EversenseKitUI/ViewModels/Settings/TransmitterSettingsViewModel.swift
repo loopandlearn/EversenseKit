@@ -100,41 +100,43 @@ class TransmitterSettingsViewModel: ObservableObject {
                 return
             }
 
-            let transmitterSettings = TransmitterSettings(
-                vibrationMode: self.vibrationMode,
+            DispatchQueue.global(qos: .userInitiated).async {
+                let transmitterSettings = TransmitterSettings(
+                    vibrationMode: self.vibrationMode,
 
-                glucoseHighEnabled: self.enableGlucoseHighAlerts,
-                glucoseHighInMgDl: UInt16(self.glucoseHighInMgDl),
-                glucoseLowInMgDl: UInt16(self.glucoseLowInMgDl),
+                    glucoseHighEnabled: self.enableGlucoseHighAlerts,
+                    glucoseHighInMgDl: UInt16(self.glucoseHighInMgDl),
+                    glucoseLowInMgDl: UInt16(self.glucoseLowInMgDl),
 
-                rateFallingEnabled: self.rateFallingEnabled,
-                rateRisingEnabled: self.rateRisingEnabled,
-                rateFallingThreshold: UInt8(self.rateFallingThreshold * 10),
-                rateRisingThreshold: UInt8(self.rateRisingThreshold * 10),
+                    rateFallingEnabled: self.rateFallingEnabled,
+                    rateRisingEnabled: self.rateRisingEnabled,
+                    rateFallingThreshold: UInt8(self.rateFallingThreshold * 10),
+                    rateRisingThreshold: UInt8(self.rateRisingThreshold * 10),
 
-                predictiveHighEnabled: self.predictionHighEnabled,
-                predictiveHighThreshold: UInt16(self.predictionHighThreshold),
-                predictiveHighTime: self.predictionHighTime,
-                predictiveLowEnabled: self.predictionLowEnabled,
-                predictiveLowThreshold: UInt16(self.predictionLowThreshold),
-                predictiveLowTime: self.predictionLowTime,
+                    predictiveHighEnabled: self.predictionHighEnabled,
+                    predictiveHighThreshold: UInt16(self.predictionHighThreshold),
+                    predictiveHighTime: self.predictionHighTime,
+                    predictiveLowEnabled: self.predictionLowEnabled,
+                    predictiveLowThreshold: UInt16(self.predictionLowThreshold),
+                    predictiveLowTime: self.predictionLowTime,
 
-                repeatAlarmLow: self.repeatLow,
-                repeatAlarmHigh: self.repeatHigh,
-                bleDisconnect: self.bleDisconnect
-            )
+                    repeatAlarmLow: self.repeatLow,
+                    repeatAlarmHigh: self.repeatHigh,
+                    bleDisconnect: self.bleDisconnect
+                )
 
-            if !cgmManager.state.is365 {
-                EversenseE3.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
-                EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: cgmManager)
-            } else {
-                Eversense365.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
-                Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: cgmManager)
-            }
+                if !cgmManager.state.is365 {
+                    EversenseE3.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
+                    EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: cgmManager)
+                } else {
+                    Eversense365.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
+                    Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: cgmManager)
+                }
 
-            DispatchQueue.main.async {
-                self.loading = false
-                self.error = ""
+                DispatchQueue.main.async {
+                    self.loading = false
+                    self.error = ""
+                }
             }
         }
     }

@@ -20,7 +20,7 @@ import SwiftUI
 
                 Chart {
                     BarMark(
-                        y: .value("Strength (%)", viewModel.strengthRaw)
+                        y: .value("Strength", viewModel.strengthRaw)
                     )
                 }
                 .foregroundStyle(.blue)

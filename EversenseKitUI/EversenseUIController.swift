@@ -7,6 +7,7 @@ enum EversenseUIScreen {
     case onboardingScan
 
     case settings
+    case transmitterInfo
     case transmitterSettings
     case placementGuide
     case calibration
@@ -128,6 +129,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
             let viewModel = EversenseSettingsViewModel(
                 cgmManager: cgmManager,
                 deleteCgm: deleteCgm,
+                toTransmitterInfo: { self.navigateTo(.transmitterInfo) },
                 toTransmitterSettings: { self.navigateTo(.transmitterSettings) },
                 toDMSSettings: { self.navigateTo(.dmsSettings) },
                 toPlacementGuide: { self.navigateTo(.placementGuide) },
@@ -136,6 +138,9 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                 toAlertHistory: { self.navigateTo(.alertHistory) }
             )
             return hostingController(rootView: EversenseSettingsView(viewModel: viewModel))
+        case .transmitterInfo:
+            let viewModel = TransmitterInfoViewModel(cgmManager: cgmManager)
+            return hostingController(rootView: TransmitterInfoView(viewModel: viewModel))
         case .transmitterSettings:
             let viewModel = TransmitterSettingsViewModel(cgmManager: cgmManager, unit: displayGlucosePreference.unit)
             return hostingController(rootView: TransmitterSettingsView(viewModel: viewModel))
@@ -156,7 +161,8 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
             let viewModel = AlertHistoryViewModel(cgmManager: cgmManager)
             return hostingController(rootView: AlertHistoryView(viewModel: viewModel))
         case .dmsSettings:
-            let viewModel = DMSSettingsViewModel(cgmManager: cgmManager)
+            let inviteViewModel = InviteNowViewModel(cgmManager: cgmManager)
+            let viewModel = DMSSettingsViewModel(cgmManager: cgmManager, inviteNowViewModel: inviteViewModel)
             return hostingController(rootView: DMSSettingsView(viewModel: viewModel))
         }
     }

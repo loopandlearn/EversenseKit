@@ -110,6 +110,10 @@ public class EversenseCGMManager: CGMManager {
         stateObservers.insert(state, queue: queue)
     }
 
+    func removeStateObserver(state: StateObserver) {
+        stateObservers.removeElement(state)
+    }
+
     public func acknowledgeAlert(alertIdentifier _: LoopKit.Alert.AlertIdentifier, completion: @escaping ((any Error)?) -> Void) {
         completion(nil)
     }
@@ -213,7 +217,7 @@ extension EversenseCGMManager {
                         sensorId: self.state.sensorId,
                         readings: self.state.readingsToUpload,
                         calibrations: [],
-                        alerts: self.state.activeAlarms
+                        alerts: self.state.activeAlarms.filter { $0.code.dmsCode != 255 }
                     ) else {
                         self.logger.warning("Failed to upload device events")
                         return
