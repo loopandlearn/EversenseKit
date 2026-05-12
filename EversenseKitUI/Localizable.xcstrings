@@ -3836,7 +3836,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Anulează"
+            "value" : "Anulați"
           }
         },
         "ru" : {
@@ -4970,7 +4970,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conectarea"
+            "value" : "Conectare"
           }
         },
         "ru" : {
@@ -6104,7 +6104,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Calibrare dublă zilnică Faza"
+            "value" : "Faza de calibrare dublă zilnică"
           }
         },
         "ru" : {
@@ -6266,7 +6266,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug/test"
+            "value" : "Depanare/test"
           }
         },
         "ru" : {
@@ -7886,7 +7886,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activează vibrația transmițătorului"
+            "value" : "Activați vibrația transmițătorului"
           }
         },
         "ru" : {
@@ -9506,7 +9506,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glucoza se schimbă prea repede"
+            "value" : "Glicemia se schimbă prea repede"
           }
         },
         "ru" : {
@@ -9992,7 +9992,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nivelul glucozei"
+            "value" : "Nivelul glicemiei"
           }
         },
         "ru" : {
@@ -10478,7 +10478,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glucoză prea mare"
+            "value" : "Glicemie prea mare"
           }
         },
         "ru" : {
@@ -10640,7 +10640,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glucoză prea scăzută"
+            "value" : "Glicemie prea mică"
           }
         },
         "ru" : {
@@ -11450,7 +11450,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Snooze mare"
+            "value" : "Amânare ridicată"
           }
         },
         "ru" : {
@@ -11612,7 +11612,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Snooze mare"
+            "value" : "Amânare mare"
           }
         },
         "ru" : {
@@ -12908,7 +12908,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Insuficiența datelor"
+            "value" : "Date insuficiente"
           }
         },
         "ru" : {
@@ -15014,7 +15014,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Snooze scăzut"
+            "value" : "Amânare redusă"
           }
         },
         "ru" : {
@@ -15176,7 +15176,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Asigurați-vă că Eversense este în modul de împerechere. Vă rugăm să citiți manualul pentru a afla cum să faceți acest lucru."
+            "value" : "Asigurați-vă că Eversense este în modul de asociere. Vă rugăm să citiți manualul pentru a afla cum să faceți acest lucru."
           }
         },
         "ru" : {
@@ -17444,7 +17444,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alte eșecuri"
+            "value" : "Altă defecțiune"
           }
         },
         "ru" : {
@@ -22466,7 +22466,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stabilitatea senzorului"
+            "value" : "Stabilitate senzor"
           }
         },
         "ru" : {
@@ -22790,7 +22790,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Partajează jurnalele Eversense"
+            "value" : "Partajați jurnalele Eversense"
           }
         },
         "ru" : {
@@ -23762,7 +23762,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deget suspect"
+            "value" : "Înțepare suspicioasă în deget"
           }
         },
         "ru" : {
@@ -24248,7 +24248,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eversense 365 este un transmițător cu implant pe tot parcursul anului, cu algoritm îmbunătățit în comparație cu Eversense E3"
+            "value" : "Eversense 365 este un transmițător implantabil pe tot parcursul anului, cu algoritm îmbunătățit în comparație cu Eversense E3"
           }
         },
         "ru" : {
@@ -24410,7 +24410,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eversense E3 este un transmițător de implant de 90 de zile sau 180 de zile. Primul dispozitiv implantabil Eversense construit de Senseonics"
+            "value" : "Eversense E3 este un transmițător implantabil de 90 de zile sau 180 de zile. Primul dispozitiv implantabil Eversense construit de Senseonics"
           }
         },
         "ru" : {
@@ -26840,7 +26840,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Numele emițătorului"
+            "value" : "Nume transmițător"
           }
         },
         "ru" : {
@@ -29156,7 +29156,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "欢迎光临"
+            "value" : "欢迎使用！"
           }
         }
       }
