@@ -271,7 +271,7 @@ struct EversenseSettingsView: View {
                         .fixedSize()
 
                     if viewModel.batteryPercentage <= 1 {
-                        Text("%")
+                        Text(String("%"))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }

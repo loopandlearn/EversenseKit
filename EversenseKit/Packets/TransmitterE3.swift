@@ -117,7 +117,8 @@ extension EversenseE3 {
             cgmManager.state.batteryPercentage = batteryPercentage.value.percentage()
 
             // Do Ping
-            let _: PingResponse = try peripheralManager.write(PingPacket())
+            let pingResponse: PingResponse = try peripheralManager.write(PingPacket())
+            cgmManager.state.transmitterId = pingResponse.transmitterId
 
             let sensorIdResponse: GetSensorIdResponse = try peripheralManager.write(GetSensorIdPacket())
             cgmManager.state.sensorId = sensorIdResponse.sensorId

@@ -11,7 +11,7 @@ extension EversenseE3 {
         typealias T = GetSensorIdResponse
 
         var responseType: UInt8 {
-            PacketIds.readTwoByteSerialFlashRegisterResponseId.rawValue
+            PacketIds.readFourByteSerialFlashRegisterResponseId.rawValue
         }
 
         var responseId: UInt8? {
@@ -24,7 +24,7 @@ extension EversenseE3 {
 
         func parseResponse(data: Data) -> GetSensorIdResponse {
             GetSensorIdResponse(
-                sensorId: Data(data.subdata(in: start ..< start + 3))
+                sensorId: Data(data.subdata(in: start ..< start + 4))
             )
         }
     }

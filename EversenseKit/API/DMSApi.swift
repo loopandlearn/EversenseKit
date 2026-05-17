@@ -89,7 +89,7 @@ enum DMSApi {
                 mgBytes: buildEmptyMgBytes(calibrations: calibrations),
                 patientBytes: buildEmptyPatientBytes(),
                 alertBytes: buildAlertBytes(alerts: alerts, sensorId: sensorId),
-                algorithmVersion: "10"
+                algorithmVersion: cgmManager.state.is365 ? "10" : "1"
             )
 
             var request = URLRequest(url: url)

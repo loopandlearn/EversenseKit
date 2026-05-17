@@ -37,7 +37,7 @@ struct DMSSettingsView: View {
                     if viewModel.enabled {
                         HStack {
                             Text("Email Address", comment: "Label for email address")
-                            TextField("", text: $viewModel.username)
+                            TextField(String(""), text: $viewModel.username)
                                 .textContentType(.emailAddress)
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.trailing)
@@ -45,8 +45,8 @@ struct DMSSettingsView: View {
 
                         HStack {
                             Text("Password", comment: "Label for password")
-                            SecureField("", text: $viewModel.password)
-                                .textContentType(.emailAddress)
+                            SecureField(String(""), text: $viewModel.password)
+                                .textContentType(.password)
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.trailing)
                         }
@@ -79,7 +79,7 @@ struct DMSSettingsView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
-                    .disabled(viewModel.isDirty)
+                    .disabled(!viewModel.isDirty)
                 } footer: {
                     Text(
                         "Increasing the Upload Delay will lower the Internet usage, but gives the Eversense DMS a small delay",

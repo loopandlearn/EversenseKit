@@ -14,7 +14,7 @@ struct NowInviteSheet: View {
                             Text("Full Name", comment: "invite form fullName")
                                 .foregroundStyle(.primary)
 
-                            TextField("", text: $viewModel.fullName)
+                            TextField(String(""), text: $viewModel.fullName)
                                 .textContentType(.name)
                                 .multilineTextAlignment(.trailing)
                                 .autocorrectionDisabled()
@@ -24,7 +24,7 @@ struct NowInviteSheet: View {
                             Text("Email Address", comment: "invite form email")
                                 .foregroundStyle(.primary)
 
-                            TextField("", text: $viewModel.email)
+                            TextField(String(""), text: $viewModel.email)
                                 .textContentType(.emailAddress)
                                 .keyboardType(.emailAddress)
                                 .autocapitalization(.none)

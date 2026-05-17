@@ -1,7 +1,7 @@
 import LoopKitUI
 import SwiftUI
 
-struct Eversense365Auth: View {
+struct EversenseAuth: View {
     @Environment(\.dismissAction) private var dismiss
 
     @ObservedObject var viewModel: Eversense365AuthViewModel

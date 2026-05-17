@@ -77,8 +77,6 @@ enum EversenseE3 {
         case resetTransmitterResponseId = 131
         case saveBLEBondingInformationCommandId = 105
         case saveBLEBondingInformationResponseId = 233
-        case sendBloodGlucoseDataCommandId = 21
-        case sendBloodGlucoseDataResponseId = 149
         case sendBloodGlucoseDataWithTwoTimestampsCommandId = 60
         case sendBloodGlucoseDataWithTwoTimestampsResponseId = 188
         case sensorReadAlertPush = 73

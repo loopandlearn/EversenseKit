@@ -60,7 +60,7 @@ class DMSSettingsViewModel: ObservableObject {
 
         Task {
             let result = await DMSApi.updateFollowers(cgmManager: cgmManager)
-            DispatchQueue.main.async {
+            await MainActor.run {
                 self.eversenseNowUsers = result
             }
         }
@@ -79,7 +79,8 @@ class DMSSettingsViewModel: ObservableObject {
         Task {
             await DMSApi.removeFollower(cgmManager: cgmManager, email: follower.FollowerEmail)
             let result = await DMSApi.updateFollowers(cgmManager: cgmManager)
-            DispatchQueue.main.async {
+
+            await MainActor.run {
                 self.eversenseNowUsers = result
             }
         }

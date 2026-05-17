@@ -87,7 +87,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
 
         case .onboardingAuth:
             let viewModel = Eversense365AuthViewModel(cgmManager, { self.navigateTo(.onboardingScan) })
-            return hostingController(rootView: Eversense365Auth(viewModel: viewModel))
+            return hostingController(rootView: EversenseAuth(viewModel: viewModel))
 
         case .onboardingScan:
             let completion = {
@@ -111,7 +111,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
             }
 
             let viewModel = EversenseScanViewModel(cgmManager, completion)
-            return hostingController(rootView: Eversense365ScanView(viewModel: viewModel))
+            return hostingController(rootView: EversenseScanView(viewModel: viewModel))
 
         case .settings:
             let deleteCgm = {
@@ -188,8 +188,8 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
         #if targetEnvironment(simulator)
             if let cgmManager = self.cgmManager {
                 cgmManager.state.isOnboarded = true
-                cgmManager.state.bleNameString = "Eversense 365 DEMO"
-                cgmManager.state.security = .v2 // Eversense 365
+                cgmManager.state.bleNameString = cgmType == 1 ? "Eversense 365 DEMO" : "Eversense E3 DEMO"
+                cgmManager.state.security = cgmType == 1 ? .v2 : .none
                 cgmManager.state.recentGlucoseInMgDl = 140
                 cgmManager.state.recentGlucoseDateTime = Date.now
                 cgmManager.state.recentGlucoseTrend = .flat
@@ -229,19 +229,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                 }
             }
         #else
-            switch cgmType {
-            case 0:
-                // Eversense E3
-                navigateTo(.onboardingScan)
-                return
-
-            case 1:
-                // Eversense 365
-                navigateTo(.onboardingAuth)
-                return
-            default:
-                logger.error("Invalid transmitter type received: \(cgmType)")
-            }
+            navigateTo(.onboardingAuth)
         #endif
     }
 }
