@@ -488,6 +488,168 @@
         }
       }
     },
+    "1 hour" : {
+      "comment" : "Batch size - 1 hour",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 ساعة"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 hodina"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 time"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 Stunde"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 hour"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 hora"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 tunti"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 heure"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שעה אחת"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 óra"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 ora"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1時間"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1시간"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 time"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 uur"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 godzina"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 hora"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 oră"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 час"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 hodina"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 ura"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 timme"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 saat"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 година"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 giờ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 小时"
+          }
+        }
+      }
+    },
     "1 Weekly Calibration Phase" : {
       "comment" : "title for OneCal",
       "extractionState" : "manual",
@@ -646,6 +808,330 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1 每周校准阶段"
+          }
+        }
+      }
+    },
+    "15 minutes" : {
+      "comment" : "Batch size - 15min",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 دقيقة"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minut"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minutter"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 Minuten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minutes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minutos"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minuuttia"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minutes"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 דקות"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 perc"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minuti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15分"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15분"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minutter"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minuten"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minut"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minutos"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minute"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 минут"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minút"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minut"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minuter"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 dakika"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 хвилин"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 phút"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 分钟"
+          }
+        }
+      }
+    },
+    "30 minutes" : {
+      "comment" : "Batch size - 30min",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 دقيقة"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minut"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minutter"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 Minuten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minutes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minutos"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minuuttia"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minutes"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 דקות"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 perc"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minuti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30分"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30분"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minutter"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minuten"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minut"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minutos"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 de minute"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 минут"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minút"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minut"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minuter"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 dakika"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 хвилин"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 phút"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 分钟"
           }
         }
       }
@@ -4807,7 +5293,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Anulează"
+            "value" : "Anulați"
           }
         },
         "ru" : {
@@ -5941,7 +6427,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conectarea"
+            "value" : "Conectare"
           }
         },
         "ru" : {
@@ -6188,6 +6674,168 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create account"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear una cuenta"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luo tili"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créer un compte"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "צור חשבון"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fiók létrehozása"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creare un account"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アカウント作成"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계정 만들기"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opprett konto"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account aanmaken"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utwórz konto"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Criar conta"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creați un cont"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создать учетную запись"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vytvorenie účtu"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ustvarite račun"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skapa konto"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesap oluştur"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Створити обліковий запис"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tạo tài khoản"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建账户"
+          }
+        }
+      }
+    },
+    "Create Account" : {
+      "comment" : "label to create account",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إنشاء حساب"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vytvořit účet"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opret konto"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konto erstellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create Account"
           }
         },
         "es" : {
@@ -7237,7 +7885,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Calibrare dublă zilnică Faza"
+            "value" : "Faza de calibrare dublă zilnică"
           }
         },
         "ru" : {
@@ -7399,7 +8047,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug/test"
+            "value" : "Depanare/test"
           }
         },
         "ru" : {
@@ -7934,6 +8582,168 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "检测到断线"
+          }
+        }
+      }
+    },
+    "DMS Settings" : {
+      "comment" : "DMS header",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إعدادات DMS"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavení DMS"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DMS-indstillinger"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DMS-Einstellungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DMS Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes DMS"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DMS-asetukset"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres DMS"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הגדרות DMS"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DMS beállítások"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impostazioni DMS"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DMSの設定"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DMS 설정"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DMS-innstillinger"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DMS-instellingen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ustawienia DMS"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Definições DMS"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setări DMS"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки DMS"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavenia DMS"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavitve DMS"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DMS-inställningar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DMS Ayarları"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Налаштування DMS"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cài đặt DMS"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DMS 设置"
           }
         }
       }
@@ -8910,6 +9720,168 @@
         }
       }
     },
+    "Email Address" : {
+      "comment" : "Label for email address",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عنوان البريد الإلكتروني"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mailová adresa"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mail-adresse"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-Mail Adresse"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email Address"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dirección de correo electrónico"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sähköpostiosoite"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adresse électronique"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כתובת דוא\"ל"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mail cím"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indirizzo e-mail"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メールアドレス"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이메일 주소"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-postadresse"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mailadres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adres e-mail"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endereço de correio eletrónico"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adresa de e-mail"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Адрес электронной почты"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mailová adresa"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elektronski naslov"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-postadress"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-posta Adresi"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Адреса електронної пошти"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Địa chỉ Email"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电子邮件地址"
+          }
+        }
+      }
+    },
     "Enable high glucose alerts" : {
       "comment" : "label toggle glucose high alert",
       "extractionState" : "manual",
@@ -9343,7 +10315,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activează vibrația transmițătorului"
+            "value" : "Activați vibrația transmițătorului"
           }
         },
         "ru" : {
@@ -9878,6 +10850,168 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eversense E3"
+          }
+        }
+      }
+    },
+    "Eversense NOW" : {
+      "comment" : "Eversense NOW section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إيفرسنس ناو"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NOW"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NU"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NOW"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NOW"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NOW"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NYT"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NOW"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אברסנס עכשיו"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NOW"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense ORA"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エバーセンス・ナウ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지금 에버센스"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NÅ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NU Eversense"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NOW"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NOW"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NOW"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NOW"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense TERAZ"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense ZDAJ"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NU"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense ŞİMDİ"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NOW"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NGAY BÂY GIỜ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eversense NOW"
           }
         }
       }
@@ -11447,7 +12581,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glucoza se schimbă prea repede"
+            "value" : "Glicemia se schimbă prea repede"
           }
         },
         "ru" : {
@@ -11933,7 +13067,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nivelul glucozei"
+            "value" : "Nivelul glicemiei"
           }
         },
         "ru" : {
@@ -12419,7 +13553,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glucoză prea mare"
+            "value" : "Glicemie prea mare"
           }
         },
         "ru" : {
@@ -12581,7 +13715,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glucoză prea scăzută"
+            "value" : "Glicemie prea mică"
           }
         },
         "ru" : {
@@ -13391,7 +14525,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Snooze mare"
+            "value" : "Amânare ridicată"
           }
         },
         "ru" : {
@@ -13553,7 +14687,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Snooze mare"
+            "value" : "Amânare mare"
           }
         },
         "ru" : {
@@ -14416,6 +15550,168 @@
         }
       }
     },
+    "Increasing the Upload Delay will lower the Internet usage, but gives the Eversense DMS a small delay" : {
+      "comment" : "batch size hint",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ستؤدي زيادة تأخير التحميل إلى تقليل استخدام الإنترنت، ولكنها تمنح Eversense DMS تأخيرًا بسيطًا"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvýšení zpoždění nahrávání sníží využití internetu, ale způsobí malé zpoždění systému Eversense DMS."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At øge uploadforsinkelsen vil sænke internetforbruget, men giver Eversense DMS en lille forsinkelse"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Erhöhen der Upload-Verzögerung verringert die Internetnutzung, führt aber zu einer kleinen Verzögerung des Eversense DMS"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Increasing the Upload Delay will lower the Internet usage, but gives the Eversense DMS a small delay"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aumentar el retardo de subida reducirá el uso de Internet, pero dará al Eversense DMS un pequeño retardo."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upload Delay -viiveen lisääminen vähentää Internetin käyttöä, mutta antaa Eversense DMS:lle pienen viiveen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'augmentation du délai de chargement réduit l'utilisation de l'Internet, mais entraîne un léger retard pour le système Eversense DMS."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הגדלת עיכוב ההעלאה תפחית את השימוש באינטרנט, אך תעניק ל- Eversense DMS עיכוב קטן"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Feltöltési késleltetés növelése csökkenti az internethasználatot, de az Eversense DMS-nek egy kis késleltetést biztosít."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aumentando il ritardo di caricamento si riduce l'utilizzo di Internet, ma il DMS Eversense subisce un piccolo ritardo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アップロード遅延を増やすと、インターネットの使用量は減りますが、エバーセンスDMSにわずかな遅延が生じます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "업로드 지연을 늘리면 인터넷 사용량이 줄어들지만, 에버센스 DMS에 약간의 지연이 발생합니다."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hvis du øker opplastingsforsinkelsen, reduseres Internett-bruken, men Eversense DMS får en liten forsinkelse"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het verhogen van de uploadvertraging verlaagt het internetgebruik, maar geeft de Eversense DMS een kleine vertraging."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwiększenie opóźnienia wysyłania zmniejszy wykorzystanie Internetu, ale spowoduje niewielkie opóźnienie systemu Eversense DMS"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aumentar o atraso de carregamento reduzirá o uso da Internet, mas dará ao Eversense DMS um pequeno atraso"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creșterea întârzierii la încărcare va reduce utilizarea internetului, dar va oferi Eversense DMS o mică întârziere"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Увеличение задержки загрузки снизит использование Интернета, но даст Eversense DMS небольшую задержку."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvýšenie oneskorenia nahrávania zníži využitie internetu, ale spôsobí malé oneskorenie systému Eversense DMS"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povečanje zakasnitve nalaganja bo zmanjšalo uporabo interneta, vendar bo sistem Eversense DMS imel majhno zakasnitev."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Om du ökar Upload Delay minskar internetanvändningen, men Eversense DMS får en liten fördröjning"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yükleme Gecikmesini artırmak İnternet kullanımını azaltır, ancak Eversense DMS'ye küçük bir gecikme sağlar"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Збільшення затримки завантаження зменшує використання Інтернету, але дає Eversense DMS невелику затримку"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tăng độ trễ tải lên sẽ làm giảm mức sử dụng Internet, nhưng mang lại cho Eversense DMS một độ trễ nhỏ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "增加上传延迟会降低互联网使用率，但会给 Eversense DMS 带来少量延迟。"
+          }
+        }
+      }
+    },
     "Information" : {
       "comment" : "The information section",
       "extractionState" : "manual",
@@ -15011,7 +16307,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Insuficiența datelor"
+            "value" : "Date insuficiente"
           }
         },
         "ru" : {
@@ -16364,11 +17660,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "آخر تحديث: %@"
+            "value" : "آخر تحديث: %@"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Poslední aktualizace: %@"
             "value" : "Poslední aktualizace: %@"
           }
         },
@@ -16376,11 +17674,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sidste opdatering: %@."
+            "value" : "Sidste opdatering: %@."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Letzte Aktualisierung: %@"
             "value" : "Letzte Aktualisierung: %@"
           }
         },
@@ -16388,11 +17688,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last update: %@"
+            "value" : "Last update: %@"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Última actualización: %@"
             "value" : "Última actualización: %@"
           }
         },
@@ -16400,11 +17702,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Viimeisin päivitys: %@"
+            "value" : "Viimeisin päivitys: %@"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Dernière mise à jour : %@"
             "value" : "Dernière mise à jour : %@"
           }
         },
@@ -16412,11 +17716,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "עדכון אחרון: %@"
+            "value" : "עדכון אחרון: %@"
           }
         },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Utolsó frissítés: %@"
             "value" : "Utolsó frissítés: %@"
           }
         },
@@ -16424,11 +17730,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ultimo aggiornamento: %@"
+            "value" : "Ultimo aggiornamento: %@"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "最終更新日: %@"
             "value" : "最終更新日: %@"
           }
         },
@@ -16436,11 +17744,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "마지막 업데이트: %@"
+            "value" : "마지막 업데이트: %@"
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Siste oppdatering: %@"
             "value" : "Siste oppdatering: %@"
           }
         },
@@ -16448,17 +17758,20 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Laatst bijgewerkt: %@"
+            "value" : "Laatst bijgewerkt: %@"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ostatnia aktualizacja: %@"
+            "value" : "Ostatnia aktualizacja: %@"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Última atualização: %@"
             "value" : "Última atualização: %@"
           }
         },
@@ -16472,11 +17785,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Последнее обновление: %@"
+            "value" : "Последнее обновление: %@"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Posledná aktualizácia: %@"
             "value" : "Posledná aktualizácia: %@"
           }
         },
@@ -16484,11 +17799,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zadnja posodobitev: %@"
+            "value" : "Zadnja posodobitev: %@"
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Senaste uppdatering: %@"
             "value" : "Senaste uppdatering: %@"
           }
         },
@@ -16496,11 +17813,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Son güncelleme: %@"
+            "value" : "Son güncelleme: %@"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Останнє оновлення: %@"
             "value" : "Останнє оновлення: %@"
           }
         },
@@ -16508,11 +17827,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cập nhật lần cuối: %@"
+            "value" : "Cập nhật lần cuối: %@"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "最后更新： %@"
             "value" : "最后更新： %@"
           }
         }
@@ -17599,7 +18920,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Snooze scăzut"
+            "value" : "Amânare redusă"
           }
         },
         "ru" : {
@@ -17761,7 +19082,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Asigurați-vă că Eversense este în modul de împerechere. Vă rugăm să citiți manualul pentru a afla cum să faceți acest lucru."
+            "value" : "Asigurați-vă că Eversense este în modul de asociere. Vă rugăm să citiți manualul pentru a afla cum să faceți acest lucru."
           }
         },
         "ru" : {
@@ -19434,6 +20755,168 @@
         }
       }
     },
+    "None" : {
+      "comment" : "Batch size - directly",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يوجد"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žádné"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingen"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninguno"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ei ole"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אף אחד"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nincs"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nessuno"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "なし"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "없음"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingen"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhum"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niciuna"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žiadne"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ni"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingen"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiçbiri"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ні."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无"
+          }
+        }
+      }
+    },
     "Not enough data" : {
       "comment" : "title for NotEnoughData",
       "extractionState" : "manual",
@@ -20191,7 +21674,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alte eșecuri"
+            "value" : "Altă defecțiune"
           }
         },
         "ru" : {
@@ -25373,7 +26856,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stabilitatea senzorului"
+            "value" : "Stabilitate senzor"
           }
         },
         "ru" : {
@@ -25697,7 +27180,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Partajează jurnalele Eversense"
+            "value" : "Partajați jurnalele Eversense"
           }
         },
         "ru" : {
@@ -25920,11 +27403,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "قوة الإشارة: %@"
+            "value" : "قوة الإشارة: %@"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Síla signálu: %@"
             "value" : "Síla signálu: %@"
           }
         },
@@ -25932,11 +27417,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Signalstyrke: %@."
+            "value" : "Signalstyrke: %@."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Signalstärke: %@"
             "value" : "Signalstärke: %@"
           }
         },
@@ -25944,11 +27431,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Signal strength: %@"
+            "value" : "Signal strength: %@"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Intensidad de la señal: %@"
             "value" : "Intensidad de la señal: %@"
           }
         },
@@ -25956,11 +27445,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Signaalin voimakkuus: %@"
+            "value" : "Signaalin voimakkuus: %@"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Puissance du signal : %@"
             "value" : "Puissance du signal : %@"
           }
         },
@@ -25968,11 +27459,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "עוצמת האות: %@"
+            "value" : "עוצמת האות: %@"
           }
         },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Jelerősség: %@"
             "value" : "Jelerősség: %@"
           }
         },
@@ -25980,11 +27473,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Potenza del segnale: %@"
+            "value" : "Potenza del segnale: %@"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "信号強度：%@。"
             "value" : "信号強度：%@。"
           }
         },
@@ -25992,11 +27487,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "신호 강도: %@"
+            "value" : "신호 강도: %@"
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Signalstyrke: %@"
             "value" : "Signalstyrke: %@"
           }
         },
@@ -26004,11 +27501,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Signaalsterkte: %@"
+            "value" : "Signaalsterkte: %@"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Siła sygnału: %@"
             "value" : "Siła sygnału: %@"
           }
         },
@@ -26016,11 +27515,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Intensidade do sinal: %@"
+            "value" : "Intensidade do sinal: %@"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Puterea semnalului: %@"
             "value" : "Puterea semnalului: %@"
           }
         },
@@ -26028,11 +27529,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Уровень сигнала: %@"
+            "value" : "Уровень сигнала: %@"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Sila signálu: %@"
             "value" : "Sila signálu: %@"
           }
         },
@@ -26040,11 +27543,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Moč signala: %@"
+            "value" : "Moč signala: %@"
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Signalstyrka: %@."
             "value" : "Signalstyrka: %@."
           }
         },
@@ -26052,11 +27557,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sinyal gücü: %@"
+            "value" : "Sinyal gücü: %@"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Рівень сигналу: %@"
             "value" : "Рівень сигналу: %@"
           }
         },
@@ -26064,11 +27571,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cường độ tín hiệu: %@"
+            "value" : "Cường độ tín hiệu: %@"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "信号强度： %@"
             "value" : "信号强度： %@"
           }
         }
@@ -26237,6 +27746,7 @@
       }
     },
     "Strength" : {
+    "Strength" : {
       "comment" : "Label for the transmitter implant signal strength.",
       "extractionState" : "manual",
       "localizations" : {
@@ -26394,6 +27904,168 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "强度 (%%)"
+          }
+        }
+      }
+    },
+    "Strength (%)" : {
+      "comment" : "Label for the transmitter implant signal strength.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "القوة (%%%%)"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Síla (%%%%)"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Styrke (%%%%)"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stärke (%%%%)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strength (%%%%)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resistencia (%%%%)"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lujuus (%%%%)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résistance (%%%%)"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "חוזק (%%%%)"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Szilárdság (%%%%)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forza (%%%%)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "強度(%%%%)"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "강도(%%%%)"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Styrke (%%%%)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sterkte (%%%%)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wytrzymałość (%%%%)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resistência (%%%%)"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezistență (%%%%)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прочность (%%%%)"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sila (%%%%)"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moč (%%%%)"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Styrka (%%%%)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güç (%%%%)"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сила (%%%%)"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sức mạnh (%%%%)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "强度 (%%%%)"
           }
         }
       }
@@ -26669,7 +28341,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deget suspect"
+            "value" : "Înțepare suspicioasă în deget"
           }
         },
         "ru" : {
@@ -27155,7 +28827,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eversense 365 este un transmițător cu implant pe tot parcursul anului, cu algoritm îmbunătățit în comparație cu Eversense E3"
+            "value" : "Eversense 365 este un transmițător implantabil pe tot parcursul anului, cu algoritm îmbunătățit în comparație cu Eversense E3"
           }
         },
         "ru" : {
@@ -27317,7 +28989,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eversense E3 este un transmițător de implant de 90 de zile sau 180 de zile. Primul dispozitiv implantabil Eversense construit de Senseonics"
+            "value" : "Eversense E3 este un transmițător implantabil de 90 de zile sau 180 de zile. Primul dispozitiv implantabil Eversense construit de Senseonics"
           }
         },
         "ru" : {
@@ -29747,7 +31419,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Numele emițătorului"
+            "value" : "Nume transmițător"
           }
         },
         "ru" : {
@@ -31418,6 +33090,168 @@
         }
       }
     },
+    "Upload Delay" : {
+      "comment" : "DMS batching label",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأخير التحميل"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zpoždění nahrávání"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upload-forsinkelse"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upload-Verzögerung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upload Delay"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retraso de carga"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latauksen viive"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Délai de téléchargement"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "עיכוב העלאה"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feltöltési késleltetés"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ritardo di caricamento"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アップロード遅延"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "업로드 지연"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opplastingsforsinkelse"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uploadvertraging"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opóźnienie przesyłania"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atraso de carregamento"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Întârziere încărcare"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Задержка загрузки"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oneskorenie nahrávania"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zakasnitev nalaganja"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fördröjning av uppladdning"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yükleme Gecikmesi"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Затримка завантаження"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trì hoãn tải lên"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上传延迟"
+          }
+        }
+      }
+    },
     "Use your BG meter to monitor your glucose. Contact Eversense Customer Support if the issue persists." : {
       "comment" : "description for GeneralGlucoseSuspended",
       "extractionState" : "manual",
@@ -32385,7 +34219,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "欢迎光临"
+            "value" : "欢迎使用！"
           }
         }
       }
@@ -34821,7 +36655,7 @@
       }
     },
     "Your transmitter's battery is empty. Please recharge transmitter now to resume sensor glucose display." : {
-      "comment" : "description for EmptyBatteryAlarm\"",
+      "comment" : "description for EmptyBatteryAlarm",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
