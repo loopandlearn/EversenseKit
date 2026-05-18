@@ -258,6 +258,10 @@ extension PeripheralManager: CBPeripheralDelegate {
         {
             let packet = Eversense365.PushAlarmWithDataPacket(currentGlucose: cgmManager.state.recentGlucoseInMgDl ?? 0)
             let response = packet.parseResponse(data: actualData)
+            guard response.alarm.code != .unknown else {
+                logger.warning("[365] Received unknown alarm: \(response.alarm.codeRaw)")
+                return
+            }
 
             DispatchQueue.main.async {
                 self.cgmManager.state.activeAlarms = [response.alarm]
