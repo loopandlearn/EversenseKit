@@ -47,10 +47,6 @@ enum DMSApi {
                 return false
             }
 
-            logger
-                .debug(
-                    "PutCurrentValues success! httpCode: \((response as? HTTPURLResponse)?.statusCode ?? -1), response: \(String(data: data, encoding: .utf8) ?? "EMPTY")"
-                )
             return true
         } catch {
             logger.error("Failed to upload readings: \(error.localizedDescription)")
@@ -107,10 +103,6 @@ enum DMSApi {
                 return false
             }
 
-            logger
-                .debug(
-                    "PutDeviceEvents success! httpCode: \((response as? HTTPURLResponse)?.statusCode ?? -1), response: \(String(data: data, encoding: .utf8) ?? "EMPTY")"
-                )
             return true
         } catch {
             logger.error("Failed to upload readings: \(error.localizedDescription)")
@@ -210,10 +202,6 @@ enum DMSApi {
                 return
             }
 
-            logger
-                .debug(
-                    "PutVerificationCode_V2 success! httpCode: \((response as? HTTPURLResponse)?.statusCode ?? -1), response: \(String(data: data, encoding: .utf8) ?? "EMPTY")"
-                )
         } catch {
             logger.error("Failed to invite follower: \(error.localizedDescription)")
         }
@@ -243,10 +231,6 @@ enum DMSApi {
                 return
             }
 
-            logger
-                .debug(
-                    "UpdateStatus success! httpCode: \((response as? HTTPURLResponse)?.statusCode ?? -1), response: \(String(data: data, encoding: .utf8) ?? "EMPTY")"
-                )
         } catch {
             logger.error("Failed to update followers: \(error.localizedDescription)")
         }
