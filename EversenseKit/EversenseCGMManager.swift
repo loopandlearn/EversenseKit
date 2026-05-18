@@ -147,6 +147,7 @@ extension EversenseCGMManager {
 
         if !force, Date.now.timeIntervalSince(lastGlucoseTimestamp) < .minutes(4.5) {
             logger.warning("Skipping sync, glucose is still fresh - \(Date.now.timeIntervalSince(lastGlucoseTimestamp))s")
+            completion?()
             return
         }
 
