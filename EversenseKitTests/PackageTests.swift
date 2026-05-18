@@ -75,13 +75,23 @@ struct PackageTest {
     }
 
     @Test func activeAlarms() async throws {
-        let data = Data(hex: "4222020f021139002c")
+        let data = Data(hex: "42220139002c")
 
         Eversense365.sensorIdLength = 0x0A
-        let packet = Eversense365.GetActiveAlarmsPacket()
+        let packet = Eversense365.GetActiveAlarmsPacket(currentGlucose: 180)
         let result = packet.parseResponse(data: data)
 
         #expect(result.count == 1)
+    }
+
+    @Test func pushAlarm() async throws {
+        let data = Data(hex: "44034700006d23c600000068006a000100e8086a000300000000c0")
+
+        Eversense365.sensorIdLength = 0x0A
+        let packet = Eversense365.PushAlarmWithDataPacket(currentGlucose: 180)
+        let result = packet.parseResponse(data: data)
+
+        #expect(result.alarm.codeRaw > 0)
     }
 
     @Test func currentGlucoseOld() async throws {

@@ -5,7 +5,7 @@ extension EversenseE3 {
         typealias T = SetBloodGlucosePointResponse
 
         var responseType: UInt8 {
-            PacketIds.sendBloodGlucoseDataResponseId.rawValue
+            PacketIds.sendBloodGlucoseDataWithTwoTimestampsResponseId.rawValue
         }
 
         var responseId: UInt8? {
@@ -20,10 +20,13 @@ extension EversenseE3 {
         }
 
         func getRequestData() -> Data {
-            var data = Data([PacketIds.sendBloodGlucoseDataCommandId.rawValue])
-            data.append(timestamp.toUnix2000())
-            data.append(Date.now.toUnix2000())
+            var data = Data([PacketIds.sendBloodGlucoseDataWithTwoTimestampsCommandId.rawValue])
+            data.append(BinaryOperations.toDateArray(date: timestamp))
+            data.append(BinaryOperations.toTimeArray(date: timestamp))
+            data.append(BinaryOperations.toDateArray(date: Date.now))
+            data.append(BinaryOperations.toTimeArray(date: Date.now))
             data.append(BinaryOperations.dataFrom16Bits(value: glucoseInMgDl))
+            data.append(Data([0x00, 0x00, 0x00]))
             data.append(0x55)
 
             let checksum = BinaryOperations.generateChecksumCRC16(data: data)
