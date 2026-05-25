@@ -6,11 +6,13 @@ extension EversenseE3 {
 
     static func readGlucoseData(
         peripheralManager: PeripheralManager,
-        cgmManager: EversenseCGMManager,
+        cgmManager _: EversenseCGMManager,
         lastGlucoseTimestamp: Date
-    ) -> [NewGlucoseSample] {
+    ) -> (CGMReading, [CGMReading])? {
         do {
-            let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager)
+            guard let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager) else {
+                return nil
+            }
 
             logger.debug("Sending GetLogRangePacket...")
             let glucoseRange: GetLogRangeResponse = try peripheralManager.write(GetLogRangePacket(type: .bloodGlucose))
@@ -32,41 +34,28 @@ extension EversenseE3 {
                 glucoseHistory.append(pageResponse)
             }
 
-            var samples = glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
-                NewGlucoseSample(
-                    cgmManager: cgmManager,
-                    value: $0.glucoseInMgDl,
+            let samples = glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
+                CGMReading(
+                    glucoseInMgDl: $0.glucoseInMgDl,
+                    datetime: $0.datetime,
                     trend: nil,
-                    dateTime: $0.datetime
+                    raw: ""
                 )
-            }
-
-            if let mostRecentGlucose = mostRecentGlucose,
-               mostRecentGlucose.datetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
-            {
-                cgmManager.state.recentGlucoseInMgDl = mostRecentGlucose.glucoseInMgDl
-                cgmManager.state.recentGlucoseDateTime = mostRecentGlucose.datetime
-
-                samples.append(
-                    NewGlucoseSample(
-                        cgmManager: cgmManager,
-                        value: mostRecentGlucose.glucoseInMgDl,
-                        trend: mostRecentGlucose.trend,
-                        dateTime: mostRecentGlucose.datetime
-                    )
-                )
-            } else if let recentGlucose = glucoseHistory.last,
-                      recentGlucose.datetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
-            {
-                cgmManager.state.recentGlucoseInMgDl = recentGlucose.glucoseInMgDl
-                cgmManager.state.recentGlucoseDateTime = recentGlucose.datetime
             }
 
             logger.info("[E3] Glucose data read  - timestamp: \(Date.now), count: \(samples.count)")
-            return samples
+            return (
+                CGMReading(
+                    glucoseInMgDl: mostRecentGlucose.glucoseInMgDl,
+                    datetime: mostRecentGlucose.datetime,
+                    trend: mostRecentGlucose.trend,
+                    raw: ""
+                ),
+                samples.sorted { $0.datetime < $1.datetime }
+            )
         } catch {
             logger.error("[E3] Something went wrong during readGlucoseData: \(error)")
-            return []
+            return nil
         }
     }
 
@@ -85,6 +74,17 @@ extension EversenseE3 {
             return glucoseData
         } catch {
             logger.error("[E3] Failed to get recent glucose: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    private static func getSensorId(peripheralManager: PeripheralManager) -> Data? {
+        do {
+            logger.debug("Sending GetSensorIdPacket...")
+            let response: GetSensorIdResponse = try peripheralManager.write(GetSensorIdPacket())
+            return response.sensorId
+        } catch {
+            logger.error("[E3] Failed to get sensorId: \(error.localizedDescription)")
             return nil
         }
     }
@@ -117,7 +117,11 @@ extension EversenseE3 {
             cgmManager.state.batteryPercentage = batteryPercentage.value.percentage()
 
             // Do Ping
-            let _: PingResponse = try peripheralManager.write(PingPacket())
+            let pingResponse: PingResponse = try peripheralManager.write(PingPacket())
+            cgmManager.state.transmitterId = pingResponse.transmitterId
+
+            let sensorIdResponse: GetSensorIdResponse = try peripheralManager.write(GetSensorIdPacket())
+            cgmManager.state.sensorId = sensorIdResponse.sensorId
 
             // Get Transmitter version & extended Version
             let versionResponse: GetVersionResponse = try peripheralManager
@@ -186,7 +190,7 @@ extension EversenseE3 {
 
             // Get glucose alarms & status
             let glucoseAlarmsStatus: GetGlucoseAlertsAndStatusPacketResonse = try peripheralManager
-                .write(GetGlucoseAlertsAndStatusPacket())
+                .write(GetGlucoseAlertsAndStatusPacket(currentGlucose: cgmManager.state.recentGlucoseInMgDl ?? 0))
             cgmManager.state.activeAlarms = glucoseAlarmsStatus.alarms
 
             let vibrateMode: GetVibrateModeResponse = try peripheralManager

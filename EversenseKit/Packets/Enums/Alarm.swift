@@ -409,4 +409,24 @@ public enum Alarm: UInt8, Codable {
             return nil
         }
     }
+
+    var dmsCode: UInt8 {
+        switch self {
+        case .LowGlucoseAlarm: return 0
+        case .HighGlucoseAlarm: return 1
+        // LOW_GLUCOSE_ALERT_ASSERTED -> return 2
+        // HIGH_GLUCOSE_ALERT_ASSERTED -> return 3
+        case .RateFallingAlarm: return 4
+        case .RateRisingAlarm: return 5
+        case .PredictiveLowAlarm: return 6
+        case .PredictiveHighAlarm: return 7
+        case .CalibrationNowAlarm: return 8
+        case .CalibrationRequiredAlarm: return 9
+        case .CalibrationGracePeriodAlarm: return 10
+        case .CalibrationExpiredAlarm: return 11
+        case .SeriouslyLowAlarm: return 12
+        case .SeriouslyHighAlarm: return 13
+        default: return 255
+        }
+    }
 }

@@ -7,11 +7,13 @@ enum EversenseUIScreen {
     case onboardingScan
 
     case settings
+    case transmitterInfo
     case transmitterSettings
     case placementGuide
     case calibration
     case calibrationHistory
     case alertHistory
+    case dmsSettings
 }
 
 class EversenseUIController: UINavigationController, CGMManagerOnboarding, CompletionNotifying, UINavigationControllerDelegate {
@@ -85,7 +87,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
 
         case .onboardingAuth:
             let viewModel = Eversense365AuthViewModel(cgmManager, { self.navigateTo(.onboardingScan) })
-            return hostingController(rootView: Eversense365Auth(viewModel: viewModel))
+            return hostingController(rootView: EversenseAuth(viewModel: viewModel))
 
         case .onboardingScan:
             let completion = {
@@ -109,7 +111,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
             }
 
             let viewModel = EversenseScanViewModel(cgmManager, completion)
-            return hostingController(rootView: Eversense365ScanView(viewModel: viewModel))
+            return hostingController(rootView: EversenseScanView(viewModel: viewModel))
 
         case .settings:
             let deleteCgm = {
@@ -123,32 +125,22 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                     }
                 }
             }
-            let toTransmitterSettings = {
-                self.navigateTo(.transmitterSettings)
-            }
-            let toPlacementGuide = {
-                self.navigateTo(.placementGuide)
-            }
-            let toCalibration = {
-                self.navigateTo(.calibration)
-            }
-            let toCalibrationHistory = {
-                self.navigateTo(.calibrationHistory)
-            }
-            let toAlertHistory = {
-                self.navigateTo(.alertHistory)
-            }
 
             let viewModel = EversenseSettingsViewModel(
                 cgmManager: cgmManager,
                 deleteCgm: deleteCgm,
-                toTransmitterSettings: toTransmitterSettings,
-                toPlacementGuide: toPlacementGuide,
-                toCalibration: toCalibration,
-                toCalibrationHistory: toCalibrationHistory,
-                toAlertHistory: toAlertHistory
+                toTransmitterInfo: { self.navigateTo(.transmitterInfo) },
+                toTransmitterSettings: { self.navigateTo(.transmitterSettings) },
+                toDMSSettings: { self.navigateTo(.dmsSettings) },
+                toPlacementGuide: { self.navigateTo(.placementGuide) },
+                toCalibration: { self.navigateTo(.calibration) },
+                toCalibrationHistory: { self.navigateTo(.calibrationHistory) },
+                toAlertHistory: { self.navigateTo(.alertHistory) }
             )
             return hostingController(rootView: EversenseSettingsView(viewModel: viewModel))
+        case .transmitterInfo:
+            let viewModel = TransmitterInfoViewModel(cgmManager: cgmManager)
+            return hostingController(rootView: TransmitterInfoView(viewModel: viewModel))
         case .transmitterSettings:
             let viewModel = TransmitterSettingsViewModel(cgmManager: cgmManager, unit: displayGlucosePreference.unit)
             return hostingController(rootView: TransmitterSettingsView(viewModel: viewModel))
@@ -168,6 +160,10 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
         case .alertHistory:
             let viewModel = AlertHistoryViewModel(cgmManager: cgmManager)
             return hostingController(rootView: AlertHistoryView(viewModel: viewModel))
+        case .dmsSettings:
+            let inviteViewModel = InviteNowViewModel(cgmManager: cgmManager)
+            let viewModel = DMSSettingsViewModel(cgmManager: cgmManager, inviteNowViewModel: inviteViewModel)
+            return hostingController(rootView: DMSSettingsView(viewModel: viewModel))
         }
     }
 
@@ -192,8 +188,8 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
         #if targetEnvironment(simulator)
             if let cgmManager = self.cgmManager {
                 cgmManager.state.isOnboarded = true
-                cgmManager.state.bleNameString = "Eversense 365 DEMO"
-                cgmManager.state.security = .v2 // Eversense 365
+                cgmManager.state.bleNameString = cgmType == 1 ? "Eversense 365 DEMO" : "Eversense E3 DEMO"
+                cgmManager.state.security = cgmType == 1 ? .v2 : .none
                 cgmManager.state.recentGlucoseInMgDl = 140
                 cgmManager.state.recentGlucoseDateTime = Date.now
                 cgmManager.state.recentGlucoseTrend = .flat
@@ -208,8 +204,20 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                 cgmManager.state.nextCalibration = Date.now.addingTimeInterval(.days(7))
                 cgmManager.state.lastSynced = Date.now
                 cgmManager.state.activeAlarms = [
-                    ActiveAlarm(code: .CalibrationNowAlarm, codeRaw: Alarm.CalibrationNowAlarm.rawValue, flag: 0, priority: 0),
-                    ActiveAlarm(code: .PredictiveHighAlarm, codeRaw: Alarm.CalibrationNowAlarm.rawValue, flag: 0, priority: 2)
+                    ActiveAlarm(
+                        code: .CalibrationNowAlarm,
+                        codeRaw: Alarm.CalibrationNowAlarm.rawValue,
+                        glucoseInMgDl: 0,
+                        flag: 0,
+                        priority: 0
+                    ),
+                    ActiveAlarm(
+                        code: .PredictiveHighAlarm,
+                        codeRaw: Alarm.CalibrationNowAlarm.rawValue,
+                        glucoseInMgDl: 0,
+                        flag: 0,
+                        priority: 2
+                    )
                 ]
 
                 if let cgmManagerOnboardingDelegate = self.cgmManagerOnboardingDelegate {
@@ -221,19 +229,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                 }
             }
         #else
-            switch cgmType {
-            case 0:
-                // Eversense E3
-                navigateTo(.onboardingScan)
-                return
-
-            case 1:
-                // Eversense 365
-                navigateTo(.onboardingAuth)
-                return
-            default:
-                logger.error("Invalid transmitter type received: \(cgmType)")
-            }
+            navigateTo(.onboardingAuth)
         #endif
     }
 }

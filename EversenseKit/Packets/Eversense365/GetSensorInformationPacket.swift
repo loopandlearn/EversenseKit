@@ -9,6 +9,7 @@ extension Eversense365 {
         let version: String
         let extVersion: String
         let sensorIdLength: Int
+        let sensorId: Data
         let communicationProtocolVersion: Double
 
         init(
@@ -21,6 +22,7 @@ extension Eversense365 {
             version: String,
             extVersion: String,
             sensorIdLength: Int,
+            sensorId: Data,
             communicationProtocolVersion: Double
         ) {
             self.serialNumber = serialNumber
@@ -32,6 +34,7 @@ extension Eversense365 {
             self.version = version
             self.extVersion = extVersion
             self.sensorIdLength = sensorIdLength
+            self.sensorId = sensorId
             self.communicationProtocolVersion = communicationProtocolVersion
         }
     }
@@ -111,7 +114,8 @@ extension Eversense365 {
                             .OTHER_FIRMWARE_VERSION_END + doubleSensorIdLen
                     )
                     .toUtf8String(),
-                sensorIdLength: Int(data[Offset.SENSOR_ID_LEN_START]),
+                sensorIdLength: sensorIdLen,
+                sensorId: Data(data.subdata(in: Offset.SENSOR_ID_START ..< Offset.SENSOR_ID_END + sensorIdLen - 2).reversed()),
                 communicationProtocolVersion: Double(
                     data.subdata(in: Offset.COMM_VERSION_START ..< Offset.COMM_VERSION_END).toUtf8String()
                 ) ?? 0

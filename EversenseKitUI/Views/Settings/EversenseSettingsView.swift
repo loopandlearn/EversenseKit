@@ -138,37 +138,18 @@ struct EversenseSettingsView: View {
             }
 
             Section {
-                SectionItem(
-                    title: Text("Transmitter name", comment: "name"),
-                    value: viewModel.transmitterName
-                )
-                SectionItem(
-                    title: Text("Current phase", comment: "current phase"),
-                    value: viewModel.currentPhase
-                )
-                SectionItem(
-                    title: Text("Signal strength", comment: "transmitter implant signal strength"),
-                    value: viewModel.signalStrength
-                )
-                SectionItem(
-                    title: Text("Battery percentage", comment: "transmitter battery level"),
-                    value: viewModel.batteryLevel + "%"
-                )
-                HStack {
-                    Text("Insertion date", comment: "insertiondate")
-                    Spacer()
-                    VStack(alignment: .trailing) {
-                        Text(viewModel.insertionDate)
-                            .foregroundColor(.secondary)
-
-                        Text(viewModel.insertionTime)
-                            .foregroundColor(.secondary)
+                Button(action: viewModel.toTransmitterInfo) {
+                    HStack {
+                        Text("Transmitter information", comment: "go to transmitter info")
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: UIFont.systemFontSize, weight: .medium))
+                            .opacity(0.35)
                     }
+                    .contentShape(Rectangle())
                 }
-                SectionItem(
-                    title: Text("Last sync", comment: "transmitter last sync"),
-                    value: viewModel.lastSync
-                )
+                .buttonStyle(PlainButtonStyle())
+
                 Button(action: viewModel.toTransmitterSettings) {
                     HStack {
                         Text("Transmitter settings", comment: "go to transmitter settings")
@@ -177,6 +158,19 @@ struct EversenseSettingsView: View {
                             .font(.system(size: UIFont.systemFontSize, weight: .medium))
                             .opacity(0.35)
                     }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(PlainButtonStyle())
+
+                Button(action: viewModel.toDMSSettings) {
+                    HStack {
+                        Text("DMS Settings", comment: "go to eversense dms settings")
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: UIFont.systemFontSize, weight: .medium))
+                            .opacity(0.35)
+                    }
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
 
@@ -188,6 +182,7 @@ struct EversenseSettingsView: View {
                             .font(.system(size: UIFont.systemFontSize, weight: .medium))
                             .opacity(0.35)
                     }
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
 
@@ -200,14 +195,20 @@ struct EversenseSettingsView: View {
                                 .font(.system(size: UIFont.systemFontSize, weight: .medium))
                                 .opacity(0.35)
                         }
+                        .contentShape(Rectangle())
                     }
                     .buttonStyle(PlainButtonStyle())
                 }
             } header: {
-                Text("Transmitter information", comment: "transmitter section")
+                Text("Transmitter Settings", comment: "transmitter section")
             }
 
             Section {
+                SectionItem(
+                    title: Text("Last sync", comment: "transmitter last sync"),
+                    value: viewModel.lastSync
+                )
+
                 Button(action: { self.isSharePresented = true }) {
                     Text("Share Eversense logs", comment: "share logs")
                 }
@@ -270,7 +271,7 @@ struct EversenseSettingsView: View {
                         .fixedSize()
 
                     if viewModel.batteryPercentage <= 1 {
-                        Text("%")
+                        Text(String("%"))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }

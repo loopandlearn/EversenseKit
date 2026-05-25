@@ -1,5 +1,11 @@
 extension EversenseE3 {
-    class PingResponse {}
+    class PingResponse {
+        let transmitterId: String
+
+        init(transmitterId: String) {
+            self.transmitterId = transmitterId
+        }
+    }
 
     class PingPacket: BasePacket {
         typealias T = PingResponse
@@ -21,8 +27,10 @@ extension EversenseE3 {
             return data
         }
 
-        func parseResponse(data _: Data) -> PingResponse {
-            PingResponse()
+        func parseResponse(data: Data) -> PingResponse {
+            PingResponse(
+                transmitterId: "\(data.subdata(in: 0 ..< 4).toUInt64())"
+            )
         }
     }
 }

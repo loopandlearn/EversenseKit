@@ -256,7 +256,7 @@ extension PeripheralManager: CBPeripheralDelegate {
         if actualData[0] == Eversense365.PacketIds.NotificationId.rawValue,
            actualData[1] == Eversense365.PushIds.AlarmWithData.rawValue
         {
-            let packet = Eversense365.PushAlarmWithDataPacket()
+            let packet = Eversense365.PushAlarmWithDataPacket(currentGlucose: cgmManager.state.recentGlucoseInMgDl ?? 0)
             let response = packet.parseResponse(data: actualData)
 
             DispatchQueue.main.async {

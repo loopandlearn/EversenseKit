@@ -45,8 +45,13 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         isOnboarded = rawValue["isOnboarded"] as? Bool ?? false
         isSyncing = rawValue["isSyncing"] as? Bool ?? false
         lastSynced = rawValue["lastSynced"] as? Date
+        lastOnlineSync = rawValue["lastOnlineSync"] as? Date ?? lastSynced
         version = rawValue["version"] as? String
         extVersion = rawValue["extVersion"] as? String
+        transmitterId = rawValue["transmitterId"] as? String
+        shouldUploadToEversenseDMS = rawValue["shouldUploadToEversenseDMS"] as? Bool ?? true
+        uploadBatchSize = rawValue["uploadBatchSize"] as? Int ?? 12
+        sensorId = rawValue["sensorId"] as? Data ?? Data()
         communicationProtocol = rawValue["communicationProtocol"] as? Double ?? 0
         activatedAt = rawValue["activatedAt"] as? Date ?? Date.distantPast
         expiresAt = rawValue["expiresAt"] as? Date ?? Date.distantPast
@@ -132,6 +137,18 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
             EversenseLogger(category: "EversenseCGMState").error("Failed to decode activeAlarms - \(error.localizedDescription)")
             activeAlarms = []
         }
+
+        do {
+            if let readingsToUploadData = rawValue["readingsToUpload"] as? Data {
+                readingsToUpload = try JSONDecoder().decode([CGMReading].self, from: readingsToUploadData)
+            } else {
+                readingsToUpload = []
+            }
+        } catch {
+            EversenseLogger(category: "EversenseCGMState")
+                .error("Failed to decode readingsToUpload - \(error.localizedDescription)")
+            readingsToUpload = []
+        }
     }
 
     public var rawValue: RawValue {
@@ -141,8 +158,13 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["isOnboarded"] = isOnboarded
         value["isSyncing"] = isSyncing
         value["lastSynced"] = lastSynced
+        value["lastOnlineSync"] = lastOnlineSync
+        value["shouldUploadToEversenseDMS"] = shouldUploadToEversenseDMS
+        value["uploadBatchSize"] = uploadBatchSize
         value["version"] = version
         value["extVersion"] = extVersion
+        value["transmitterId"] = transmitterId
+        value["sensorId"] = sensorId
         value["communicationProtocol"] = communicationProtocol
         value["activatedAt"] = activatedAt
         value["expiresAt"] = expiresAt
@@ -193,6 +215,13 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
             EversenseLogger(category: "EversenseCGMState").error("Failed to encode activeAlarms - \(error.localizedDescription)")
         }
 
+        do {
+            value["readingsToUpload"] = try JSONEncoder().encode(readingsToUpload)
+        } catch {
+            EversenseLogger(category: "EversenseCGMState")
+                .error("Failed to encode readingsToUpload - \(error.localizedDescription)")
+        }
+
         return value
     }
 
@@ -203,9 +232,15 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var lastSynced: Date?
     public var version: String?
     public var extVersion: String?
+    public var transmitterId: String?
+    public var sensorId: Data
     public var communicationProtocol: Double
     public var activatedAt: Date
     public var expiresAt: Date
+
+    public var shouldUploadToEversenseDMS: Bool
+    public var uploadBatchSize: Int
+    public var lastOnlineSync: Date?
 
     public var mmaFeatures: UInt8
     public var batteryPercentage: Int
@@ -246,6 +281,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var recentGlucoseTrend: GlucoseTrend
 
     public var activeAlarms: [ActiveAlarm]
+    public var readingsToUpload: [CGMReading]
 
     // Eversense 365
     public var security: SecurityType = .none
@@ -264,12 +300,10 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         !(security == .none)
     }
 
-    public var modelStr: String? {
-        if is365 {
-            return String(localized: "Eversense 365", comment: "Eversense 365 (1year)")
-        }
-
-        return String(localized: "Eversense E3", comment: "Eversense E3")
+    public var modelStr: String {
+        is365 ?
+            String(localized: "Eversense 365", comment: "Eversense 365 (1year)") :
+            String(localized: "Eversense E3", comment: "Eversense E3")
     }
 
     public var debugDescription: String {

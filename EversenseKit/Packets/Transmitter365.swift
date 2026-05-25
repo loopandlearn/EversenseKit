@@ -6,13 +6,15 @@ extension Eversense365 {
     static var sensorIdLength = 0x00
 
     static func readGlucoseData(
-        peripheralManager: PeripheralManager,
         cgmManager: EversenseCGMManager,
+        peripheralManager: PeripheralManager,
         lastGlucoseTimestamp: Date
-    ) -> [NewGlucoseSample] {
+    ) -> (CGMReading, [CGMReading])? {
         do {
             logger.debug("sending GetRecentGlucosePacket...")
-            let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager)
+            guard let mostRecentGlucose = getRecentGlucose(peripheralManager: peripheralManager) else {
+                return nil
+            }
 
             logger.debug("sending GetGlucoseLogRangePacket...")
             let glucoseRange: GetLogRangeResponse = try peripheralManager
@@ -27,46 +29,32 @@ extension Eversense365 {
             let message =
                 "GetLogValuePacket -  from: \(range.from), to: \(range.to), lastGlucoseTimestamp: \(lastGlucoseTimestamp)"
             logger.debug(message)
+
             let historyResponse: GetGlucoseLogValuesResponse = try peripheralManager
                 .write(GetGlucoseLogValuesPacket(from: range.from, to: range.to), timeout: .seconds(15))
 
-            if let mostRecentGlucose = mostRecentGlucose,
-               mostRecentGlucose.glucoseDatetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
-            {
-                cgmManager.state.recentGlucoseInMgDl = mostRecentGlucose.glucoseInMgDl
-                cgmManager.state.recentGlucoseDateTime = mostRecentGlucose.glucoseDatetime
-            } else if let recentGlucose = historyResponse.glucoseHistory.last,
-                      recentGlucose.datetime > (cgmManager.state.recentGlucoseDateTime ?? Date.distantPast)
-            {
-                cgmManager.state.recentGlucoseInMgDl = recentGlucose.valueInMgDl
-                cgmManager.state.recentGlucoseDateTime = recentGlucose.datetime
-            }
-
-            var samples = historyResponse.glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
-                NewGlucoseSample(
-                    cgmManager: cgmManager,
-                    value: $0.valueInMgDl,
+            let samples = historyResponse.glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
+                CGMReading(
+                    glucoseInMgDl: $0.valueInMgDl,
+                    datetime: $0.datetime,
                     trend: $0.trend,
-                    dateTime: $0.datetime
-                )
-            }
-
-            if let mostRecentGlucose = mostRecentGlucose {
-                samples.append(
-                    NewGlucoseSample(
-                        cgmManager: cgmManager,
-                        value: mostRecentGlucose.glucoseInMgDl,
-                        trend: mostRecentGlucose.trend,
-                        dateTime: mostRecentGlucose.glucoseDatetime
-                    )
+                    raw: $0.raw
                 )
             }
 
             logger.info("[365] Glucose data read  - timestamp: \(Date.now), count: \(samples.count)")
-            return samples
+            return (
+                CGMReading(
+                    glucoseInMgDl: mostRecentGlucose.glucoseInMgDl,
+                    datetime: mostRecentGlucose.glucoseDatetime,
+                    trend: mostRecentGlucose.trend,
+                    raw: ""
+                ),
+                samples.sorted { $0.datetime < $1.datetime }
+            )
         } catch {
             logger.error("[365] Something went wrong during readGlucoseData: \(error)")
-            return []
+            return nil
         }
     }
 
@@ -104,7 +92,9 @@ extension Eversense365 {
             let sensorInformation: GetSensorInformationResponse = try peripheralManager
                 .write(GetSensorInformationPacket())
 
+            cgmManager.state.transmitterId = sensorInformation.serialNumber
             cgmManager.state.mmaFeatures = sensorInformation.mmaFeatures
+            cgmManager.state.sensorId = sensorInformation.sensorId
             cgmManager.state.batteryPercentage = sensorInformation.batteryLevel
             cgmManager.state.version = sensorInformation.version
             cgmManager.state.extVersion = sensorInformation.extVersion
@@ -160,7 +150,8 @@ extension Eversense365 {
             cgmManager.state.repeatHighTimeout = patientSettings.repeatHighTimeout
 
             logger.debug("Sending GetActiveAlarmsPacket")
-            let activeAlarms: GetActiveAlarmsResponse = try peripheralManager.write(GetActiveAlarmsPacket())
+            let alarmsRequest = GetActiveAlarmsPacket(currentGlucose: cgmManager.state.recentGlucoseInMgDl ?? 0)
+            let activeAlarms: GetActiveAlarmsResponse = try peripheralManager.write(alarmsRequest)
             cgmManager.state.activeAlarms = activeAlarms.alarms
 
             logger.info("[365] Sync completed - timestamp: \(Date.now)")

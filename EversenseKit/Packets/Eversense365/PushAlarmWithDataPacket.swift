@@ -20,6 +20,11 @@ extension Eversense365 {
             PushIds.AlarmWithData.rawValue
         }
 
+        let currentGlucose: UInt16
+        init(currentGlucose: UInt16) {
+            self.currentGlucose = currentGlucose
+        }
+
         func getRequestData() -> Data {
             // Unused
             Data()
@@ -35,6 +40,7 @@ extension Eversense365 {
                 alarm: ActiveAlarm(
                     code: Alarm(rawValue: data[3]) ?? .unknown,
                     codeRaw: data[3],
+                    glucoseInMgDl: currentGlucose,
                     flag: 0,
                     priority: 0
                 ),

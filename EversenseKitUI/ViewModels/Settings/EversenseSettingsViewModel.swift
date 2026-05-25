@@ -10,8 +10,6 @@ struct ActiveAlarmItem: Identifiable {
 
 class EversenseSettingsViewModel: ObservableObject {
     @Published var transmitterModel: String = ""
-    @Published var transmitterName: String = ""
-    @Published var currentPhase: String = ""
     @Published var lastMeasurement = HKQuantity(unit: .milligramsPerDeciliter, doubleValue: 0)
     @Published var lastMeasurementDatetime: String = ""
     @Published var lastCalibrationTime: String = ""
@@ -25,11 +23,8 @@ class EversenseSettingsViewModel: ObservableObject {
     @Published var nextCalibrationMinutes: Double = 0
     @Published var batteryLevel: String = "0"
     @Published var batteryPercentage: Double = 0
-    @Published var signalStrength: String = ""
     @Published var connectionStatus: String = ""
     @Published var lastSync: String = ""
-    @Published var insertionDate: String = ""
-    @Published var insertionTime: String = ""
     @Published var activeAlarm: [ActiveAlarmItem] = []
     @Published var calibrationReadiness: CalibrationReadiness = .Unknown
     @Published var is365: Bool = false
@@ -54,7 +49,9 @@ class EversenseSettingsViewModel: ObservableObject {
     private let cgmManager: EversenseCGMManager?
     public let allowCalibrations = FeatureFlags.ALLOW_CALIBRATION
     public let deleteCgm: () -> Void
+    public let toTransmitterInfo: () -> Void
     public let toTransmitterSettings: () -> Void
+    public let toDMSSettings: () -> Void
     public let toPlacementGuide: () -> Void
     public let toCalibration: () -> Void
     public let toCalibrationHistory: () -> Void
@@ -62,7 +59,9 @@ class EversenseSettingsViewModel: ObservableObject {
     init(
         cgmManager: EversenseCGMManager?,
         deleteCgm: @escaping () -> Void,
+        toTransmitterInfo: @escaping () -> Void,
         toTransmitterSettings: @escaping () -> Void,
+        toDMSSettings: @escaping () -> Void,
         toPlacementGuide: @escaping () -> Void,
         toCalibration: @escaping () -> Void,
         toCalibrationHistory: @escaping () -> Void,
@@ -70,8 +69,10 @@ class EversenseSettingsViewModel: ObservableObject {
     ) {
         self.cgmManager = cgmManager
         self.deleteCgm = deleteCgm
+        self.toTransmitterInfo = toTransmitterInfo
         self.toTransmitterSettings = toTransmitterSettings
         self.toPlacementGuide = toPlacementGuide
+        self.toDMSSettings = toDMSSettings
         self.toCalibration = toCalibration
         self.toCalibrationHistory = toCalibrationHistory
         self.toAlertHistory = toAlertHistory
@@ -80,8 +81,12 @@ class EversenseSettingsViewModel: ObservableObject {
             return
         }
 
-        cgmManager.addStateObserver(state: self, queue: .main)
         stateDidUpdate(cgmManager.state)
+        cgmManager.addStateObserver(state: self, queue: .main)
+    }
+
+    deinit {
+        cgmManager?.removeStateObserver(state: self)
     }
 
     func getLogs() -> [URL] {
@@ -93,7 +98,7 @@ class EversenseSettingsViewModel: ObservableObject {
 
     public func readGlucose() {
         forceSyncing = true
-        cgmManager?.heartbeathOperation {
+        cgmManager?.heartbeathOperation(force: true) {
             DispatchQueue.main.async {
                 self.forceSyncing = false
             }
@@ -103,15 +108,10 @@ class EversenseSettingsViewModel: ObservableObject {
 
 extension EversenseSettingsViewModel: StateObserver {
     func stateDidUpdate(_ state: EversenseCGMState) {
-        transmitterModel = state.modelStr ?? "UNKNOWN"
+        transmitterModel = state.modelStr
         is365 = state.is365
-        transmitterName = state.bleNameString ?? ""
         connectionStatus = state.connectionStatus.title
-        currentPhase = state.calibrationPhase.getTitle(calibrationMode: state.calibrationMode)
         calibrationReadiness = state.calibrationReadiness
-        insertionDate = dateFormatter.string(from: state.activatedAt)
-        insertionTime = timeFormatter.string(from: state.activatedAt)
-        signalStrength = state.signalStrength.title
         activeAlarm = state.activeAlarms
             .filter { $0.code.type != .Info }
             .map { item in ActiveAlarmItem(code: item.code, codeRaw: item.codeRaw, priority: item.priority) }

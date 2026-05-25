@@ -5,11 +5,15 @@ extension Eversense365 {
         let trend: GlucoseTrend
         let glucoseDatetime: Date
         let glucoseInMgDl: UInt16
+        let raw: String
+        let sensorId: Data
 
-        init(trend: GlucoseTrend, glucoseDatetime: Date, glucoseInMgDl: UInt16) {
+        init(trend: GlucoseTrend, glucoseDatetime: Date, glucoseInMgDl: UInt16, raw: String, sensorId: Data) {
             self.trend = trend
             self.glucoseDatetime = glucoseDatetime
             self.glucoseInMgDl = glucoseInMgDl
+            self.raw = raw
+            self.sensorId = sensorId
         }
     }
 
@@ -96,7 +100,9 @@ extension Eversense365 {
                         )
                 ),
                 glucoseInMgDl: UInt16(data[Offset.GLUCOSE + sensorIdLength]) |
-                    (UInt16(data[Offset.GLUCOSE + sensorIdLength + 1]) << 8)
+                    (UInt16(data[Offset.GLUCOSE + sensorIdLength + 1]) << 8),
+                raw: "0x" + data.subdata(in: 0 ..< 193).hexString(),
+                sensorId: Data(data.subdata(in: Offset.SENSOR_ID ..< Offset.SENSOR_ID + sensorIdLength))
             )
         }
 
