@@ -87,20 +87,20 @@ class TransmitterSettingsViewModel: ObservableObject {
         loading = true
         error = ""
 
-        cgmManager.bluetoothManager.ensureConnected { error in
-            if let error = error {
-                DispatchQueue.main.async {
-                    self.loading = false
-                    self.error = error.describe
+        DispatchQueue.global(qos: .userInitiated).async {
+            cgmManager.bluetoothManager.ensureConnected { error in
+                if let error = error {
+                    DispatchQueue.main.async {
+                        self.loading = false
+                        self.error = error.describe
+                    }
+                    return
                 }
-                return
-            }
 
-            guard let peripheralManager = cgmManager.bluetoothManager.peripheralManager else {
-                return
-            }
+                guard let peripheralManager = cgmManager.bluetoothManager.peripheralManager else {
+                    return
+                }
 
-            DispatchQueue.global(qos: .userInitiated).async {
                 let transmitterSettings = TransmitterSettings(
                     vibrationMode: self.vibrationMode,
 

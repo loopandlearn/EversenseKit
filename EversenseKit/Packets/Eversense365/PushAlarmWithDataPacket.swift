@@ -38,8 +38,8 @@ extension Eversense365 {
         func parseResponse(data: Data) -> Eversense365.PushAlarmWithDataResponse {
             PushAlarmWithDataResponse(
                 alarm: ActiveAlarm(
-                    code: Alarm(rawValue: data[3]) ?? .unknown,
-                    codeRaw: data[3],
+                    code: Alarm(rawValue: data[2]) ?? .unknown,
+                    codeRaw: data[2],
                     glucoseInMgDl: currentGlucose,
                     flag: 0,
                     priority: 0

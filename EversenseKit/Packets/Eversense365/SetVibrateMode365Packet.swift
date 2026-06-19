@@ -18,7 +18,7 @@ extension Eversense365 {
         }
 
         func getRequestData() -> Data {
-            let data = Data([PacketIds.WriteCommandId.rawValue, WriteIds.VibrateMode.rawValue, silenced ? 0 : 1])
+            let data = Data([PacketIds.WriteCommandId.rawValue, WriteIds.VibrateMode.rawValue, silenced ? 1 : 0])
             return CryptoUtil.shared.encrypt(data: data)
         }
 

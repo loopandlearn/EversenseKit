@@ -98,9 +98,15 @@ class EversenseSettingsViewModel: ObservableObject {
 
     public func readGlucose() {
         forceSyncing = true
-        cgmManager?.heartbeathOperation(force: true) {
-            DispatchQueue.main.async {
-                self.forceSyncing = false
+
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self else {
+                return
+            }
+            self.cgmManager?.heartbeathOperation(force: true) {
+                DispatchQueue.main.async {
+                    self.forceSyncing = false
+                }
             }
         }
     }
