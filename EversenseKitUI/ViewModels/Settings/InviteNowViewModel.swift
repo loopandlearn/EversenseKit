@@ -31,7 +31,7 @@ class InviteNowViewModel: ObservableObject {
                 email: email
             )
 
-            DispatchQueue.main.async {
+            await MainActor.run {
                 self.isLoading = false
                 self.dismiss?()
             }
