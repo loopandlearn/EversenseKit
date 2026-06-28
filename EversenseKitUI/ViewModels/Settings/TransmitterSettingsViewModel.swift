@@ -30,7 +30,7 @@ class TransmitterSettingsViewModel: ObservableObject {
     public let rateAllowedOptions: [Double] = (0 ..< 8).map { 1.5 + Double($0) * 0.5 }
     public let glucoseHighAllowedOptions: [Double] = (0 ... 110).map { Double($0 * 2 + 180) }
     public let glucoseLowAllowedOptions: [Double] = (0 ... 15).map { Double($0 * 2 + 40) }
-    public let timeAllowedOptions: [Double] = (5 ... 30).map { Double($0) }
+    public let timeAllowedOptions: [Double] = (5 ... 30).map { TimeInterval(minutes: Double($0)) }
     public let bleDisconnectAllowedOptions: [Double] = (1 ... 6).map { TimeInterval(minutes: Double($0 * 5)) }
     public let repeatLowAllowedOptions: [Double] = (1 ... 6).map { TimeInterval(minutes: Double($0 * 5)) }
     public let repeatHighAllowedOptions: [Double] = (1 ... 33).map { TimeInterval(minutes: Double($0 * 5 + 15)) }
