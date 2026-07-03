@@ -72,22 +72,37 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
         return cgmManager.state.isOnboarded ? .settings : .onboardingStart
     }
 
-    private func hostingController<Content: View>(rootView: Content) -> DismissibleHostingController<some View> {
+    private func hostingController<Content: View>(
+        rootView: Content,
+        title: String? = nil,
+        largeTitleDisplayMode: UINavigationItem.LargeTitleDisplayMode = .automatic
+    ) -> DismissibleHostingController<some View> {
         let rootView = rootView
             .environment(\.appName, Bundle.main.bundleDisplayName)
             .environmentObject(displayGlucosePreference)
-        return DismissibleHostingController(content: rootView, colorPalette: colorPalette)
+
+        let hostedView = DismissibleHostingController(content: rootView, colorPalette: colorPalette)
+        hostedView.navigationItem.title = title
+        hostedView.navigationItem.largeTitleDisplayMode = largeTitleDisplayMode
+
+        return hostedView
     }
 
     private func viewControllerForScreen(_ screen: EversenseUIScreen) -> UIViewController {
         switch screen {
         case .onboardingStart:
             let view = EversenseOnboardingStart(nextAction: onboardingNextStep)
-            return hostingController(rootView: view)
+            return hostingController(
+                rootView: view,
+                title: String(localized: "Welcome!", comment: "Onboarding Header")
+            )
 
         case .onboardingAuth:
             let viewModel = Eversense365AuthViewModel(cgmManager, { self.navigateTo(.onboardingScan) })
-            return hostingController(rootView: EversenseAuth(viewModel: viewModel))
+            return hostingController(
+                rootView: EversenseAuth(viewModel: viewModel),
+                title: String(localized: "Eversense Account", comment: "Login header")
+            )
 
         case .onboardingScan:
             let completion = {
@@ -111,7 +126,10 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
             }
 
             let viewModel = EversenseScanViewModel(cgmManager, completion)
-            return hostingController(rootView: EversenseScanView(viewModel: viewModel))
+            return hostingController(
+                rootView: EversenseScanView(viewModel: viewModel),
+                title: String(localized: "Scanning", comment: "Scanning header")
+            )
 
         case .settings:
             let deleteCgm = {
@@ -137,33 +155,67 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
                 toCalibrationHistory: { self.navigateTo(.calibrationHistory) },
                 toAlertHistory: { self.navigateTo(.alertHistory) }
             )
-            return hostingController(rootView: EversenseSettingsView(viewModel: viewModel))
+            return hostingController(
+                rootView: EversenseSettingsView(viewModel: viewModel),
+                title: viewModel.transmitterModel
+            )
+
         case .transmitterInfo:
             let viewModel = TransmitterInfoViewModel(cgmManager: cgmManager)
-            return hostingController(rootView: TransmitterInfoView(viewModel: viewModel))
+            return hostingController(
+                rootView: TransmitterInfoView(viewModel: viewModel),
+                title: String(localized: "Transmitter information", comment: "transmitter section")
+            )
+
         case .transmitterSettings:
             let viewModel = TransmitterSettingsViewModel(cgmManager: cgmManager, unit: displayGlucosePreference.unit)
-            return hostingController(rootView: TransmitterSettingsView(viewModel: viewModel))
+            return hostingController(
+                rootView: TransmitterSettingsView(viewModel: viewModel),
+                title: String(localized: "Transmitter settings", comment: "Title for user options")
+            )
+
         case .placementGuide:
             if #available(iOS 16.0, *) {
                 let viewModel = PlacementGuideViewModel(cgmManager: cgmManager)
-                return hostingController(rootView: PlacementGuideView(viewModel: viewModel))
+                return hostingController(
+                    rootView: PlacementGuideView(viewModel: viewModel),
+                    title: String(localized: "Placement Guide", comment: "Title for placement guide")
+                )
             } else {
-                return hostingController(rootView: PlacementGuideEmpty())
+                return hostingController(
+                    rootView: PlacementGuideEmpty(),
+                    title: String(localized: "Placement Guide", comment: "Title for placement guide")
+                )
             }
+
         case .calibration:
             let viewModel = CalibrationViewModel(cgmManager: cgmManager, displayGlucosePreference.unit, goBack)
-            return hostingController(rootView: CalibrationView(viewModel: viewModel))
+            return hostingController(
+                rootView: CalibrationView(viewModel: viewModel),
+                title: String(localized: "Calibration", comment: "Calibation header")
+            )
+
         case .calibrationHistory:
             let viewModel = CalibrationHistoryViewModel(cgmManager: cgmManager, glucosePreference: displayGlucosePreference)
-            return hostingController(rootView: CalibrationHistoryView(viewModel: viewModel))
+            return hostingController(
+                rootView: CalibrationHistoryView(viewModel: viewModel),
+                title: String(localized: "Calibration history", comment: "Calibation history header")
+            )
+
         case .alertHistory:
             let viewModel = AlertHistoryViewModel(cgmManager: cgmManager)
-            return hostingController(rootView: AlertHistoryView(viewModel: viewModel))
+            return hostingController(
+                rootView: AlertHistoryView(viewModel: viewModel),
+                title: String(localized: "Alert history", comment: "Alert history header")
+            )
+
         case .dmsSettings:
             let inviteViewModel = InviteNowViewModel(cgmManager: cgmManager)
             let viewModel = DMSSettingsViewModel(cgmManager: cgmManager, inviteNowViewModel: inviteViewModel)
-            return hostingController(rootView: DMSSettingsView(viewModel: viewModel))
+            return hostingController(
+                rootView: DMSSettingsView(viewModel: viewModel),
+                title: String(localized: "DMS Settings", comment: "DMS header")
+            )
         }
     }
 

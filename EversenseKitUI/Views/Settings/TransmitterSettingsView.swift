@@ -217,7 +217,6 @@ struct TransmitterSettingsView: View {
             .padding([.bottom, .horizontal])
             .disabled(viewModel.loading)
         }
-        .navigationBarTitle(String(localized: "Transmitter settings", comment: "Title for user options"))
     }
 
     @ViewBuilder private func toggleRow(label: Text, hint: Text, value: Binding<Bool>) -> some View {

@@ -35,7 +35,6 @@ struct TransmitterInfoView: View {
                 }
             }
         }
-        .navigationTitle(String(localized: "Transmitter information", comment: "transmitter section"))
     }
 
     private func SectionItem(title: Text, value: String) -> some View {

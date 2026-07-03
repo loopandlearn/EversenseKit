@@ -29,7 +29,6 @@ struct CalibrationHistoryView: View {
                 }
             }
         }
-        .navigationTitle(String(localized: "Calibration history", comment: "Calibation history header"))
         .onAppear {
             viewModel.start()
         }

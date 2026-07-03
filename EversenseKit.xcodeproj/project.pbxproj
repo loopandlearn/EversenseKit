@@ -11,7 +11,6 @@
 		3E02C8BD2DC8DF7700108B7A /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8BA2DC8DF7700108B7A /* LoopKitUI.framework */; };
 		3E6696ED2E927ED600AAE4F1 /* EversenseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8AA2DC8DEA600108B7A /* EversenseKit.framework */; };
 		3E6696EE2E927ED600AAE4F1 /* EversenseKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8AA2DC8DEA600108B7A /* EversenseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3E9218952E5208D3004B6D0B /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3E9218942E5208D3004B6D0B /* CryptoSwift */; };
 		3EFE70872E08434B00CF6B9E /* EversenseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E02C8AA2DC8DEA600108B7A /* EversenseKit.framework */; platformFilter = ios; };
 /* End PBXBuildFile section */
 
@@ -115,7 +114,6 @@
 			files = (
 				3E02C8BB2DC8DF7700108B7A /* LoopKit.framework in Frameworks */,
 				3E02C8BD2DC8DF7700108B7A /* LoopKitUI.framework in Frameworks */,
-				3E9218952E5208D3004B6D0B /* CryptoSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,7 +208,6 @@
 			);
 			name = EversenseKit;
 			packageProductDependencies = (
-				3E9218942E5208D3004B6D0B /* CryptoSwift */,
 			);
 			productName = EversenseKit;
 			productReference = 3E02C8AA2DC8DEA600108B7A /* EversenseKit.framework */;
@@ -319,7 +316,6 @@
 			mainGroup = 3E02C8A02DC8DEA600108B7A;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				3E9218932E5208D3004B6D0B /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3E02C8AB2DC8DEA600108B7A /* Products */;
@@ -781,25 +777,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		3E9218932E5208D3004B6D0B /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.4.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		3E9218942E5208D3004B6D0B /* CryptoSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3E9218932E5208D3004B6D0B /* XCRemoteSwiftPackageReference "CryptoSwift" */;
-			productName = CryptoSwift;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3E02C8A12DC8DEA600108B7A /* Project object */;
 }

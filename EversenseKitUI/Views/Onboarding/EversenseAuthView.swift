@@ -48,7 +48,6 @@ struct EversenseAuth: View {
         .listStyle(InsetGroupedListStyle())
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarHidden(false)
-        .navigationTitle(String(localized: "Eversense Account", comment: "Login header"))
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: self.dismiss) {

@@ -47,7 +47,7 @@ extension TransmitterInfoViewModel: StateObserver {
         if state.batteryPercentage == 255 {
             batteryLevel = String(localized: "Charging", comment: "battery charging")
         } else {
-            batteryLevel = "\(state.batteryPercentage)"
+            batteryLevel = "\(state.batteryPercentage)%"
         }
     }
 }

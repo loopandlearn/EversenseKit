@@ -31,8 +31,6 @@ import SwiftUI
                 .frame(width: 150, height: 400)
             }
         }
-        .navigationBarTitle(String(localized: "Placement Guide", comment: "Title for placement guide"))
-        .navigationBarTitleDisplayMode(.inline)
         .onDisappear {
             viewModel.stop()
         }
@@ -43,6 +41,5 @@ import SwiftUI
 struct PlacementGuideEmpty: View {
     var body: some View {
         VStack {}
-            .navigationBarTitle(String(localized: "Placement Guide", comment: "Title for placement guide"))
     }
 }

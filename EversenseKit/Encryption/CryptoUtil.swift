@@ -1,5 +1,4 @@
 import CryptoKit
-import CryptoSwift
 import Foundation
 
 class CryptoUtil {
@@ -94,22 +93,17 @@ class CryptoUtil {
             }
 
             let s = BinaryOperations.dataFrom16Bits(value: UInt16(i) << 2)
-            let aes = try AES(
-                key: sessionKey.withUnsafeBytes { Array(Data($0)) },
-                blockMode: CCM(
-                    iv: [UInt8](CryptoUtil.generateEncryptionSalt(salt: salt, i: i)),
-                    tagLength: 8,
-                    messageLength: data.count,
-                    additionalAuthenticatedData: [UInt8](s)
-                ),
-                padding: .noPadding
+
+            let ccm = try AESCCM(
+                key: sessionKey.withUnsafeBytes { Array($0) },
+                nonce: [UInt8](CryptoUtil.generateEncryptionSalt(salt: salt, i: i)),
+                tagLength: 8,
+                additionalAuthenticatedData: [UInt8](s)
             )
 
             var output = Data()
             output.append(s)
-            output.append(
-                Data(try aes.encrypt([UInt8](data)))
-            )
+            output.append(Data(try ccm.encrypt([UInt8](data))))
 
             return output
         } catch {
@@ -134,20 +128,15 @@ class CryptoUtil {
             let prefix = Data(data.subdata(in: 0 ..< 2))
             let i = (prefix.toInt64() >> 2) & 0x3FFF
 
-            let aes = try AES(
-                key: sessionKey.withUnsafeBytes { Array(Data($0)) },
-                blockMode: CCM(
-                    iv: [UInt8](CryptoUtil.generateEncryptionSalt(salt: salt, i: i)),
-                    tagLength: 8,
-                    messageLength: cipherText.count - 8,
-                    additionalAuthenticatedData: [UInt8](prefix)
-                ),
-                padding: .noPadding
+            let ccm = try AESCCM(
+                key: sessionKey.withUnsafeBytes { Array($0) },
+                nonce: [UInt8](CryptoUtil.generateEncryptionSalt(salt: salt, i: i)),
+                tagLength: 8,
+                additionalAuthenticatedData: [UInt8](prefix)
             )
 
-            return Data(
-                try aes.decrypt([UInt8](cipherText))
-            )
+            // cipherText already contains the 8-byte tag appended by encrypt()
+            return Data(try ccm.decrypt([UInt8](cipherText)))
         } catch {
             CryptoUtil.logger.error("[general] Failed to decrypt data: \(error)")
             return Data()
