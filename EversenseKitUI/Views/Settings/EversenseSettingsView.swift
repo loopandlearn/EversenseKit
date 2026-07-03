@@ -242,7 +242,6 @@ struct EversenseSettingsView: View {
         .navigationBarItems(trailing: Button(action: dismiss) {
             Text("Done", comment: "done button title")
         })
-        .navigationBarTitle(viewModel.transmitterModel)
     }
 
     @ViewBuilder private var transmitterState: some View {

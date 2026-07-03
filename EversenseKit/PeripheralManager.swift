@@ -47,18 +47,18 @@ class PeripheralManager: NSObject {
 
     func write<T>(_ packet: any BasePacket, timeout: TimeInterval = .seconds(5)) throws -> T {
         // Wait until previous write calls have been completed
-        self.writeSemaphore.wait()
-        
+        writeSemaphore.wait()
+
         guard let characteristic = requestCharacteristic else {
-            self.logger.error("Not connected anymore...")
+            logger.error("Not connected anymore...")
             throw NSError(domain: "Not connected anymore...", code: 0, userInfo: nil)
         }
-        
+
         defer {
             writeSemaphore.signal()
             writeResponse = nil
         }
-        
+
         self.packet = packet
         let writeQ = EversenseKitDispatchGroup()
         writeQ.enter()

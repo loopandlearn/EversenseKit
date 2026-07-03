@@ -125,7 +125,6 @@ struct DMSSettingsView: View {
                 }
             }
         }
-        .navigationTitle(String(localized: "DMS Settings", comment: "DMS header"))
         .actionSheet(isPresented: $viewModel.removeConfirmationSheet) {
             confirmationSheet
         }

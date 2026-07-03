@@ -30,7 +30,6 @@ struct EversenseScanView: View {
         .listStyle(InsetGroupedListStyle())
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarHidden(false)
-        .navigationTitle(String(localized: "Scanning", comment: "Scanning header"))
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: dismiss) {

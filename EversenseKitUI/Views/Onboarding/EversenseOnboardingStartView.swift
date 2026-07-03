@@ -60,7 +60,6 @@ struct EversenseOnboardingStart: View {
         }
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarHidden(false)
-        .navigationTitle(String(localized: "Welcome!", comment: "Onboarding Header"))
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: dismiss) {

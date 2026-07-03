@@ -26,7 +26,6 @@ struct AlertHistoryView: View {
                 }
             }
         }
-        .navigationTitle(String(localized: "Alert history", comment: "Alert history header"))
         .onAppear {
             viewModel.start()
         }

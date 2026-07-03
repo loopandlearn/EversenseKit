@@ -51,13 +51,16 @@ struct CalibrationView: View {
                     .foregroundStyle(.red)
             }
             Button(action: viewModel.calibrate) {
-                Text("Calibrate transmitter", comment: "calibration")
+                if viewModel.isLoading {
+                    ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                } else {
+                    Text("Calibrate transmitter", comment: "calibration")
+                }
             }
             .buttonStyle(ActionButtonStyle())
             .padding([.bottom, .horizontal])
             .disabled(!viewModel.allowCalibrations || viewModel.isLoading)
         }
-        .navigationTitle(String(localized: "Calibration", comment: "Calibation header"))
     }
 
     private func formatGlucose(_ value: UInt16) -> String {

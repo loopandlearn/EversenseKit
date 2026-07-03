@@ -29,6 +29,7 @@ class Eversense365AuthViewModel: ObservableObject {
                 }
 
                 await MainActor.run {
+                    self.isLoading = false
                     self.nextStep()
                 }
             } catch {

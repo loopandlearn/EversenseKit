@@ -52,6 +52,10 @@ extension EversenseCGMManager: CGMManagerUI {
     }
 
     public var cgmLifecycleProgress: (any LoopKit.DeviceLifecycleProgress)? {
+        guard state.calibrationReadiness == .Ready else {
+            return nil
+        }
+
         if let nextCalibration = state.nextCalibration,
            let lastCalibration = state.lastCalibration,
            nextCalibration.addingTimeInterval(.days(-1)) <= Date.now
