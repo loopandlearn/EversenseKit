@@ -1,3 +1,5 @@
+import LoopKit
+
 enum AlarmType {
     case Critical
     case Warning
@@ -118,6 +120,29 @@ public enum Alarm: UInt8, Codable {
         .SensorTemperatureAlarm,
         .SensorLowTemperatureAlarm
     ]
+
+    var alarm: Alert {
+        let title = self.title
+        let body = description ?? ""
+
+        return Alert(
+            identifier: Alert.Identifier(
+                managerIdentifier: "EversenseKit",
+                alertIdentifier: "com.bastiaanv.eversensekit.\(String(describing: self))"
+            ),
+            foregroundContent: Alert.Content(
+                title: title,
+                body: body,
+                acknowledgeActionButtonLabel: String(localized: "OK", comment: "Acknowlegde alarm")
+            ),
+            backgroundContent: Alert.Content(
+                title: title,
+                body: body,
+                acknowledgeActionButtonLabel: String(localized: "OK", comment: "Acknowlegde alarm")
+            ),
+            trigger: .immediate
+        )
+    }
 
     var type: AlarmType {
         switch self {

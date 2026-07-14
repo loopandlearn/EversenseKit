@@ -19755,6 +19755,168 @@
         }
       }
     },
+    "OK" : {
+      "comment" : "Acknowlegde alarm",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حسناً"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De acuerdo"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בסדר"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확인"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ОК"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "V redu"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamam"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Гаразд"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ĐƯỢC"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好的"
+          }
+        }
+      }
+    },
     "Operational" : {
       "comment" : "connection status connected",
       "extractionState" : "manual",
@@ -23000,157 +23162,157 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "إزالة المتابع %%@"
+            "value" : "إزالة المتابع %@"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Odstranění následovníka %%@"
+            "value" : "Odstranění následovníka %@"
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fjern følger %%@"
+            "value" : "Fjern følger %@."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Follower entfernen %%@"
+            "value" : "Follower entfernen %@"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remove follower %%@"
+            "value" : "Remove follower %@"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quitar seguidor %%@"
+            "value" : "Quitar seguidor %@"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Poista seuraaja %%@"
+            "value" : "Poista seuraaja %@"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Supprimer le suiveur %%@"
+            "value" : "Supprimer le suiveur %@"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "הסר עוקב %%@"
+            "value" : "הסר עוקב %@"
           }
         },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A követő eltávolítása %%@"
+            "value" : "A követő eltávolítása %@"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rimuovere il follower %%@"
+            "value" : "Rimuovere il seguace %@"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "フォロワー %%@ を外す"
+            "value" : "フォロワー %@ を外す"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "팔로워 %%@ 제거"
+            "value" : "팔로워 %@ 제거"
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fjern følger %%@"
+            "value" : "Fjern følgeren %@"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Volger %%@ verwijderen"
+            "value" : "Volger %@ verwijderen"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usuń obserwującego %%@"
+            "value" : "Usuń obserwatora %@"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remover seguidor %%@"
+            "value" : "Remover o seguidor %@"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eliminați adeptul %%@"
+            "value" : "Eliminați adeptul %@"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Удалить последователя %%@"
+            "value" : "Удалить последователя %@"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Odstránenie nasledovníka %%@"
+            "value" : "Odstránenie nasledovníka %@"
           }
         },
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Odstranite sledilca %%@"
+            "value" : "Odstranite sledilca %@"
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ta bort följare %%@"
+            "value" : "Ta bort följare %@"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Takipçiyi kaldır %%@"
+            "value" : "Takipçiyi kaldır %@"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Видалити підписника %%@"
+            "value" : "Видалити підписника %@"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Xóa người theo dõi %%@"
+            "value" : "Xóa người theo dõi %@"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "删除追随者 %%@"
+            "value" : "移除追随者 %@"
           }
         }
       }
@@ -26078,319 +26240,157 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "القوة (%%)"
+            "value" : "القوة"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Síla (%%)"
+            "value" : "Síla"
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Styrke (%%)"
+            "value" : "Styrke"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stärke (%%)"
+            "value" : "Stärke"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Strength (%%)"
+            "value" : "Strength"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resistencia (%%)"
+            "value" : "Fuerza"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lujuus (%%)"
+            "value" : "Vahvuus"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Résistance (%%)"
+            "value" : "La force"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "חוזק (%%)"
+            "value" : "חוזק"
           }
         },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Szilárdság (%%)"
+            "value" : "Erősség"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Forza (%%)"
+            "value" : "La forza"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "強度(%%)"
+            "value" : "強さ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "강도(%%)"
+            "value" : "힘"
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Styrke (%%)"
+            "value" : "Styrke"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sterkte (%%)"
+            "value" : "Sterkte"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wytrzymałość (%%)"
+            "value" : "Siła"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resistência (%%)"
+            "value" : "Força"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rezistență (%%)"
+            "value" : "Putere"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Прочность (%%)"
+            "value" : "Прочность"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sila (%%)"
+            "value" : "Sila"
           }
         },
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Moč (%%)"
+            "value" : "Moč"
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Styrka (%%)"
+            "value" : "Styrka"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Güç (%%)"
+            "value" : "Güç"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Сила (%%)"
+            "value" : "Сила"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sức mạnh (%%)"
+            "value" : "Sức mạnh"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "强度 (%%)"
-          }
-        }
-      }
-    },
-    "Strength (%)" : {
-      "comment" : "Label for the transmitter implant signal strength.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "القوة (%%%%)"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Síla (%%%%)"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Styrke (%%%%)"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stärke (%%%%)"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Strength (%%%%)"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resistencia (%%%%)"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lujuus (%%%%)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résistance (%%%%)"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "חוזק (%%%%)"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Szilárdság (%%%%)"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Forza (%%%%)"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "強度(%%%%)"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "강도(%%%%)"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Styrke (%%%%)"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sterkte (%%%%)"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wytrzymałość (%%%%)"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resistência (%%%%)"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rezistență (%%%%)"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Прочность (%%%%)"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sila (%%%%)"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moč (%%%%)"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Styrka (%%%%)"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Güç (%%%%)"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Сила (%%%%)"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sức mạnh (%%%%)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "强度 (%%%%)"
+            "value" : "实力"
           }
         }
       }
