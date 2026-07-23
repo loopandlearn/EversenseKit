@@ -59,7 +59,7 @@ struct CryptoUtilTests {
 
     @Test func testUnix() async throws {
         let x = Date.now.toUnix2000()
-        let x2 = x.toHexString()
-        print(x2)
+        //let x2 = x.toHexString()
+        //print(x2)
     }
 }
