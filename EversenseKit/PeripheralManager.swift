@@ -23,6 +23,7 @@ class PeripheralManager: NSObject {
     private var writeQueue: EversenseKitDispatchGroup?
     private let writeSemaphore = DispatchSemaphore(value: 1)
     private var writeResponse: AnyObject?
+    private var isCleaningUp = false
 
     private let maxPacketSize: Int
 
@@ -40,12 +41,17 @@ class PeripheralManager: NSObject {
     }
 
     func cleanup() {
+        isCleaningUp = true
+        writeSemaphore.signal()
         if let writeAction = writeQueue {
             writeAction.leave()
         }
     }
 
     func write<T>(_ packet: any BasePacket, timeout: TimeInterval = .seconds(5)) throws -> T {
+        if isCleaningUp {
+            throw NSError(domain: "PeripheralManager cleaned up", code: -1)
+        }
         // Wait until previous write calls have been completed
         writeSemaphore.wait()
 
