@@ -152,7 +152,7 @@ extension Eversense365 {
             logger.debug("Sending GetActiveAlarmsPacket")
             let alarmsRequest = GetActiveAlarmsPacket(currentGlucose: cgmManager.state.recentGlucoseInMgDl ?? 0)
             let activeAlarms: GetActiveAlarmsResponse = try peripheralManager.write(alarmsRequest)
-            cgmManager.state.activeAlarms = activeAlarms.alarms
+            cgmManager.handleAlarm(alarms: activeAlarms.alarms)
 
             logger.info("[365] Sync completed - timestamp: \(Date.now)")
 

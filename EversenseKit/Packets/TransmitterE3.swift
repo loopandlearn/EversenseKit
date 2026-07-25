@@ -191,7 +191,7 @@ extension EversenseE3 {
             // Get glucose alarms & status
             let glucoseAlarmsStatus: GetGlucoseAlertsAndStatusPacketResonse = try peripheralManager
                 .write(GetGlucoseAlertsAndStatusPacket(currentGlucose: cgmManager.state.recentGlucoseInMgDl ?? 0))
-            cgmManager.state.activeAlarms = glucoseAlarmsStatus.alarms
+            cgmManager.handleAlarm(alarms: glucoseAlarmsStatus.alarms)
 
             let vibrateMode: GetVibrateModeResponse = try peripheralManager
                 .write(GetVibrateModePacket())

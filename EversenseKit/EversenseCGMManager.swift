@@ -234,6 +234,28 @@ extension EversenseCGMManager {
         }
     }
 
+    func handleAlarm(alarms: [ActiveAlarm]) {
+        let newAlarms = findNewAlarms(current: state.activeAlarms, updated: alarms)
+        if !newAlarms.isEmpty {
+            delegate.notify { delegate in
+                guard let delegate else {
+                    return
+                }
+
+                newAlarms.forEach {
+                    delegate.issueAlert($0.code.alarm)
+                }
+            }
+        }
+
+        state.activeAlarms = alarms
+    }
+
+    private func findNewAlarms(current: [ActiveAlarm], updated: [ActiveAlarm]) -> [ActiveAlarm] {
+        let currentCodes = Set(current.map(\.codeRaw))
+        return updated.filter { !currentCodes.contains($0.codeRaw) && $0.code != .unknown }
+    }
+
     private func getGlucoseAndSync(
         _ peripheralManager: PeripheralManager,
         _ lastGlucoseTimestamp: Date
