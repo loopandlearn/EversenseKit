@@ -379,8 +379,7 @@ extension PeripheralManager {
         do {
             if cgmManager.state.certificateV2 == nil {
                 guard
-                    let username = cgmManager.state.username,
-                    let password = cgmManager.state.password,
+                    let credentials = cgmManager.keychain.getEversenseCredentials(),
                     let publicKey = cgmManager.state.publicKeyV2
                 else {
                     logger.error("Missing credentials...")
@@ -392,7 +391,10 @@ extension PeripheralManager {
                 let whoAmIResponse: Eversense365.AuthWhoAmIResponse =
                     try write(Eversense365.AuthWhoAmIPacket(secret: clientId))
 
-                let accessResponse = try await AuthenticationApi.login(username: username, password: password)
+                let accessResponse = try await AuthenticationApi.login(
+                    username: credentials.username,
+                    password: credentials.password
+                )
 
                 let fleetSecret = await KeyVaultApi.getFleetSecretV2(
                     accessToken: accessResponse.accessToken,

@@ -19,10 +19,9 @@ class Eversense365AuthViewModel: ObservableObject {
         Task {
             do {
                 let response = try await AuthenticationApi.login(username: username, password: password)
+                cgmManager?.keychain.setEversenseCredentials(credentials: Credentials(username: username, password: password))
 
                 if let cgmManager = cgmManager {
-                    cgmManager.state.username = username
-                    cgmManager.state.password = password
                     cgmManager.state.accessToken = response.accessToken
                     cgmManager.state.accessTokenExpiration = Date.now.addingTimeInterval(.seconds(Double(response.expiresIn)))
                     cgmManager.notifyStateDidChange()
