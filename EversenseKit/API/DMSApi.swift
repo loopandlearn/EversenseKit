@@ -39,11 +39,13 @@ enum DMSApi {
             request.httpBody = try JSONEncoder().encode(message)
 
             let (data, response) = try await URLSession.shared.data(for: request)
-            guard let response = response as? HTTPURLResponse, response.statusCode < 400 else {
-                let message =
-                    "Got invalid response from PutCurrentValues: \((response as? HTTPURLResponse)?.statusCode ?? -1) \(String(data: data, encoding: .utf8) ?? "No data")"
+            logger
+                .info(
+                    "Server response PutCurrentValues: \((response as? HTTPURLResponse)?.statusCode ?? -1), data: \(String(data: data, encoding: .utf8) ?? "No data")"
+                )
 
-                logger.error(message)
+            guard let response = response as? HTTPURLResponse, response.statusCode < 400 else {
+                logger.error("Got invalid response from PutCurrentValues")
                 return false
             }
 
@@ -95,11 +97,12 @@ enum DMSApi {
             request.httpBody = try JSONEncoder().encode(message)
 
             let (data, response) = try await URLSession.shared.data(for: request)
+            logger
+                .info(
+                    "Server response PutDeviceEvents: \((response as? HTTPURLResponse)?.statusCode ?? -1), data: \(String(data: data, encoding: .utf8) ?? "No data")"
+                )
             guard let response = response as? HTTPURLResponse, response.statusCode < 400 else {
-                let message =
-                    "Got invalid response from PutDeviceEvents: \((response as? HTTPURLResponse)?.statusCode ?? -1) \(String(data: data, encoding: .utf8) ?? "No data")"
-
-                logger.error(message)
+                logger.error("Got invalid response from PutDeviceEvents")
                 return false
             }
 

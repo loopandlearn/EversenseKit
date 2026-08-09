@@ -296,8 +296,10 @@ struct TransmitterSettingsView: View {
                         labelValue
                             .foregroundStyle(statePicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                         Spacer()
-                        Text(displayGlucosePreference.format(viewModel.toHkQuantity(valueValue.wrappedValue)))
-                            .foregroundStyle(statePicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                        Text(
+                            displayGlucosePreference.format(viewModel.toHkQuantity(valueValue.wrappedValue))
+                        )
+                        .foregroundStyle(statePicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     }
                     .onTapGesture {
                         statePicker.wrappedValue.toggle()
@@ -362,8 +364,11 @@ struct TransmitterSettingsView: View {
                         labelThreshold
                             .foregroundStyle(stateThresholdPicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                         Spacer()
-                        Text(displayGlucosePreference.format(viewModel.toHkQuantity(valueThreshold.wrappedValue)))
-                            .foregroundStyle(stateThresholdPicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                        Text(
+                            displayGlucosePreference
+                                .format(viewModel.toHkQuantity(valueThreshold.wrappedValue))
+                        )
+                        .foregroundStyle(stateThresholdPicker.wrappedValue ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     }
                     .onTapGesture {
                         stateThresholdPicker.wrappedValue.toggle()

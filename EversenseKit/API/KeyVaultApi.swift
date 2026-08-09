@@ -22,11 +22,12 @@ enum KeyVaultApi {
         request.allHTTPHeaderFields = ["Authorization": "Bearer \(accessToken)"]
 
         let (data, response) = try await URLSession.shared.data(for: request)
+        logger
+            .info(
+                "Received response from KeyVault: \((response as? HTTPURLResponse)?.statusCode ?? -1) \(String(data: data, encoding: .utf8) ?? "No data")"
+            )
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            let message =
-                "Got invalid response from KeyVault: \((response as? HTTPURLResponse)?.statusCode ?? -1) \(String(data: data, encoding: .utf8) ?? "No data")"
-
-            logger.error(message)
+            logger.error("Got invalid response from KeyVault")
             throw NSError(domain: message, code: -1)
         }
 

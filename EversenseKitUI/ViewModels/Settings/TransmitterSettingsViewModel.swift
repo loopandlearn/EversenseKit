@@ -27,9 +27,9 @@ class TransmitterSettingsViewModel: ObservableObject {
     @Published var repeatLow: Double = .minutes(15)
     @Published var repeatHigh: Double = .minutes(15)
 
-    public let rateAllowedOptions: [Double] = (0 ..< 8).map { 1.5 + Double($0) * 0.5 }
-    public let glucoseHighAllowedOptions: [Double] = (0 ... 110).map { Double($0 * 2 + 180) }
-    public let glucoseLowAllowedOptions: [Double] = (0 ... 15).map { Double($0 * 2 + 40) }
+    public let rateAllowedOptions: [Double]
+    public let glucoseHighAllowedOptions: [Double]
+    public let glucoseLowAllowedOptions: [Double]
     public let timeAllowedOptions: [Double] = (5 ... 30).map { TimeInterval(minutes: Double($0)) }
     public let bleDisconnectAllowedOptions: [Double] = (1 ... 6).map { TimeInterval(minutes: Double($0 * 5)) }
     public let repeatLowAllowedOptions: [Double] = (1 ... 6).map { TimeInterval(minutes: Double($0 * 5)) }
@@ -37,11 +37,25 @@ class TransmitterSettingsViewModel: ObservableObject {
 
     private let cgmManager: EversenseCGMManager?
     private let unit: HKUnit
-    private let formatString: NSString
+    private let formatString: String
     init(cgmManager: EversenseCGMManager?, unit: HKUnit) {
         self.cgmManager = cgmManager
         self.unit = unit
         formatString = unit == .milligramsPerDeciliter ? "%.1f mg/dl/min" : "%.2f mmol/L/min"
+
+        rateAllowedOptions = PickerGenerator.generatePickerValues(
+            setting: PickerSettings(min: 1.5, max: 5, step: 0.1),
+            units: unit,
+            roundedFormat: "%.2f"
+        )
+        glucoseHighAllowedOptions = PickerGenerator.generatePickerValues(
+            setting: PickerSettings(min: 125, max: 350, step: 1),
+            units: unit
+        )
+        glucoseLowAllowedOptions = PickerGenerator.generatePickerValues(
+            setting: PickerSettings(min: 60, max: 115, step: 1),
+            units: unit
+        )
 
         guard let cgmManager = cgmManager else {
             return
@@ -76,7 +90,7 @@ class TransmitterSettingsViewModel: ObservableObject {
 
     func toRateFormatted(_ value: Double) -> String {
         let value = HKQuantity(unit: .milligramsPerDeciliter, doubleValue: value)
-        return NSString(format: formatString, value.doubleValue(for: unit)) as String
+        return String(format: formatString, value.doubleValue(for: unit))
     }
 
     func saveSettings() {
