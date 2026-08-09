@@ -54,10 +54,6 @@ class DMSSettingsViewModel: ObservableObject {
     }
 
     func updateFollowers(_ cgmManager: EversenseCGMManager) {
-        guard let _ = cgmManager.state.username, let _ = cgmManager.state.password else {
-            return
-        }
-
         Task {
             let result = await DMSApi.updateFollowers(cgmManager: cgmManager)
             await MainActor.run {
@@ -92,8 +88,7 @@ class DMSSettingsViewModel: ObservableObject {
         }
 
         cgmManager.state.shouldUploadToEversenseDMS = enabled
-        cgmManager.state.username = username
-        cgmManager.state.password = password
+        cgmManager.keychain.setEversenseCredentials(credentials: Credentials(username: username, password: password))
         cgmManager.state.uploadBatchSize = batchSize
         cgmManager.notifyStateDidChange()
     }
@@ -103,11 +98,12 @@ class DMSSettingsViewModel: ObservableObject {
             return
         }
 
+        let credentials = cgmManager.keychain.getEversenseCredentials()
         DispatchQueue.main.async {
             self.isDirty = (
                 cgmManager.state.shouldUploadToEversenseDMS != self.enabled ||
-                    cgmManager.state.username != self.username ||
-                    cgmManager.state.password != self.password ||
+                    credentials?.username != self.username ||
+                    credentials?.password != self.password ||
                     cgmManager.state.uploadBatchSize != self.batchSize
             )
         }
@@ -116,10 +112,11 @@ class DMSSettingsViewModel: ObservableObject {
 
 extension DMSSettingsViewModel: StateObserver {
     func stateDidUpdate(_ state: EversenseCGMState) {
+        let credentials = cgmManager?.keychain.getEversenseCredentials()
         DispatchQueue.main.async {
             self.enabled = state.shouldUploadToEversenseDMS
-            self.username = state.username ?? ""
-            self.password = state.password ?? ""
+            self.username = credentials?.username ?? ""
+            self.password = credentials?.password ?? ""
             self.batchSize = state.uploadBatchSize
             self.checkDirtyState()
         }

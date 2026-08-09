@@ -244,13 +244,13 @@ enum DMSApi {
             return accessToken
         }
 
-        guard let username = cgmManager.state.username, let password = cgmManager.state.password else {
+        guard let credentials = cgmManager.keychain.getEversenseCredentials() else {
             logger.error("User not logged in...")
             return nil
         }
 
         do {
-            let response = try await AuthenticationApi.login(username: username, password: password)
+            let response = try await AuthenticationApi.login(username: credentials.username, password: credentials.password)
             cgmManager.state.accessToken = response.accessToken
             cgmManager.state.accessTokenExpiration = Date.now.addingTimeInterval(.seconds(Double(response.expiresIn)))
             cgmManager.notifyStateDidChange()

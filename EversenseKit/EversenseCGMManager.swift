@@ -10,6 +10,7 @@ public class EversenseCGMManager: CGMManager {
 
     private let logger = EversenseLogger(category: "CGMManager")
     internal let bluetoothManager: BluetoothManager
+    internal let keychain = KeychainManager()
 
     public var state: EversenseCGMState
     public var rawState: RawStateValue {
@@ -88,6 +89,14 @@ public class EversenseCGMManager: CGMManager {
         self.state = state
         bluetoothManager = BluetoothManager()
         bluetoothManager.cgmManager = self
+
+        // Migrate username/password
+        if let username = state.username, let password = state.password {
+            keychain.setEversenseCredentials(credentials: Credentials(username: username, password: password))
+            self.state.username = nil
+            self.state.password = nil
+            notifyStateDidChange()
+        }
     }
 
     func cleanup() {
@@ -297,6 +306,39 @@ extension EversenseCGMManager {
             }
 
             cgmManagerDelegate.cgmManagerDidUpdateState(self)
+        }
+    }
+}
+
+struct Credentials: Codable {
+    let username: String
+    let password: String
+}
+
+extension KeychainManager {
+    private static let ServiceKey = "com.bastiaanv.Eversensekit"
+
+    func getEversenseCredentials() -> Credentials? {
+        do {
+            let credentials = try getGenericPasswordForServiceAsData(Self.ServiceKey)
+            return try JSONDecoder().decode(Credentials.self, from: credentials)
+        } catch {
+            print("Failed to fetch credentials: \(error)")
+            return nil
+        }
+    }
+
+    func setEversenseCredentials(credentials: Credentials?) {
+        do {
+            try deleteGenericPassword(forService: Self.ServiceKey)
+            guard let session = credentials else {
+                return
+            }
+
+            let sessionData = try JSONEncoder().encode(session)
+            try replaceGenericPassword(sessionData, forService: Self.ServiceKey)
+        } catch {
+            return
         }
     }
 }

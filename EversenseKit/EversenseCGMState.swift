@@ -89,7 +89,6 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         privateKeyV2 = rawValue["privateKeyV2"] as? Data
         clientIdV2 = rawValue["clientIdV2"] as? Data
         certificateV2 = rawValue["certificateV2"] as? String
-        fleetKeyPublicKeyV2 = rawValue["fleetKeyPublicKeyV2"] as? Data
 
         if let rawCalibrationMode = rawValue["calibrationMode"] as? CalibrationMode.RawValue {
             calibrationMode = CalibrationMode(rawValue: rawCalibrationMode) ?? .Default
@@ -207,7 +206,6 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["privateKeyV2"] = privateKeyV2
         value["clientIdV2"] = clientIdV2
         value["certificateV2"] = certificateV2
-        value["fleetKeyPublicKeyV2"] = fleetKeyPublicKeyV2
 
         do {
             value["activeAlarms"] = try JSONEncoder().encode(activeAlarms)
@@ -294,7 +292,6 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var privateKeyV2: Data?
     public var clientIdV2: Data?
     public var certificateV2: String?
-    public var fleetKeyPublicKeyV2: Data?
 
     public var is365: Bool {
         !(security == .none)
