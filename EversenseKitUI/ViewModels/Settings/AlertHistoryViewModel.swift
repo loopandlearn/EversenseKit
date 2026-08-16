@@ -31,17 +31,12 @@ class AlertHistoryViewModel: ObservableObject {
     }()
 
     private let logger = EversenseLogger(category: "AlertHistoryViewModel")
-    private let cgmManager: EversenseCGMManager?
-    init(cgmManager: EversenseCGMManager?) {
+    private let cgmManager: EversenseCGMManager
+    init(cgmManager: EversenseCGMManager) {
         self.cgmManager = cgmManager
     }
 
     func start() {
-        guard let cgmManager = cgmManager else {
-            logger.error("No CGMManager...")
-            return
-        }
-
         Task {
             await MainActor.run {
                 isLoading = true

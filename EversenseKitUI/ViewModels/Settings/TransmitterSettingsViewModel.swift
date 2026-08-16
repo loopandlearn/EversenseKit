@@ -35,10 +35,10 @@ class TransmitterSettingsViewModel: ObservableObject {
     public let repeatLowAllowedOptions: [Double] = (1 ... 6).map { TimeInterval(minutes: Double($0 * 5)) }
     public let repeatHighAllowedOptions: [Double] = (1 ... 33).map { TimeInterval(minutes: Double($0 * 5 + 15)) }
 
-    private let cgmManager: EversenseCGMManager?
+    private let cgmManager: EversenseCGMManager
     private let unit: HKUnit
     private let formatString: String
-    init(cgmManager: EversenseCGMManager?, unit: HKUnit) {
+    init(cgmManager: EversenseCGMManager, unit: HKUnit) {
         self.cgmManager = cgmManager
         self.unit = unit
         formatString = unit == .milligramsPerDeciliter ? "%.1f mg/dl/min" : "%.2f mmol/L/min"
@@ -56,10 +56,6 @@ class TransmitterSettingsViewModel: ObservableObject {
             setting: PickerSettings(min: 60, max: 115, step: 1),
             units: unit
         )
-
-        guard let cgmManager = cgmManager else {
-            return
-        }
 
         vibrationMode = cgmManager.state.vibrateMode ?? false
 
@@ -94,15 +90,11 @@ class TransmitterSettingsViewModel: ObservableObject {
     }
 
     func saveSettings() {
-        guard let cgmManager = cgmManager else {
-            return
-        }
-
         loading = true
         error = ""
 
         DispatchQueue.global(qos: .userInitiated).async {
-            cgmManager.bluetoothManager.ensureConnected { error in
+            self.cgmManager.bluetoothManager.ensureConnected { error in
                 if let error = error {
                     DispatchQueue.main.async {
                         self.loading = false
@@ -111,7 +103,7 @@ class TransmitterSettingsViewModel: ObservableObject {
                     return
                 }
 
-                guard let peripheralManager = cgmManager.bluetoothManager.peripheralManager else {
+                guard let peripheralManager = self.cgmManager.bluetoothManager.peripheralManager else {
                     return
                 }
 
@@ -139,12 +131,12 @@ class TransmitterSettingsViewModel: ObservableObject {
                     bleDisconnect: self.bleDisconnect
                 )
 
-                if !cgmManager.state.is365 {
+                if !self.cgmManager.state.is365 {
                     EversenseE3.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
-                    EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: cgmManager)
+                    EversenseE3.fullSync(peripheralManager: peripheralManager, cgmManager: self.cgmManager)
                 } else {
                     Eversense365.writeTransmitterSettings(peripheralManager: peripheralManager, data: transmitterSettings)
-                    Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: cgmManager)
+                    Eversense365.fullSync(peripheralManager: peripheralManager, cgmManager: self.cgmManager)
                 }
 
                 DispatchQueue.main.async {

@@ -14,6 +14,13 @@ struct EversenseAuth: View {
                         .textContentType(.emailAddress)
                     SecureField(String(localized: "Password", comment: "Label for password"), text: $viewModel.password)
                         .textContentType(.password)
+
+                    Picker(selection: $viewModel.apiZone) {
+                        ForEach(EversenseApiZone.all, id: \.self) { item in
+                            Text(item == .US ? "US" : "Outside US")
+                        }
+                    } label: { Text("Where was your Eversense Tracker purchased?") }
+                        .pickerStyle(.wheel)
                 } footer: {
                     Text(
                         "If your Eversense 365 is already active, please make sure to use the same account",
@@ -38,11 +45,21 @@ struct EversenseAuth: View {
                     .foregroundStyle(.red)
             }
 
-            Button(action: viewModel.login) {
-                Text("Login", comment: "label for Login")
+            HStack(spacing: 5) {
+                if !viewModel.is365 {
+                    Button(action: viewModel.nextStep) {
+                        Text("Skip", comment: "label for Login")
+                    }
+                    .disabled(viewModel.username.isEmpty || viewModel.password.isEmpty || viewModel.isLoading)
+                    .buttonStyle(ActionButtonStyle(.secondary))
+                }
+
+                Button(action: viewModel.login) {
+                    Text("Login", comment: "label for Login")
+                }
+                .disabled(viewModel.username.isEmpty || viewModel.password.isEmpty || viewModel.isLoading)
+                .buttonStyle(ActionButtonStyle())
             }
-            .disabled(viewModel.username.isEmpty || viewModel.password.isEmpty || viewModel.isLoading)
-            .buttonStyle(ActionButtonStyle())
             .padding([.bottom, .horizontal])
         }
         .listStyle(InsetGroupedListStyle())

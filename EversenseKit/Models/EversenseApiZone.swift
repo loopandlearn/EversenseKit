@@ -1,0 +1,48 @@
+public enum EversenseApiZone: UInt8 {
+    case US = 1
+    case OutsideUS = 2
+
+    var careUrl: String {
+        switch self {
+        case .US:
+            return "https://usapialpha.eversensedms.com/"
+        case .OutsideUS:
+            return "https://ousalphaapiservices.eversensedms.com/"
+        }
+    }
+
+    var tokenUrl: String {
+        switch self {
+        case .US:
+            return "https://usiamapi.eversensedms.com/connect/token"
+        case .OutsideUS:
+            return "https://ousiamapialpha.eversensedms.com/connect/token"
+        }
+    }
+
+    var registerUrl: String {
+        switch self {
+        case .US:
+            return "https://us.eversensedms.com/Account/Register"
+        case .OutsideUS:
+            return "https://global.eversensedms.com/registration"
+        }
+    }
+
+    var forgotPasswordUrl: String {
+        switch self {
+        case .US:
+            return "https://us.eversensedms.com/Account/ForgotPassword"
+        case .OutsideUS:
+            return "https://global.eversensedms.com/forgotpassword"
+        }
+    }
+
+    var keyVaultUrl: String {
+        "https://deviceauthorization.eversensedms.com/api/vault"
+    }
+
+    static var all: [EversenseApiZone] {
+        [.US, .OutsideUS]
+    }
+}

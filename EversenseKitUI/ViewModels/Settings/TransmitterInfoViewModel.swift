@@ -19,20 +19,16 @@ class TransmitterInfoViewModel: ObservableObject {
         return formatter
     }()
 
-    private let cgmManager: EversenseCGMManager?
-    init(cgmManager: EversenseCGMManager?) {
+    private let cgmManager: EversenseCGMManager
+    init(cgmManager: EversenseCGMManager) {
         self.cgmManager = cgmManager
-
-        guard let cgmManager else {
-            return
-        }
 
         stateDidUpdate(cgmManager.state)
         cgmManager.addStateObserver(state: self, queue: DispatchQueue.main)
     }
 
     deinit {
-        cgmManager?.removeStateObserver(state: self)
+        cgmManager.removeStateObserver(state: self)
     }
 }
 

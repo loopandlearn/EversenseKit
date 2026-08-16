@@ -6,11 +6,18 @@ class Eversense365AuthViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var error: String = ""
     @Published var isLoading: Bool = false
+    @Published var apiZone: EversenseApiZone = .US {
+        didSet {
+            cgmManager.state.apiZone = apiZone
+        }
+    }
 
-    private let nextStep: () -> Void
-    private let cgmManager: EversenseCGMManager?
-    init(_ cgmManager: EversenseCGMManager?, _ nextStep: @escaping () -> Void) {
+    let is365: Bool
+    let nextStep: () -> Void
+    private let cgmManager: EversenseCGMManager
+    init(_ cgmManager: EversenseCGMManager, _ is365: Bool, _ nextStep: @escaping () -> Void) {
         self.cgmManager = cgmManager
+        self.is365 = is365
         self.nextStep = nextStep
     }
 
@@ -18,14 +25,11 @@ class Eversense365AuthViewModel: ObservableObject {
         isLoading = true
         Task {
             do {
-                let response = try await AuthenticationApi.login(username: username, password: password)
-                cgmManager?.keychain.setEversenseCredentials(credentials: Credentials(username: username, password: password))
-
-                if let cgmManager = cgmManager {
-                    cgmManager.state.accessToken = response.accessToken
-                    cgmManager.state.accessTokenExpiration = Date.now.addingTimeInterval(.seconds(Double(response.expiresIn)))
-                    cgmManager.notifyStateDidChange()
-                }
+                let response = try await AuthenticationApi.login(cgmManager: cgmManager, username: username, password: password)
+                cgmManager.keychain.setEversenseCredentials(credentials: Credentials(username: username, password: password))
+                cgmManager.state.accessToken = response.accessToken
+                cgmManager.state.accessTokenExpiration = Date.now.addingTimeInterval(.seconds(Double(response.expiresIn)))
+                cgmManager.notifyStateDidChange()
 
                 await MainActor.run {
                     self.isLoading = false
@@ -41,7 +45,7 @@ class Eversense365AuthViewModel: ObservableObject {
     }
 
     func openRegistrationUrl() {
-        if let url = URL(string: "https://us.eversensedms.com/Account/Register") {
+        if let url = URL(string: apiZone.registerUrl) {
             UIApplication.shared.open(url)
         } else {
             error = "Could not open registration link..."
@@ -49,7 +53,7 @@ class Eversense365AuthViewModel: ObservableObject {
     }
 
     func openForgotPasswordUrl() {
-        if let url = URL(string: "https://us.eversensedms.com/Account/ForgotPassword") {
+        if let url = URL(string: apiZone.forgotPasswordUrl) {
             UIApplication.shared.open(url)
         } else {
             error = "Could not open forgot password link..."

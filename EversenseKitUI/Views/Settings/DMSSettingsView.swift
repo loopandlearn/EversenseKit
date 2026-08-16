@@ -51,6 +51,13 @@ struct DMSSettingsView: View {
                                 .multilineTextAlignment(.trailing)
                         }
 
+                        Picker(selection: $viewModel.apiZone) {
+                            ForEach(EversenseApiZone.all, id: \.self) { item in
+                                Text(item == .US ? "US" : "Outside US")
+                            }
+                        } label: { Text("Where was your Eversense Tracker purchased?") }
+                            .pickerStyle(.wheel)
+
                         HStack {
                             Text("Upload Delay", comment: "DMS batching label")
                                 .foregroundStyle(edittingBatchSize ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))

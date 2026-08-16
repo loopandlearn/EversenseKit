@@ -1,12 +1,11 @@
 enum AuthenticationApi {
-    private static let tokenUrl = "https://usiamapi.eversensedms.com/connect/token"
     private static let clientId = "eversenseMMAAndroid"
     private static let clientSecret = "6ksPx#]~wQ3U"
 
     private static let logger = EversenseLogger(category: "AuthenticationApi")
 
-    static func login(username: String, password: String) async throws -> AuthResponse {
-        guard let url = URL(string: tokenUrl) else {
+    static func login(cgmManager: EversenseCGMManager, username: String, password: String) async throws -> AuthResponse {
+        guard let url = URL(string: cgmManager.state.apiZone.tokenUrl) else {
             logger.error("Could not create URL...")
             throw NSError(domain: "Could not create URL...", code: -1)
         }

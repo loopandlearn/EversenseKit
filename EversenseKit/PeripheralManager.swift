@@ -392,11 +392,13 @@ extension PeripheralManager {
                     try write(Eversense365.AuthWhoAmIPacket(secret: clientId))
 
                 let accessResponse = try await AuthenticationApi.login(
+                    cgmManager: cgmManager,
                     username: credentials.username,
                     password: credentials.password
                 )
 
                 let fleetSecret = await KeyVaultApi.getFleetSecretV2(
+                    cgmManager: cgmManager,
                     accessToken: accessResponse.accessToken,
                     serialNumber: whoAmIResponse.serialNumber.base64Safe(),
                     nonce: whoAmIResponse.nonce.base64Safe(),

@@ -81,20 +81,16 @@ public class EversenseCGMManager: CGMManager {
         state.modelStr
     }
 
-    public required init?(rawState: RawStateValue) {
-        guard let state = EversenseCGMState(rawValue: rawState) else {
-            return nil
-        }
-
-        self.state = state
+    public required init(rawState: RawStateValue) {
+        state = EversenseCGMState(rawValue: rawState)
         bluetoothManager = BluetoothManager()
         bluetoothManager.cgmManager = self
 
         // Migrate username/password
         if let username = state.username, let password = state.password {
             keychain.setEversenseCredentials(credentials: Credentials(username: username, password: password))
-            self.state.username = nil
-            self.state.password = nil
+            state.username = nil
+            state.password = nil
             notifyStateDidChange()
         }
     }
