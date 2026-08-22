@@ -2,6 +2,13 @@ public enum EversenseApiZone: UInt8 {
     case US = 1
     case OutsideUS = 2
 
+    var label: String {
+        switch self {
+        case .US: return String(localized: "US", comment: "us label apizone")
+        case .OutsideUS: return String(localized: "Outside US", comment: "us label apizone")
+        }
+    }
+
     var careUrl: String {
         switch self {
         case .US:

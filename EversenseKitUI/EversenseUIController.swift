@@ -105,6 +105,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
         case .onboardingScan:
             let completion = {
                 self.cgmManager.state.isOnboarded = true
+                self.cgmManager.state.hasReportedInsertionDate = false
                 self.cgmManager.notifyStateDidChange()
 
                 if let cgmManagerOnboardingDelegate = self.cgmManagerOnboardingDelegate {

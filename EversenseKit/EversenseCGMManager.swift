@@ -202,6 +202,20 @@ extension EversenseCGMManager {
                 ))
 
                 delegate.cgmManager(self, hasNew: .newData(newData))
+
+                if !self.state.hasReportedInsertionDate {
+                    let insertionEvent = PersistedCgmEvent(
+                        date: self.state.activatedAt,
+                        type: .sensorStart,
+                        deviceIdentifier: self.state.sensorId.hexString(),
+                        expectedLifetime: self.state.is365 ? .days(365) : .days(180),
+                        warmupPeriod: .hours(24)
+                    )
+                    delegate.cgmManager(self, hasNew: [insertionEvent])
+
+                    self.state.hasReportedInsertionDate = true
+                    self.notifyStateDidChange()
+                }
             }
 
             if self.state.shouldUploadToEversenseDMS {
@@ -253,11 +267,11 @@ extension EversenseCGMManager {
             }
         }
 
-        state.activeAlarms = alarms
+        state.activeAlarms = alarms.filter { $0.code != .unknown }
     }
 
     private func findNewAlarms(current: [ActiveAlarm], updated: [ActiveAlarm]) -> [ActiveAlarm] {
-        let currentCodes = Set(current.map(\.codeRaw))
+        let currentCodes = Set(current.filter { $0.code != .unknown }.map(\.codeRaw))
         return updated.filter { !currentCodes.contains($0.codeRaw) && $0.code != .unknown }
     }
 

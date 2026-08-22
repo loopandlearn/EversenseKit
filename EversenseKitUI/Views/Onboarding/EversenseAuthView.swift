@@ -5,6 +5,7 @@ struct EversenseAuth: View {
     @Environment(\.dismissAction) private var dismiss
 
     @ObservedObject var viewModel: Eversense365AuthViewModel
+    @State var editApiZone = false
 
     var body: some View {
         VStack {
@@ -15,12 +16,27 @@ struct EversenseAuth: View {
                     SecureField(String(localized: "Password", comment: "Label for password"), text: $viewModel.password)
                         .textContentType(.password)
 
-                    Picker(selection: $viewModel.apiZone) {
-                        ForEach(EversenseApiZone.all, id: \.self) { item in
-                            Text(item == .US ? "US" : "Outside US")
+                    HStack {
+                        Text("Select Your Zone", comment: "api zone lable")
+                            .foregroundStyle(editApiZone ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
+                        Spacer()
+                        Text(viewModel.apiZone.label)
+                            .foregroundStyle(editApiZone ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                    }
+                    .onTapGesture {
+                        withAnimation {
+                            self.editApiZone.toggle()
                         }
-                    } label: { Text("Where was your Eversense Tracker purchased?") }
-                        .pickerStyle(.wheel)
+                    }
+
+                    if editApiZone {
+                        Picker(selection: $viewModel.apiZone) {
+                            ForEach(EversenseApiZone.all, id: \.self) { item in
+                                Text(item.label)
+                            }
+                        } label: { EmptyView() }
+                            .pickerStyle(.wheel)
+                    }
                 } footer: {
                     Text(
                         "If your Eversense 365 is already active, please make sure to use the same account",
@@ -50,7 +66,7 @@ struct EversenseAuth: View {
                     Button(action: viewModel.nextStep) {
                         Text("Skip", comment: "label for Login")
                     }
-                    .disabled(viewModel.username.isEmpty || viewModel.password.isEmpty || viewModel.isLoading)
+                    .disabled(viewModel.isLoading)
                     .buttonStyle(ActionButtonStyle(.secondary))
                 }
 

@@ -3,6 +3,7 @@ import LoopKit
 extension EversenseE3 {
     static let fakeAppVersion = "8.0.1"
     static let logger = EversenseLogger(category: "TransmitterStateE3")
+    static let maxGlucose = 450 // mg/dl
 
     static func readGlucoseData(
         peripheralManager: PeripheralManager,
@@ -29,6 +30,12 @@ extension EversenseE3 {
             var glucoseHistory: [GetGlucoseLogResponse] = []
             for index in range.from ... range.to {
                 let pageResponse: GetGlucoseLogResponse = try peripheralManager.write(GetGlucoseLogPacket(index: index))
+                if pageResponse.glucoseInMgDl >= maxGlucose {
+                    let message =
+                        "Received invalid Glucose data - value: \(pageResponse.glucoseInMgDl) mg/dl, timestamp sample: \(pageResponse.datetime)"
+                    logger.warning(message)
+                    continue
+                }
 
                 logger.debug("Datetime: \(pageResponse.datetime), Glucose: \(pageResponse.glucoseInMgDl) mg/dl")
                 glucoseHistory.append(pageResponse)
@@ -64,7 +71,7 @@ extension EversenseE3 {
             logger.debug("Sending GetCurrentGlucosePacket...")
             let glucoseData: GetCurrentGlucoseResponse = try peripheralManager.write(GetCurrentGlucosePacket())
 
-            guard glucoseData.glucoseInMgDl < 0x03E8 else { // 1000 mg/dl
+            guard glucoseData.glucoseInMgDl < maxGlucose else {
                 let message =
                     "Received invalid Glucose data - value: \(glucoseData.glucoseInMgDl) mg/dl, timestamp sample: \(glucoseData.datetime)"
                 logger.error(message)
