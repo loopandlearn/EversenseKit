@@ -28,7 +28,13 @@ class CalibrationHistoryViewModel: ObservableObject {
     private var timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
-        formatter.timeZone = TimeZone.current
+        return formatter
+    }()
+
+    private var timeFormatterE3: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
         return formatter
     }()
 
@@ -130,7 +136,7 @@ class CalibrationHistoryViewModel: ObservableObject {
 
                         let quantity = HKQuantity(unit: .milligramsPerDeciliter, doubleValue: Double(item.glucoseInMgDl))
                         let historyItem = CalibrationHistoryItem(
-                            time: timeFormatter.string(from: item.datetime),
+                            time: timeFormatterE3.string(from: item.datetime),
                             glucose: glucosePreference.format(quantity),
                             flag: item.flag
                         )
