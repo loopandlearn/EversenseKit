@@ -137,7 +137,7 @@ extension EversenseSettingsViewModel: StateObserver {
         }
 
         if let lastCalibration = state.lastCalibration, let nextCalibration = state.nextCalibration {
-            let calibrationPeriod = state.calibrationMode.toPeriod()
+            let calibrationPeriod = nextCalibration.timeIntervalSince(lastCalibration)
             let calibrationAge = lastCalibration.timeIntervalSinceNow * -1
             let nextCalibrationIn = calibrationPeriod - calibrationAge
 

@@ -143,20 +143,12 @@ extension EversenseE3 {
                 .write(GetLastCalibrationDatePacket())
             let lastCalibrationTime: GetLastCalibrationTimeResponse = try peripheralManager
                 .write(GetLastCalibrationTimePacket())
-            cgmManager.state.lastCalibration = Date.fromComponents(
+            let lastCalibration = Date.fromComponents(
                 date: lastCalibrationDate.date,
                 time: lastCalibrationTime.time
             )
-
-            // Get next calibration datetime
-            let nextCalibrationDate: GetNextCalibrationDateResponse = try peripheralManager
-                .write(GetNextCalibrationDatePacket())
-            let nextCalibrationTime: GetNextCalibrationTimeResponse = try peripheralManager
-                .write(GetNextCalibrationTimePacket())
-            cgmManager.state.nextCalibration = Date.fromComponents(
-                date: nextCalibrationDate.date,
-                time: nextCalibrationTime.time
-            )
+            cgmManager.state.lastCalibration = lastCalibration
+            cgmManager.state.nextCalibration = lastCalibration.addingTimeInterval(.hours(24))
 
             // Get current calibration phase
             let calibrationMode: CalibrationMode

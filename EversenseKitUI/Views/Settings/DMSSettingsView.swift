@@ -105,21 +105,23 @@ struct DMSSettingsView: View {
                         .buttonStyle(.bordered)
                         .disabled(!viewModel.isDirty)
 
-                        Button { viewModel.testCredentials() } label: {
-                            Text("Test connection", comment: "label save")
-                                .font(.title3)
-                                .frame(maxWidth: .infinity)
+                        if viewModel.enabled {
+                            Button { viewModel.testCredentials() } label: {
+                                Text("Test connection", comment: "label save")
+                                    .font(.title3)
+                                    .frame(maxWidth: .infinity)
 
-                            if viewModel.isLoading {
-                                ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                                if viewModel.isLoading {
+                                    ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                                }
                             }
-                        }
-                        .buttonStyle(.bordered)
-                        .disabled(viewModel.isLoading || viewModel.isDirty)
+                            .buttonStyle(.bordered)
+                            .disabled(viewModel.isLoading || viewModel.isDirty)
 
-                        if !viewModel.error.isEmpty {
-                            Text(viewModel.error)
-                                .foregroundStyle(.red)
+                            if !viewModel.error.isEmpty {
+                                Text(viewModel.error)
+                                    .foregroundStyle(.red)
+                            }
                         }
                     }
                 } footer: {
