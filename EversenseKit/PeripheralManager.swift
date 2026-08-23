@@ -56,7 +56,7 @@ class PeripheralManager: NSObject {
         writeSemaphore.wait()
 
         guard let characteristic = requestCharacteristic else {
-            logger.error("Not connected anymore...")
+            logger.error("Not connected anymore...", type: .send)
             throw NSError(domain: "Not connected anymore...", code: 0, userInfo: nil)
         }
 
@@ -73,13 +73,13 @@ class PeripheralManager: NSObject {
 
         let data = packet.getRequestData()
         if case cgmManager.state.security = .none {
-            logger.debug("[RAW] Writing data -> \(data.hexString())")
+            logger.debug("[RAW] Writing data -> \(data.hexString())", type: .send)
             peripheral.writeValue(data, for: characteristic, type: .withoutResponse)
         } else {
             let encodedMessage = EncodingOperations.encode(data: data, chunkSize: maxPacketSize)
 
             for message in EncodingOperations.split(data: encodedMessage, chunkSize: maxPacketSize) {
-                logger.debug("[ENCODED] Writing data -> \(message.hexString())")
+                logger.debug("[ENCODED] Writing data -> \(message.hexString())", type: .send)
 
                 peripheral.writeValue(message, for: characteristic, type: .withoutResponse)
                 Thread.sleep(forTimeInterval: .milliseconds(100))
@@ -199,13 +199,13 @@ extension PeripheralManager: CBPeripheralDelegate {
 
     func peripheral(_: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if let error = error {
-            logger.error("Received error on value update: \(error.localizedDescription)")
+            logger.error("Received error on value update: \(error.localizedDescription)", type: .receive)
             connectCompletion?(ConnectFailure.unknown(reason: "Received error on value update: \(error.localizedDescription)"))
             return
         }
 
         guard let data = characteristic.value else {
-            logger.warning("Empty data received")
+            logger.warning("Empty data received", type: .receive)
             return
         }
 
@@ -227,19 +227,19 @@ extension PeripheralManager: CBPeripheralDelegate {
                 // Only decrypt if packet is not for Authentication
                 actualData = CryptoUtil.shared.decrypt(data: actualData)
                 guard !actualData.isEmpty else {
-                    logger.error("Failed to decrypt payload")
+                    logger.error("Failed to decrypt payload", type: .receive)
                     buffer = Data()
                     return
                 }
             }
         }
 
-        logger.debug("Decrypted payload: \(actualData.hexString())")
+        logger.debug("Decrypted payload: \(actualData.hexString())", type: .receive)
         buffer = Data()
 
         if actualData[0] == EversenseE3.PacketIds.keepAlivePush.rawValue {
             // TODO: Detect alarm notification
-            logger.debug("[E3] Got keep alive message")
+            logger.debug("[E3] Got keep alive message", type: .receive)
 
             if cgmManager.state.recentGlucoseDateTime == nil || cgmManager.state.recentGlucoseDateTime!
                 .addingTimeInterval(.minutes(4.5)) > Date.now
@@ -258,7 +258,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             let packet = Eversense365.PushKeepAlivePacket()
             let response = packet.parseResponse(data: actualData)
 
-            logger.debug("[365] Got keep alive message - mostRecentGlucoseDatetime: \(response.mostRecenteGlucoseDatetime)")
+            logger.debug("[365] Got keep alive message - mostRecentGlucoseDatetime: \(response.mostRecenteGlucoseDatetime)", type: .receive)
             if response.mostRecenteGlucoseDatetime > (cgmManager.state.recentGlucoseDateTime ?? .distantPast) {
                 DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                     guard let self = self else { return }
@@ -275,7 +275,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             let packet = Eversense365.PushAlarmWithDataPacket(currentGlucose: cgmManager.state.recentGlucoseInMgDl ?? 0)
             let response = packet.parseResponse(data: actualData)
             guard response.alarm.code != .unknown else {
-                logger.warning("[365] Received unknown alarm: \(response.alarm.codeRaw)")
+                logger.warning("[365] Received unknown alarm: \(response.alarm.codeRaw)", type: .receive)
                 return
             }
 
@@ -284,7 +284,7 @@ extension PeripheralManager: CBPeripheralDelegate {
                 self.cgmManager.notifyStateDidChange()
             }
 
-            logger.debug("[365] Received alarm")
+            logger.debug("[365] Received alarm", type: .receive)
             return
         }
 
@@ -292,7 +292,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             EversenseE3.handleError(data: actualData)
 
             guard let stream = writeQueue else {
-                logger.warning("No pending writeQueue")
+                logger.warning("No pending writeQueue", type: .receive)
                 return
             }
 
@@ -304,7 +304,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             Eversense365.handleError(data: actualData)
 
             guard let stream = writeQueue else {
-                logger.warning("No pending writeQueue")
+                logger.warning("No pending writeQueue", type: .receive)
                 return
             }
 
@@ -314,13 +314,13 @@ extension PeripheralManager: CBPeripheralDelegate {
 
         // From here we assume it is a normal packet
         guard let packet = self.packet else {
-            logger.error("No active packet - data: \(actualData.hexString())")
+            logger.error("No active packet - data: \(actualData.hexString())", type: .receive)
             return
         }
 
         guard packet.checkPacket(data: actualData, doChecksum: isE3) else {
             logger
-                .warning("Received invalid response, invalid response code or checksum failed - data: \(actualData.hexString())")
+                .warning("Received invalid response, invalid response code or checksum failed - data: \(actualData.hexString())", type: .receive)
             return
         }
 
@@ -331,7 +331,7 @@ extension PeripheralManager: CBPeripheralDelegate {
         writeResponse = packet.parseResponse(data: actualData) as AnyObject
 
         guard let stream = writeQueue else {
-            logger.warning("No pending writeQueue - data: \(actualData.hexString())")
+            logger.warning("No pending writeQueue - data: \(actualData.hexString())", type: .receive)
             return
         }
 

@@ -28,7 +28,7 @@ class CalibrationHistoryViewModel: ObservableObject {
     private var timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
-//        formatter.timeZone = TimeZone.current
+        formatter.timeZone = TimeZone.current
         return formatter
     }()
 

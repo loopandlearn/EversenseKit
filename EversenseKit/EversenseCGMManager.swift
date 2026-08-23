@@ -72,7 +72,7 @@ public class EversenseCGMManager: CGMManager {
         }
     }
 
-    private let delegate = WeakSynchronizedDelegate<CGMManagerDelegate>()
+    let delegate = WeakSynchronizedDelegate<CGMManagerDelegate>()
     private let stateObservers = WeakSynchronizedSet<StateObserver>()
 
     public let managerIdentifier: String = "EversenseCGMManager"
@@ -85,6 +85,7 @@ public class EversenseCGMManager: CGMManager {
         state = EversenseCGMState(rawValue: rawState)
         bluetoothManager = BluetoothManager()
         bluetoothManager.cgmManager = self
+        EversenseLogger.cgmManager = self
 
         // Migrate username/password
         if let username = state.username, let password = state.password {
