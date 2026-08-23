@@ -21,11 +21,13 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
 
     var cgmManagerOnboardingDelegate: LoopKitUI.CGMManagerOnboardingDelegate?
     var completionDelegate: LoopKitUI.CompletionDelegate?
-    var cgmManager: EversenseCGMManager?
+    var cgmManager: EversenseCGMManager
     var displayGlucosePreference: DisplayGlucosePreference
 
     var colorPalette: LoopUIColorPalette
     var screenStack = [EversenseUIScreen]()
+
+    private var is365: Bool = true
 
     init(
         cgmManager: EversenseCGMManager? = nil,
@@ -65,11 +67,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
     }
 
     private func getInitialScreen() -> EversenseUIScreen {
-        guard let cgmManager = cgmManager else {
-            return .onboardingStart
-        }
-
-        return cgmManager.state.isOnboarded ? .settings : .onboardingStart
+        cgmManager.state.isOnboarded ? .settings : .onboardingStart
     }
 
     private func hostingController<Content: View>(
@@ -98,7 +96,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
             )
 
         case .onboardingAuth:
-            let viewModel = Eversense365AuthViewModel(cgmManager, { self.navigateTo(.onboardingScan) })
+            let viewModel = Eversense365AuthViewModel(cgmManager, is365, { self.navigateTo(.onboardingScan) })
             return hostingController(
                 rootView: EversenseAuth(viewModel: viewModel),
                 title: String(localized: "Eversense Account", comment: "Login header")
@@ -106,21 +104,20 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
 
         case .onboardingScan:
             let completion = {
-                if let cgmManager = self.cgmManager {
-                    cgmManager.state.isOnboarded = true
-                    cgmManager.notifyStateDidChange()
+                self.cgmManager.state.isOnboarded = true
+                self.cgmManager.state.hasReportedInsertionDate = false
+                self.cgmManager.notifyStateDidChange()
 
-                    if let cgmManagerOnboardingDelegate = self.cgmManagerOnboardingDelegate {
-                        DispatchQueue.main.async {
-                            cgmManagerOnboardingDelegate.cgmManagerOnboarding(didOnboardCGMManager: cgmManager)
-                            cgmManagerOnboardingDelegate.cgmManagerOnboarding(didCreateCGMManager: cgmManager)
-                            self.completionDelegate?.completionNotifyingDidComplete(self)
-                        }
-                    } else {
-                        self.logger.warning("Not onboarded -> no onboardDelegate...")
-                        DispatchQueue.main.async {
-                            self.completionDelegate?.completionNotifyingDidComplete(self)
-                        }
+                if let cgmManagerOnboardingDelegate = self.cgmManagerOnboardingDelegate {
+                    DispatchQueue.main.async {
+                        cgmManagerOnboardingDelegate.cgmManagerOnboarding(didOnboardCGMManager: self.cgmManager)
+                        cgmManagerOnboardingDelegate.cgmManagerOnboarding(didCreateCGMManager: self.cgmManager)
+                        self.completionDelegate?.completionNotifyingDidComplete(self)
+                    }
+                } else {
+                    self.logger.warning("Not onboarded -> no onboardDelegate...")
+                    DispatchQueue.main.async {
+                        self.completionDelegate?.completionNotifyingDidComplete(self)
                     }
                 }
             }
@@ -133,11 +130,7 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
 
         case .settings:
             let deleteCgm = {
-                guard let cgmManager = self.cgmManager else {
-                    return
-                }
-
-                cgmManager.delete {
+                self.cgmManager.delete {
                     DispatchQueue.main.async {
                         self.completionDelegate?.completionNotifyingDidComplete(self)
                     }
@@ -238,49 +231,48 @@ class EversenseUIController: UINavigationController, CGMManagerOnboarding, Compl
 
     private func onboardingNextStep(_ cgmType: Int) {
         #if targetEnvironment(simulator)
-            if let cgmManager = self.cgmManager {
-                cgmManager.state.isOnboarded = true
-                cgmManager.state.bleNameString = cgmType == 1 ? "Eversense 365 DEMO" : "Eversense E3 DEMO"
-                cgmManager.state.security = cgmType == 1 ? .v2 : .none
-                cgmManager.state.recentGlucoseInMgDl = 140
-                cgmManager.state.recentGlucoseDateTime = Date.now
-                cgmManager.state.recentGlucoseTrend = .flat
-                cgmManager.state.signalStrength = .Good
-                cgmManager.state.signalStrengthRaw = 1350
-                cgmManager.state.batteryPercentage = 75
-                cgmManager.state.calibrationMode = .WeeklySingle
-                cgmManager.state.calibrationPhase = .DAILY_CALIBRATION
-                cgmManager.state.calibrationReadiness = .Ready
-                cgmManager.state.activatedAt = Date.now
-                cgmManager.state.lastCalibration = Date.now
-                cgmManager.state.nextCalibration = Date.now.addingTimeInterval(.days(7))
-                cgmManager.state.lastSynced = Date.now
-                cgmManager.state.activeAlarms = [
-                    ActiveAlarm(
-                        code: .CalibrationNowAlarm,
-                        codeRaw: Alarm.CalibrationNowAlarm.rawValue,
-                        glucoseInMgDl: 0,
-                        flag: 0,
-                        priority: 0
-                    ),
-                    ActiveAlarm(
-                        code: .PredictiveHighAlarm,
-                        codeRaw: Alarm.CalibrationNowAlarm.rawValue,
-                        glucoseInMgDl: 0,
-                        flag: 0,
-                        priority: 2
-                    )
-                ]
+            cgmManager.state.isOnboarded = true
+            cgmManager.state.bleNameString = cgmType == 1 ? "Eversense 365 DEMO" : "Eversense E3 DEMO"
+            cgmManager.state.security = cgmType == 1 ? .v2 : .none
+            cgmManager.state.recentGlucoseInMgDl = 140
+            cgmManager.state.recentGlucoseDateTime = Date.now
+            cgmManager.state.recentGlucoseTrend = .flat
+            cgmManager.state.signalStrength = .Good
+            cgmManager.state.signalStrengthRaw = 1350
+            cgmManager.state.batteryPercentage = 75
+            cgmManager.state.calibrationMode = .WeeklySingle
+            cgmManager.state.calibrationPhase = .DAILY_CALIBRATION
+            cgmManager.state.calibrationReadiness = .Ready
+            cgmManager.state.activatedAt = Date.now
+            cgmManager.state.lastCalibration = Date.now
+            cgmManager.state.nextCalibration = Date.now.addingTimeInterval(.days(7))
+            cgmManager.state.lastSynced = Date.now
+            cgmManager.state.activeAlarms = [
+                ActiveAlarm(
+                    code: .CalibrationNowAlarm,
+                    codeRaw: Alarm.CalibrationNowAlarm.rawValue,
+                    glucoseInMgDl: 0,
+                    flag: 0,
+                    priority: 0
+                ),
+                ActiveAlarm(
+                    code: .PredictiveHighAlarm,
+                    codeRaw: Alarm.CalibrationNowAlarm.rawValue,
+                    glucoseInMgDl: 0,
+                    flag: 0,
+                    priority: 2
+                )
+            ]
 
-                if let cgmManagerOnboardingDelegate = self.cgmManagerOnboardingDelegate {
-                    DispatchQueue.main.async {
-                        cgmManagerOnboardingDelegate.cgmManagerOnboarding(didOnboardCGMManager: cgmManager)
-                        cgmManagerOnboardingDelegate.cgmManagerOnboarding(didCreateCGMManager: cgmManager)
-                        self.completionDelegate?.completionNotifyingDidComplete(self)
-                    }
+            if let cgmManagerOnboardingDelegate = self.cgmManagerOnboardingDelegate {
+                DispatchQueue.main.async {
+                    cgmManagerOnboardingDelegate.cgmManagerOnboarding(didOnboardCGMManager: self.cgmManager)
+                    cgmManagerOnboardingDelegate.cgmManagerOnboarding(didCreateCGMManager: self.cgmManager)
+                    self.completionDelegate?.completionNotifyingDidComplete(self)
                 }
             }
         #else
+            is365 = cgmType == 1
             navigateTo(.onboardingAuth)
         #endif
     }

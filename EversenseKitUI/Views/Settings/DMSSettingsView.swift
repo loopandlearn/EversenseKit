@@ -3,7 +3,8 @@ import SwiftUI
 
 struct DMSSettingsView: View {
     @ObservedObject var viewModel: DMSSettingsViewModel
-    @State var edittingBatchSize: Bool = false
+    @State var edittingBatchSize = false
+    @State var editApiZone = false
 
     var confirmationSheet: ActionSheet {
         ActionSheet(
@@ -31,7 +32,7 @@ struct DMSSettingsView: View {
             List {
                 Section {
                     Toggle(isOn: $viewModel.enabled) {
-                        Text("Allow upload to Eversense DMS", comment: "toggle enable DMS")
+                        Text("Upload to Eversense DMS", comment: "toggle enable DMS")
                     }
 
                     if viewModel.enabled {
@@ -49,6 +50,28 @@ struct DMSSettingsView: View {
                                 .textContentType(.password)
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.trailing)
+                        }
+
+                        HStack {
+                            Text("Select Your Zone", comment: "api zone lable")
+                                .foregroundStyle(editApiZone ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
+                            Spacer()
+                            Text(viewModel.apiZone.label)
+                                .foregroundStyle(editApiZone ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                        }
+                        .onTapGesture {
+                            withAnimation {
+                                self.editApiZone.toggle()
+                            }
+                        }
+
+                        if editApiZone {
+                            Picker(selection: $viewModel.apiZone) {
+                                ForEach(EversenseApiZone.all, id: \.self) { item in
+                                    Text(item.label)
+                                }
+                            } label: { EmptyView() }
+                                .pickerStyle(.wheel)
                         }
 
                         HStack {
@@ -73,13 +96,34 @@ struct DMSSettingsView: View {
                         }
                     }
 
-                    Button { viewModel.save() } label: {
-                        Text("Save", comment: "label save")
-                            .font(.title3)
-                            .frame(maxWidth: .infinity)
+                    VStack {
+                        Button { viewModel.save() } label: {
+                            Text("Save", comment: "label save")
+                                .font(.title3)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(!viewModel.isDirty)
+
+                        if viewModel.enabled {
+                            Button { viewModel.testCredentials() } label: {
+                                Text("Test connection", comment: "label save")
+                                    .font(.title3)
+                                    .frame(maxWidth: .infinity)
+
+                                if viewModel.isLoading {
+                                    ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                                }
+                            }
+                            .buttonStyle(.bordered)
+                            .disabled(viewModel.isLoading || viewModel.isDirty)
+
+                            if !viewModel.error.isEmpty {
+                                Text(viewModel.error)
+                                    .foregroundStyle(.red)
+                            }
+                        }
                     }
-                    .buttonStyle(.bordered)
-                    .disabled(!viewModel.isDirty)
                 } footer: {
                     Text(
                         "Increasing the Upload Delay will lower the Internet usage, but gives the Eversense DMS a small delay",

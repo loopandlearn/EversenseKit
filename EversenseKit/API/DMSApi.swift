@@ -1,8 +1,6 @@
 import LoopKit
 
 enum DMSApi {
-    private static let careBaseUrl = "https://usapialpha.eversensedms.com/"
-
     private static let logger = EversenseLogger(category: "DMSApi")
 
     private static let dateFormatter: DateFormatter = {
@@ -13,7 +11,7 @@ enum DMSApi {
     }()
 
     static func uploadCurrentValues(cgmManager: EversenseCGMManager, reading: CGMReading) async -> Bool {
-        guard let url = URL(string: "\(careBaseUrl)api/care/PutCurrentValues") else {
+        guard let url = URL(string: "\(cgmManager.state.apiZone.careUrl)api/care/PutCurrentValues") else {
             logger.error("Could not create URL...")
             return false
         }
@@ -63,7 +61,7 @@ enum DMSApi {
         calibrations: [CalibrationEvent],
         alerts: [ActiveAlarm]
     ) async -> Bool {
-        guard let url = URL(string: "\(careBaseUrl)api/care/PutDeviceEvents") else {
+        guard let url = URL(string: "\(cgmManager.state.apiZone.careUrl)api/care/PutDeviceEvents") else {
             logger.error("Could not create URL...")
             return false
         }
@@ -119,12 +117,13 @@ enum DMSApi {
         }
 
         do {
-            guard let urlFollowers = URL(string: "\(careBaseUrl)api/care/GetMyFollowerPatientList") else {
+            guard let urlFollowers = URL(string: "\(cgmManager.state.apiZone.careUrl)api/care/GetMyFollowerPatientList") else {
                 logger.error("Could not create follower URL...")
                 return []
             }
 
-            guard let urlPending = URL(string: "\(careBaseUrl)api/care/GetMyPendingFollowerPatientList") else {
+            guard let urlPending = URL(string: "\(cgmManager.state.apiZone.careUrl)api/care/GetMyPendingFollowerPatientList")
+            else {
                 logger.error("Could not create URL...")
                 return []
             }
@@ -184,7 +183,7 @@ enum DMSApi {
 
         guard let url =
             URL(
-                string: "\(careBaseUrl)api/care/PutVerificationCode_V2?SenderEmail=\(email)&ReferenceName=\(fullName)&LangCode=en"
+                string: "\(cgmManager.state.apiZone.careUrl)api/care/PutVerificationCode_V2?SenderEmail=\(email)&ReferenceName=\(fullName)&LangCode=en"
             )
         else {
             logger.error("Could not create URL...")
@@ -215,7 +214,8 @@ enum DMSApi {
             return
         }
 
-        guard let url = URL(string: "\(careBaseUrl)api/care/UpdateStatus?FollowerEmail=\(email)&Status=2") else {
+        guard let url = URL(string: "\(cgmManager.state.apiZone.careUrl)api/care/UpdateStatus?FollowerEmail=\(email)&Status=2")
+        else {
             logger.error("Could not create URL...")
             return
         }
@@ -253,7 +253,11 @@ enum DMSApi {
         }
 
         do {
-            let response = try await AuthenticationApi.login(username: credentials.username, password: credentials.password)
+            let response = try await AuthenticationApi.login(
+                cgmManager: cgmManager,
+                username: credentials.username,
+                password: credentials.password
+            )
             cgmManager.state.accessToken = response.accessToken
             cgmManager.state.accessTokenExpiration = Date.now.addingTimeInterval(.seconds(Double(response.expiresIn)))
             cgmManager.notifyStateDidChange()

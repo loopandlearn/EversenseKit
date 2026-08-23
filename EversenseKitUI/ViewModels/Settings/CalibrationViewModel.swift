@@ -11,11 +11,11 @@ class CalibrationViewModel: ObservableObject {
     let allowedGlucoseValuesMmolL = Array(UInt16(33) ... UInt16(220))
 
     private let logger = EversenseLogger(category: "CalibrationViewModel")
-    private let cgmManager: EversenseCGMManager?
+    private let cgmManager: EversenseCGMManager
     private let done: () -> Void
     private let unit: HKUnit
     public let allowCalibrations = FeatureFlags.ALLOW_CALIBRATION
-    init(cgmManager: EversenseCGMManager?, _ unit: HKUnit, _ done: @escaping () -> Void) {
+    init(cgmManager: EversenseCGMManager, _ unit: HKUnit, _ done: @escaping () -> Void) {
         self.cgmManager = cgmManager
         self.unit = unit
         self.done = done
@@ -23,11 +23,6 @@ class CalibrationViewModel: ObservableObject {
     }
 
     func calibrate() {
-        guard let cgmManager = cgmManager else {
-            logger.warning("No CGMManager...")
-            return
-        }
-
         error = ""
         isLoading = true
 

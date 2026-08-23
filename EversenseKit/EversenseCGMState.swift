@@ -40,7 +40,7 @@ public struct GlucoseDisplay: GlucoseDisplayable {
 public struct EversenseCGMState: RawRepresentable, Equatable {
     public typealias RawValue = CGMManager.RawStateValue
 
-    public init?(rawValue: RawValue) {
+    public init(rawValue: RawValue) {
         bleNameString = rawValue["bleNameString"] as? String
         isOnboarded = rawValue["isOnboarded"] as? Bool ?? false
         isSyncing = rawValue["isSyncing"] as? Bool ?? false
@@ -53,6 +53,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         uploadBatchSize = rawValue["uploadBatchSize"] as? Int ?? 12
         sensorId = rawValue["sensorId"] as? Data ?? Data()
         communicationProtocol = rawValue["communicationProtocol"] as? Double ?? 0
+        hasReportedInsertionDate = rawValue["hasReportedInsertionDate"] as? Bool ?? false
         activatedAt = rawValue["activatedAt"] as? Date ?? Date.distantPast
         expiresAt = rawValue["expiresAt"] as? Date ?? Date.distantPast
         mmaFeatures = rawValue["mmaFeatures"] as? UInt8 ?? 0
@@ -126,6 +127,17 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
             calibrationReadiness = .Unknown
         }
 
+        if let rawApiZone = rawValue["apiZone"] as? EversenseApiZone.RawValue {
+            apiZone = EversenseApiZone(rawValue: rawApiZone) ?? .US
+        } else {
+            if let bleNameString {
+                // if the bleName starts with T, we know it is a E3 transmitter, thus OutsideUS
+                apiZone = bleNameString.hasPrefix("T") ? .OutsideUS : .US
+            } else {
+                apiZone = .US
+            }
+        }
+
         do {
             if let activeAlarmsData = rawValue["activeAlarms"] as? Data {
                 activeAlarms = try JSONDecoder().decode([ActiveAlarm].self, from: activeAlarmsData)
@@ -165,6 +177,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["transmitterId"] = transmitterId
         value["sensorId"] = sensorId
         value["communicationProtocol"] = communicationProtocol
+        value["hasReportedInsertionDate"] = hasReportedInsertionDate
         value["activatedAt"] = activatedAt
         value["expiresAt"] = expiresAt
         value["mmaFeatures"] = mmaFeatures
@@ -198,6 +211,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         value["recentGlucoseDateTime"] = recentGlucoseDateTime
         value["recentGlucoseTrend"] = recentGlucoseTrend.rawValue
         value["security"] = security.rawValue
+        value["apiZone"] = apiZone.rawValue
         value["username"] = username
         value["password"] = password
         value["accessToken"] = accessToken
@@ -233,6 +247,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
     public var transmitterId: String?
     public var sensorId: Data
     public var communicationProtocol: Double
+    public var hasReportedInsertionDate: Bool
     public var activatedAt: Date
     public var expiresAt: Date
 
@@ -283,6 +298,7 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
 
     // Eversense 365
     public var security: SecurityType = .none
+    public var apiZone: EversenseApiZone
     public var username: String?
     public var password: String?
     public var accessToken: String?

@@ -3,6 +3,7 @@ import LoopKit
 extension EversenseE3 {
     static let fakeAppVersion = "8.0.1"
     static let logger = EversenseLogger(category: "TransmitterStateE3")
+    static let maxGlucose = 450 // mg/dl
 
     static func readGlucoseData(
         peripheralManager: PeripheralManager,
@@ -29,19 +30,26 @@ extension EversenseE3 {
             var glucoseHistory: [GetGlucoseLogResponse] = []
             for index in range.from ... range.to {
                 let pageResponse: GetGlucoseLogResponse = try peripheralManager.write(GetGlucoseLogPacket(index: index))
+                if pageResponse.glucoseInMgDl >= maxGlucose {
+                    let message =
+                        "Received invalid Glucose data - value: \(pageResponse.glucoseInMgDl) mg/dl, timestamp sample: \(pageResponse.datetime)"
+                    logger.warning(message)
+                    continue
+                }
 
                 logger.debug("Datetime: \(pageResponse.datetime), Glucose: \(pageResponse.glucoseInMgDl) mg/dl")
                 glucoseHistory.append(pageResponse)
             }
 
-            let samples = glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
-                CGMReading(
-                    glucoseInMgDl: $0.glucoseInMgDl,
-                    datetime: $0.datetime,
-                    trend: nil,
-                    raw: ""
-                )
-            }
+            let samples = glucoseHistory
+                .filter { $0.datetime > lastGlucoseTimestamp && $0.datetime != mostRecentGlucose.datetime }.map {
+                    CGMReading(
+                        glucoseInMgDl: $0.glucoseInMgDl,
+                        datetime: $0.datetime,
+                        trend: nil,
+                        raw: ""
+                    )
+                }
 
             logger.info("[E3] Glucose data read  - timestamp: \(Date.now), count: \(samples.count)")
             return (
@@ -64,7 +72,7 @@ extension EversenseE3 {
             logger.debug("Sending GetCurrentGlucosePacket...")
             let glucoseData: GetCurrentGlucoseResponse = try peripheralManager.write(GetCurrentGlucosePacket())
 
-            guard glucoseData.glucoseInMgDl < 0x03E8 else { // 1000 mg/dl
+            guard glucoseData.glucoseInMgDl < maxGlucose else {
                 let message =
                     "Received invalid Glucose data - value: \(glucoseData.glucoseInMgDl) mg/dl, timestamp sample: \(glucoseData.datetime)"
                 logger.error(message)
@@ -136,20 +144,12 @@ extension EversenseE3 {
                 .write(GetLastCalibrationDatePacket())
             let lastCalibrationTime: GetLastCalibrationTimeResponse = try peripheralManager
                 .write(GetLastCalibrationTimePacket())
-            cgmManager.state.lastCalibration = Date.fromComponents(
+            let lastCalibration = Date.fromComponents(
                 date: lastCalibrationDate.date,
                 time: lastCalibrationTime.time
             )
-
-            // Get next calibration datetime
-            let nextCalibrationDate: GetNextCalibrationDateResponse = try peripheralManager
-                .write(GetNextCalibrationDatePacket())
-            let nextCalibrationTime: GetNextCalibrationTimeResponse = try peripheralManager
-                .write(GetNextCalibrationTimePacket())
-            cgmManager.state.nextCalibration = Date.fromComponents(
-                date: nextCalibrationDate.date,
-                time: nextCalibrationTime.time
-            )
+            cgmManager.state.lastCalibration = lastCalibration
+            cgmManager.state.nextCalibration = lastCalibration.addingTimeInterval(.hours(24))
 
             // Get current calibration phase
             let calibrationMode: CalibrationMode

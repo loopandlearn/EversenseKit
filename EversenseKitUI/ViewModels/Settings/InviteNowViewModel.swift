@@ -12,16 +12,12 @@ class InviteNowViewModel: ObservableObject {
 
     var dismiss: (() -> Void)?
 
-    private let cgmManager: EversenseCGMManager?
-    init(cgmManager: EversenseCGMManager?) {
+    private let cgmManager: EversenseCGMManager
+    init(cgmManager: EversenseCGMManager) {
         self.cgmManager = cgmManager
     }
 
     func save() {
-        guard let cgmManager else {
-            return
-        }
-
         isLoading = true
 
         Task {

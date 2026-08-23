@@ -5,6 +5,7 @@ struct EversenseAuth: View {
     @Environment(\.dismissAction) private var dismiss
 
     @ObservedObject var viewModel: Eversense365AuthViewModel
+    @State var editApiZone = false
 
     var body: some View {
         VStack {
@@ -14,6 +15,28 @@ struct EversenseAuth: View {
                         .textContentType(.emailAddress)
                     SecureField(String(localized: "Password", comment: "Label for password"), text: $viewModel.password)
                         .textContentType(.password)
+
+                    HStack {
+                        Text("Select Your Zone", comment: "api zone lable")
+                            .foregroundStyle(editApiZone ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
+                        Spacer()
+                        Text(viewModel.apiZone.label)
+                            .foregroundStyle(editApiZone ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                    }
+                    .onTapGesture {
+                        withAnimation {
+                            self.editApiZone.toggle()
+                        }
+                    }
+
+                    if editApiZone {
+                        Picker(selection: $viewModel.apiZone) {
+                            ForEach(EversenseApiZone.all, id: \.self) { item in
+                                Text(item.label)
+                            }
+                        } label: { EmptyView() }
+                            .pickerStyle(.wheel)
+                    }
                 } footer: {
                     Text(
                         "If your Eversense 365 is already active, please make sure to use the same account",
@@ -38,11 +61,21 @@ struct EversenseAuth: View {
                     .foregroundStyle(.red)
             }
 
-            Button(action: viewModel.login) {
-                Text("Login", comment: "label for Login")
+            HStack(spacing: 5) {
+                if !viewModel.is365 {
+                    Button(action: viewModel.nextStep) {
+                        Text("Skip", comment: "label for Login")
+                    }
+                    .disabled(viewModel.isLoading)
+                    .buttonStyle(ActionButtonStyle(.secondary))
+                }
+
+                Button(action: viewModel.login) {
+                    Text("Login", comment: "label for Login")
+                }
+                .disabled(viewModel.username.isEmpty || viewModel.password.isEmpty || viewModel.isLoading)
+                .buttonStyle(ActionButtonStyle())
             }
-            .disabled(viewModel.username.isEmpty || viewModel.password.isEmpty || viewModel.isLoading)
-            .buttonStyle(ActionButtonStyle())
             .padding([.bottom, .horizontal])
         }
         .listStyle(InsetGroupedListStyle())

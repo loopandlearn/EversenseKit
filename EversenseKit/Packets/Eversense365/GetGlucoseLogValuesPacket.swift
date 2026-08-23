@@ -70,7 +70,7 @@ extension Eversense365 {
 
                 i = end
 
-                guard glucose < 0x03E8 else {
+                guard glucose < 0x01C2 else {
                     logger.warning("WARNING: glucose exceeds safety limits - value: \(glucose) mg/dl, datetime: \(datetime)")
                     continue
                 }

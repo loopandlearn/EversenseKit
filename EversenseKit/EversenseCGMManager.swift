@@ -72,7 +72,7 @@ public class EversenseCGMManager: CGMManager {
         }
     }
 
-    private let delegate = WeakSynchronizedDelegate<CGMManagerDelegate>()
+    let delegate = WeakSynchronizedDelegate<CGMManagerDelegate>()
     private let stateObservers = WeakSynchronizedSet<StateObserver>()
 
     public let managerIdentifier: String = "EversenseCGMManager"
@@ -81,20 +81,17 @@ public class EversenseCGMManager: CGMManager {
         state.modelStr
     }
 
-    public required init?(rawState: RawStateValue) {
-        guard let state = EversenseCGMState(rawValue: rawState) else {
-            return nil
-        }
-
-        self.state = state
+    public required init(rawState: RawStateValue) {
+        state = EversenseCGMState(rawValue: rawState)
         bluetoothManager = BluetoothManager()
         bluetoothManager.cgmManager = self
+        EversenseLogger.cgmManager = self
 
         // Migrate username/password
         if let username = state.username, let password = state.password {
             keychain.setEversenseCredentials(credentials: Credentials(username: username, password: password))
-            self.state.username = nil
-            self.state.password = nil
+            state.username = nil
+            state.password = nil
             notifyStateDidChange()
         }
     }
@@ -206,6 +203,20 @@ extension EversenseCGMManager {
                 ))
 
                 delegate.cgmManager(self, hasNew: .newData(newData))
+
+                if !self.state.hasReportedInsertionDate {
+                    let insertionEvent = PersistedCgmEvent(
+                        date: self.state.activatedAt,
+                        type: .sensorStart,
+                        deviceIdentifier: self.state.sensorId.hexString(),
+                        expectedLifetime: self.state.is365 ? .days(365) : .days(180),
+                        warmupPeriod: .hours(24)
+                    )
+                    delegate.cgmManager(self, hasNew: [insertionEvent])
+
+                    self.state.hasReportedInsertionDate = true
+                    self.notifyStateDidChange()
+                }
             }
 
             if self.state.shouldUploadToEversenseDMS {
@@ -257,11 +268,11 @@ extension EversenseCGMManager {
             }
         }
 
-        state.activeAlarms = alarms
+        state.activeAlarms = alarms.filter { $0.code != .unknown }
     }
 
     private func findNewAlarms(current: [ActiveAlarm], updated: [ActiveAlarm]) -> [ActiveAlarm] {
-        let currentCodes = Set(current.map(\.codeRaw))
+        let currentCodes = Set(current.filter { $0.code != .unknown }.map(\.codeRaw))
         return updated.filter { !currentCodes.contains($0.codeRaw) && $0.code != .unknown }
     }
 

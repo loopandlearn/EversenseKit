@@ -13,13 +13,9 @@ class PlacementGuideViewModel: ObservableObject {
         return formatter
     }()
 
-    private let cgmManager: EversenseCGMManager?
-    init(cgmManager: EversenseCGMManager?) {
+    private let cgmManager: EversenseCGMManager
+    init(cgmManager: EversenseCGMManager) {
         self.cgmManager = cgmManager
-
-        guard let cgmManager = cgmManager else {
-            return
-        }
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
