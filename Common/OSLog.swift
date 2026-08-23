@@ -8,7 +8,7 @@ class EversenseLogger {
     public static var cgmManager: EversenseCGMManager?
 
     init(category: String) {
-        logger = Logger(subsystem: "com.bastiaanv.AccuChekKit", category: category)
+        logger = Logger(subsystem: "org.nightscout.EversenseKit", category: category)
     }
 
     public func debug(
