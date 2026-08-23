@@ -39,7 +39,7 @@ extension EversenseE3 {
                     time: BinaryOperations.toTimeComponents(data: data, start: start + 5)
                 ),
                 glucoseInMgDl: UInt16(data[start + 8]) | (UInt16(data[start + 9]) << 8),
-                trend: getTrend(value: data[start + 13])
+                trend: getTrend(value: data[start + 12])
             )
         }
 

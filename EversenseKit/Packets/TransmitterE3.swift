@@ -41,14 +41,15 @@ extension EversenseE3 {
                 glucoseHistory.append(pageResponse)
             }
 
-            let samples = glucoseHistory.filter { $0.datetime > lastGlucoseTimestamp }.map {
-                CGMReading(
-                    glucoseInMgDl: $0.glucoseInMgDl,
-                    datetime: $0.datetime,
-                    trend: nil,
-                    raw: ""
-                )
-            }
+            let samples = glucoseHistory
+                .filter { $0.datetime > lastGlucoseTimestamp && $0.datetime != mostRecentGlucose.datetime }.map {
+                    CGMReading(
+                        glucoseInMgDl: $0.glucoseInMgDl,
+                        datetime: $0.datetime,
+                        trend: nil,
+                        raw: ""
+                    )
+                }
 
             logger.info("[E3] Glucose data read  - timestamp: \(Date.now), count: \(samples.count)")
             return (

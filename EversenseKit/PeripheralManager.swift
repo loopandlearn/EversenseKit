@@ -258,7 +258,10 @@ extension PeripheralManager: CBPeripheralDelegate {
             let packet = Eversense365.PushKeepAlivePacket()
             let response = packet.parseResponse(data: actualData)
 
-            logger.debug("[365] Got keep alive message - mostRecentGlucoseDatetime: \(response.mostRecenteGlucoseDatetime)", type: .receive)
+            logger.debug(
+                "[365] Got keep alive message - mostRecentGlucoseDatetime: \(response.mostRecenteGlucoseDatetime)",
+                type: .receive
+            )
             if response.mostRecenteGlucoseDatetime > (cgmManager.state.recentGlucoseDateTime ?? .distantPast) {
                 DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                     guard let self = self else { return }
@@ -320,7 +323,10 @@ extension PeripheralManager: CBPeripheralDelegate {
 
         guard packet.checkPacket(data: actualData, doChecksum: isE3) else {
             logger
-                .warning("Received invalid response, invalid response code or checksum failed - data: \(actualData.hexString())", type: .receive)
+                .warning(
+                    "Received invalid response, invalid response code or checksum failed - data: \(actualData.hexString())",
+                    type: .receive
+                )
             return
         }
 
