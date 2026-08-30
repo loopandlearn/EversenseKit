@@ -46,7 +46,13 @@ public enum EversenseApiZone: UInt8 {
     }
 
     var keyVaultUrl: String {
-        "https://deviceauthorization.eversensedms.com/api/vault"
+        switch self {
+        case .US:
+            return "https://deviceauthorization.eversensedms.com/api/vault"
+        case .OutsideUS:
+            return "https://ousdeviceauthorization.eversensedms.com/api/vault"
+        }
+        
     }
 
     static var all: [EversenseApiZone] {
