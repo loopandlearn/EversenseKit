@@ -130,12 +130,9 @@ public struct EversenseCGMState: RawRepresentable, Equatable {
         if let rawApiZone = rawValue["apiZone"] as? EversenseApiZone.RawValue {
             apiZone = EversenseApiZone(rawValue: rawApiZone) ?? .US
         } else {
-            if let bleNameString {
-                // if the bleName starts with T, we know it is a E3 transmitter, thus OutsideUS
-                apiZone = bleNameString.hasPrefix("T") ? .OutsideUS : .US
-            } else {
-                apiZone = .US
-            }
+            // security none -> E3 -> EU
+            // Every other security -> 365 -> US (only relevant while migrating this property)
+            apiZone = security == .none ? .OutsideUS : .US
         }
 
         do {

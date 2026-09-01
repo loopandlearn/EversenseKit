@@ -52,7 +52,6 @@ public enum EversenseApiZone: UInt8 {
         case .OutsideUS:
             return "https://ousdeviceauthorization.eversensedms.com/api/vault"
         }
-        
     }
 
     static var all: [EversenseApiZone] {
